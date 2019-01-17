@@ -22,16 +22,29 @@
 
 \maketitle
 
-%\tableofcontents
+\tableofcontents
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{Introduction}
-
-% should clearly state what the difference between this version and the Wang Han et al. 2017 formulation is
 \section{Introduction}
 
-\section{Theory}
+\begin{itemize}
+    \item Water-carbon trade-off, water use efficiency, $\chi = c_i:c_a$
+    \item Acclimation, time scales
+    \item Light use efficiency concept
+    \item Optimality concept for predicting $\chi$ and LUE.
+    \item Evaluation of predicted LUE and GPP (using prescribed greenness) with measured GPP at FLUXNET sites.
+    \item Evaluation focuses on different components of variability (spatial, annual, seasonal, daily anomalies), functional relationships, and the response to drought.
+    \item This paper describes the theory, the model implementation, and provides an comprehensive evaluation of predicted LUE and GPP with data from flux measurements.
+    \item Model benchmarking is challenging in general due to errors introduced by uncertain model forcing data and by uncertainties in the observational data used for evaluation. We address these points here with an additional focus on uncertainties in the greenness data (model forcing), and uncertainties in the GPP data, derived from different flux decomposition methods, used for evaluation. 
+    \item Sensitivities of processes to environmental conditions are key. It's generally challenging to derive them from continuous, not experimentally disturbed measurements. Here, we investigate functional relationships, determined from observations using Generalized Additive Models, and the response of LUE and GPP to drought, based on the soil moisture droughts detected by Stocker et al. (2018).
+    \item General patterns in model-data mismatch. Additional simulations conducted to investigate whether these can be resolved.
+    \item Value of this model is in providing a mechanistic and optimality-based LUE model that can be driven with observed greenness. Hence providing predicitions, grounded in basic ecological principles, and relying on a mimimum of prescribed model parameters.
+\end{itemize}
 
+\section{Methods}
+
+\subsection{Theory}
+\label{sec:theory}
 The P-model centers around a prediction for the ratio of leaf-internal to ambient \coo ($c_i : c_a = \chi$) governed by the trade-off between the costs arising from the maintenance of carboxylation capacity ($V_{\mathrm{cmax}}$) and transpiration ($E$). 
 It is founded on the standard model for C3 plant photosynthesis (Section \ref{sec:farquhar}), the coordination hypothesis (Section \ref{sec:coordination}) and the least-cost hypothesis (Section \ref{sec:least-cost}).
 
@@ -61,7 +74,7 @@ The actual photosynthetic rate is then given by:
     A = \min(A_C, A_J)
 \end{equation}
 
-\subsection{The coordination hypothesis}
+\subsubsection{The coordination hypothesis}
 \label{sec:coordination}
 Light use efficiency (LUE) models provide a powerful method and estimate assimilation rates as a linear function of absorbed light over a given time interval. 
 But the connection between the Farquhar and LUE models is not obvious. 
@@ -79,7 +92,7 @@ This hypothesis also requires that $J_{\mathrm{max}}$ maintain a ratio to $V_{\m
 Evidence for the co-ordination hypothesis was presented by Haxeltine and Prentice11, and Dewar12, who noted that it can explain many otherwise unexplained responses of C3 plants to environmental changes: including changes in leaf C:N ratios along environmental gradients, and the widely observed reduction of $V_{\mathrm{cmax}}$ under experimentally increased atmospheric CO2. More recently Maire et al.13 showed very good agreement between typical daytime values of $A_J$ and $A_C$ as calculated under the prevailing growth conditions for 31 species (293 data points) based on published studies. 
 The co-ordination hypothesis allows a simple approximation by which equation S2 is applied to predict GPP over time scales for which acclimation of $V_{\mathrm{cmax}}$ is possible, with $I$ now representing daily, rather than instantaneous, PPFD.
 
-\subsection{The least-cost hypothesis}
+\subsubsection{The least-cost hypothesis}
 \label{sec:least-cost}
 Missing from the Farquhar model is an equation to predict χ, which constrains both the Rubisco- and electron-transport limited rates of carbon fixation and therefore appears in both equations S1 and S2. 
 $\chi$ at any moment must be consistent both with the rate of carbon fixation and with the rate of diffusion of \coo\ through the stomata. 
@@ -98,7 +111,7 @@ If $a$ and $b$ are dimensionless cost factors (maintenance respiration per unit 
     a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}
 \end{equation}
 
-\subsubsection{Predicting $\chi$}
+\subsubsubsection{Predicting $\chi$}
 The following section provides a derivation of optimal $\chi$ using Fick's Law, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
 Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
 According to the Fick's Law of diffusion:
@@ -143,7 +156,6 @@ This can also be written as
 \end{equation}
 \clearpage
 
-\subsection{The light use efficiency model}
 With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
 \begin{equation}
 \label{eq:lue}
@@ -155,7 +167,7 @@ Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
 \end{equation}
 This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure.
 
-\subsection{Introducing $J_{\mathrm{max}}$ limitation}
+\subsubsection{Introducing $J_{\mathrm{max}}$ limitation}
 Equation \ref{eq:lue} is correct only if the response of GPP ($A$) to increasing PPFD remains linear up to the co-limitation point. 
 By considering a non-rectangular hyperbola relationship between $A_J$ and $I_{\mathrm{abs}}$ (ref 26), we allow for the effect of finite $J_{\mathrm{max}}$:
 \begin{equation}
@@ -191,7 +203,7 @@ Solving Eq. \ref{eq:k} for $a_0$ and substituting this into Eq. \ref{eq:ajlim} w
     L = \frac{1}{\sqrt{1 - \left( \frac{c_i+2\Gamma^{\ast}}{k(c_i+K)} \right)^{2}}}
 \end{equation}
 
-To obtain an estimate of the optimum value of $J_{\mathrm{max}}$ we assume that (a) there is a cost associated with $J_{\mathrm{max}}$ that is equal to the product of $J_{\mathrm{max}}$ and a constant $c^{\ast}$, and (b) that the value of $J_{\mathrm{max}}$ maximizes the benefit ($A_J$) minus the cost. 
+To obtain an estimate of the optimum value of $J_{\mathrm{max}}$ we assume that (a) there is a cost associated with $J_{\mathrm{max}}$ that is equal to the product of $J_{\mathrm{max}}$ and a constant $c$, and (b) that the value of $J_{\mathrm{max}}$ maximizes the benefit ($A_J$) minus the cost. 
 This maximum is obtained when
 \begin{equation}
 \label{eq:jmaxpartial}
@@ -231,12 +243,16 @@ Using the prediction of $c_i$ from Eq. \ref{eq:ci}, this can be written as
 The revised LUE model thus becomes
 \begin{equation}
 \label{eq:ajlim4}
-    A_J = \phi_0 \; I_{\mathrm{abs}} \; m \; \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
+    A_J = \phi_0 \; I_{\mathrm{abs}} \; m'
+\end{equation}
+with
+\begin{equation}
+    m' = m \; \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
 \end{equation}
 Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq. \ref{eq:c}) c = 0.41.
 
-% \subsection{Corollary of the $\chi$ prediction}
-% \subsubsection{Stomatal conductance}
+% \subsubsection{Corollary of the $\chi$ prediction}
+% \subsubsubsection{Stomatal conductance}
 % Stomatal conductance $g_s$ follows from the prediction of $\chi$ given by Eq. \ref{eq:chi_exact} and $g_s = A / ( c_a\;(1-\chi) )$ (from Eq. \ref{eq:fick}). Stomatal contuctance can thus be written as
 % \begin{equation}
 %     g_s = \left( 1 + \frac{\xi}{\sqrt{D}} \right) \frac{A}{c_a}
@@ -251,7 +267,7 @@ Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq.
 
 % Note that in the P-model output, $c_i$ is given in ppm.
 
-% \subsubsection{Intrinsic water use efficiency}
+% \subsubsubsection{Intrinsic water use efficiency}
 % The intrinsic water use efficiency (iWUE) is defined as the ratio of assimilation over stomatal conductance (to water). With Eq. \ref{eq:fick} this is
 % \begin{equation}
 %     \mathrm{iWUE} = A / g_s^W = \frac{c_a - c_i}{1.6\;p}
@@ -259,7 +275,7 @@ Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq.
 % With $A$ expressed in units of mol CO$_2$ m$^{-2}$ s$^{-1}$, and $g_s^W$ in units of mol H$_2$O m$^{-2}$ s$^{-1}$, iWUE is unitless. The factor 1.6 accounts for the difference in diffusivity between CO$_2$ and H$_2$O. In all above calculations, $c_a$ and $c_i$ are expressed as partial pressure of CO$_2$ in units of Pa. Division by the atmospheric pressure $p$ converts $(c_a - c_i)$ to unitless.
 
 
-% \subsubsection{$V_{\mathrm{cmax}}$}
+% \subsubsubsection{$V_{\mathrm{cmax}}$}
 
 % Rearranging Eq. \ref{eq:rubiscolimited} and $\gamma=\Gamma^{\ast}/c_a$ and $\kappa=K/c_a$ gives
 % \begin{equation*}
@@ -287,7 +303,7 @@ Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq.
 % %    V_{\mathrm{cmax25}} = V_{\mathrm{cmax}} \; \exp\Bigg( \frac{H_a(T-T_{\text{ref}})}{T_{\text{ref}}TR}\;\frac{1+\exp( \frac{T_{\text{ref}}\Delta S - H_d}{RT_{\text{ref}}}  )}{1+\exp( \frac{T\Delta S-H_d}{RT} )} \Bigg)
 % %\end{equation}
 
-% \subsubsection{Dark respiration $R_{\mathrm{d}}$}
+% \subsubsubsection{Dark respiration $R_{\mathrm{d}}$}
 
 % Dark respiration at standard temperature $R_{\mathrm{d25}}$ is calculated as being proportional to $V_{\mathrm{cmax25}}$:
 % \begin{equation}
@@ -310,80 +326,170 @@ Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq.
 %    R_{\mathrm{d}} = R_{\mathrm{d25}} \Bigg( \exp\Bigg(\frac{\Delta H_{\mathrm{Rd}}}{R}\Big( \frac{1}{T_{K25}} - \frac{1}{T_K} \Big)\Bigg) \Bigg)^{-1}
 %\end{equation}
 
-\subsection{Temperature dependence of quantum yield efficiency}
+\subsubsection{The light use efficiency model}
+\label{sec:luemodel}
+For the further model description, we refer to ecosystem-scale quantities and 
 
-\subsection{Soil moisture stress}
-
-\section{Implementation, forcing data description}
-
-\subsection{Soil moisture model}
-
-The soil water balance is solved following the SPLASH model and accounting only for liquid water. WATCH-WFDEI $P_{\text{rain}}$ and $P_{\text{snow}}$ are summed and converted from kg m$^{-2}$ s$^{-1}$ to mm d$^{-1}$ by multiplication with $(60 \cdot 60 \cdot 24)$ s d$^{-1}$. 
-
-% I'm a bit confused. In the SPLASH documentation, we used the term 'soil holding capacity' to refer to what one may rather call the field capacity and expressed it in units of mm. What you termed 'water holding capacity, WHC' may be refered to as 'porosity' instead. We may rename terms in Eq. 77 of the SPLASH documentation (field capacity instead of soil moisture capacity) and write this as follows:
-
-To obtain the total soil water holding capacity (WHC, in mm), we use data on soil depth ($d$, in m) and porosity ($\phi$, in $m_{H_{2}O}^{3} \cdot m_{Soil}^{-3}$) and calculate $W_m$ as
 \begin{equation}
-    W_m = \phi \cdot d \cdot 10^{-3}
+\text{GPP} = \text{fAPAR} \cdot \text{PPFD} \cdot \text{LUE}
+\label{eq:luemodel}
 \end{equation}
-Runoff is generated when ...
-
-
-Where, the water holding capacity, defined as volumetric proportion, was estimated, following Hillel (1982), as the difference between field capacity and wilting point.
-\begin{equation}
-\text{WHC}=W_{\text{FC}}-W_{\text{PWP}}
-\end{equation}
-
-Field capacity and wilting point, were obtained from texture and organic matter content data, through pedotransfer functions, described in Saxton \& Rawls (2006) as follows:
-\begin{equation}
-W_{\text{FC}}= W_{\text{FC}}_{0}+(1.283\cdot W_{\text{FC}}_{0}^{2}-0.374\cdot W_{\text{FC}}_{0}-0.015)
-\end{equation}
-Where,
+with 
 \begin{align}
-W_{\text{FC}}_{0} &=-0.251f_{\text{sand}}+195f_{\text{clay}}+0.011f_{\text{OM}}\\                            &+0.006(f_{\text{sand}}\cdot f_{\text{OM}})\\
-                  &-0.027(f_{\text{clay}}\cdot f_{\text{OM}})\\
-                  &+0.452 (f_{\text{sand}}\cdot f_{\text{clay}})\\
-                  +0.299
+    \text{GPP} &= A_J \\
+    \text{fAPAR} \cdot \text{PPFD} &= I_{\text{abs}} \\
+    \text{LUE} &= \beta(\theta) \; \phi_0(T) \; m'
 \end{align}
-And,
+
+\paragraph{Temperature dependence}
+The temperature dependence of quantum yield efficiency ($\phi_0(T)$) is modelled following the temperature dependence of the maximum quantum yield of photosystem II in light-adapted tobacco leaves, determined by Bernacchi et al., 2003 (xxx add bibref) as 
 \begin{equation}
-W_{\text{PWP}}=W_{\text{PWP}}_{0}+(0.14\cdot W_{\text{PWP}}_{0}-0.02)
+\phi_0(T) = a_T \; b_T \; ( 0.352 + 0.022\;T - 0.00034\;T^2 )
 \end{equation}
-Where,
-\begin{align}
-W_{\text{PWP}}_{0} &=0.024 f_{\text{sand}} + 0.487 f_{\text{clay}} + 0.006 f_{\text{OM}} \\
-                  &+0.005 ( f_{\text{sand}}\cdot f_{\text{OM}} )\\
-                  &-0.013( f_{\text{clay}}\cdot f_{\text{OM}} )\\
-                  &+0.068( f_{\text{sand}} \cdot f_{\text{clay}} )\\
-                  &+0.031
-\end{align}
-Where, $W_{\text{FC}}_{0}$ and $W_{\text{PWP}}_{0}$ are the field capacity and wilting point first solutions respectively. And, $f_{\text{sand}}$, $f_{\text{clay}}$, $f_{\text{OM}}$ are the sand, clay and organic matter contents.
-Contents of sand, clay, organic matter and soil depth data were acquired from the ISRIC-SoilGrids web portal (ftp://ftp.soilgrids.org/data/aggregated/10km/), and resampled to 0.5$^{\circ}$ to match the meteorological data resolution.
+where $a_T$ is the leaf absorptance, and $b_T$ is the fraction of absorbed light that reaches photosystem II. $(a_T \cdot b_T)$ is treated as a single calibratable parameter (see Section \ref{sec:calib}), and further referred to as $\widehat{c_T}\equiv a_t\;b_b$. Note that the temperature dependence of quantum yield efficiency was not accounted for in earlier publications with the P-model (xxx refs) and $\phi_0$ was treated as a constant. Here, we conducted simulations both with constant and temperature-dependent $\phi_0$. For the former, $\phi_0$ was treated as a single calibratable parameter (below referred to as $\widehat{\phi_0}$), and implicitly includes the factors for leaf absorbtance, light attenuation before reaching chloroplasts. Both $\widehat{c_T}$ and $\widehat{\phi_0}$ implicitly account for incomplete utilization of the spectrum of incident PPFD.
 
+\paragraph{Soil moisture stress}
+$\beta(\theta)$ is a soil moisture stress function. We use results by Stocker et al. (2018) (xxx add bibref) to fit a soil moisture stress functions ($\beta(\theta)\simeq\text{fLUE}$) based on two general patterns. First, the functional form of $\beta(\theta)$ can be approximated by a quadratic function that approaches 1 for soil moisture above a certain threshold $\theta^{\ast}$ and held constant at 1 for soil moisture values above that. Here $\theta$ is the plant-available soil water, expressed as a fraction of field capacity. The general form is:
+\begin{equation}
+    \beta =
+\begin{cases}
+    q(\theta - \theta^{\ast})^2 + 1,& \theta \leq \theta^{\ast}\\
+    1,              & \theta > \theta^{\ast}
+\end{cases}
+\end{equation}
+Second, the sensitivity of $\beta(\theta)$ to extreme soil dryness ($\theta \rightarrow 0$) is related to the mean aridity. The dryness-related decline in $\beta(\theta)$ is particularly strong in driest climates, whereas a smaller reduction in $\beta(\theta)$ when soil water gets depleted is recorded at intermediate aridity. In the equation above, the sensitivity parameter $q$ is defined by the maximum $\beta$ reduction at low soil moisture $\beta_0\equiv\beta(\theta=\theta_0)$, leading to $q=(\beta_0-1)/(\theta^{\ast}-\theta_0)^2$. Note that $q$ has a negative value. $\beta_0$ is modelled as a linear function of the mean aridity, quantified by the mean annual ratio of AET/PET:
+\begin{equation}
+\beta_0 = \widehat{a_{\theta}} + \widehat{b_{\theta}} (\text{AET}/\text{PET})
+\end{equation}
+$\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$ are treated as calibratable parameters. 
 
+Soil moisture ($\theta$) was simulated using the SPLASH model, which treats soil water storage as a single bucket and calculates potential evapotranspiration based on Priestly-Taylor (xxx ref). Here, we account for a variable water holding capacity calculated based soil porosity and depth data from SoilGrids (xxx ref, see Appendix XXX). The soil water balance model is described in detail in xxx ref Davis. 
 
-\subsection{Greenness forcing data: EVI, FPAR, FPARitpl}
+\begin{table}
+\centering
+\begin{tabular}{llll}
+	\toprule
+    Symbol     & Value     &  Description   &  Reference   \\
+	\midrule
+    \beta      & 146       &  Ratio of unit costs, Eq. xxx   &  xxxx   \\
+	\bottomrule
+\end{tabular}
+\caption{Model parameters used for all setups.}
+\label{tab:params}
+\end{table}
 
-\subsection{FLUXNET 2015 data, unit conversions}
+\subsection{Simulation protocol}
+\label{sec:protocol}
+To investigate model performance in dependence of alternative choices for model forcing data (defining fAPAR), alternative model setups (variable/fixed soil moisture and temperature effects), and alternative observational target data for calibration (GPP based on different flux decompositions), we conducted multiple simulation sets. Parameters ($\widehat{c_T}$, $\widehat{a_{\theta}}$, and $\widehat{b_{\theta}}$) are calibrated and evaluated against respective observational data for each simulation set separately.
+
+The simulation set ORG corresponds to the model as used in xxx ref Wang Han et al., 2017. That is, the quantum efficiency of photosynthesis ($\widehat{\phi_0}$) is fixed, and without accounting for soil moisture stress ($\theta=1$). The model is forced with fAPAR data taken as MODIS FPAR, splined to daily values (see also Section \ref{sec:greennessdata}, and calibrated against GPP data from FLUXNET 2015 based on the nighttime decomposition method ('NT'). All simulation setups are described in Tab. \ref{tab:setups}. The simulation set BRC is identical to ORG, except that  $\widehat{\phi_0}$ is allowed to vary with temperature. In the simulation set FULL, soil moisture stress is additionally accounted for.
+
+Additional simulations account for both temperature and soil moisture effects. The simulation set FULL\textunderscore FPARitp also uses MODIS FPAR (MCD15A3H) data for fAPAR, but with daily values as linear interpolations of original data, which is given for 4-day intervals. This is used to investigate whether the smoothed values of the splined data (standard) are responsible for the general underestimation of maximum GPP values during the height of the growing season. The simulation set FULL\textunderscore EVI uses MODIS EVI (MOD13Q1), splined to daily from 8-daily data, to assess to which degree model performance depends on fAPAR forcing data. See Section \ref{sec:greennessdata} for more information.
+
+Additional simulation sets FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are used to investigate the dependence of (apparent) model performance on the observational data source to which it is calibrated. Here, the model is calibrated to GPP data derived using different CO$_2$ flux decomposition methods. We use GPP data based on the nighttime decomposition method (xxx ref reichstein) for FULL\textunderscore NTsub, the daytime decomposition method (xxx ref) for FULL\textunderscore DT, and an alternative decomposition method used for model-data comparison in Wang Han et al., 2017 (xxx ref) for FULL\textunderscore Ty. The latter method determines a constant background respiration rate as the (fitted) asymptote of CO$_2$ exchange fluxes with PPFD tending towards zero. This data is publicly available at XXX. Calibration and evaluation of FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are done only for sites and dates where observational data is given from all three datasets (DT, NT, and Ty), hence the distiction between FULL\textunderscore NTsub and FULL. The model calibration is implemented within the rsofun R package (function \texttt{calib\textunderscore sofun()}, see accompanying paper Stocker et al., XXX).
+
+\begin{table}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllllll}
+	\toprule
+    Setup name                 &  fAPAR data              &  GPP      &  Calibration set  &  SM limit.  &  \widehat{\phi_0} &  \widehat{c_T}    &  $\widehat{a_{\theta}}$  &  $\widehat{b_{\theta}}$   \\
+	\midrule
+    ORG                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  0.0500 &  --     &  -- & --   \\
+    BRC                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  --     &  0.0832 &  -- & --   \\
+    FULL                       &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  --     &  0.0885 &  0  & 0.687 \\
+	\midrule
+    FULL\textunderscore FPARitp &  FPAR MCD15A3H, itpl.   &  NT       &  valid NT data    &  yes        &  --     &  0.0860 &  0  & 0.700 \\
+    FULL\textunderscore EVI     &  EVI MOD13Q1, spl.      &  NT       &  valid NT data    &  yes        &  --     &  0.1317 &  0  & 0.770 \\
+	\midrule
+    FULL\textunderscore DT      &  FPAR MCD15A3H, spl.    &  DT       &  valid NT, DT, Ty &  yes        &  --     &  0.0909 & 0   & 0.690 \\
+    FULL\textunderscore Ty      &  FPAR MCD15A3H, spl.    &  Ty       &  valid NT, DT, Ty &  yes        &  --     &  0.0886 & 0   & 0.722 \\
+    FULL\textunderscore NTsub   &  FPAR MCD15A3H, spl.    &  NT       &  valid NT, DT, Ty &  yes        &  --     &  0.0918 & 0   & 0.688 \\
+	\bottomrule
+\end{tabular}}
+\caption{Model setups. The standard greenness data, used to define the model forcing for fAPAR is MODIS FPAR MCD15A3H (xxx ref), where the original data, given at 4-day intervals, is splined to daily values (see Section \ref{sec:greennessdata}). Alternative greenness forcing data is based on MODIS EVI MOD13Q1 (xxx ref), splined (`spl.') from 8-day intervals to daily, and MODIS FPAR MCD15A3H, linearly interpolated (`itpl.') from 4-day intervals to daily. Standard observational GPP data, used for model calibration and evaluation is from FLUXNET 2015 data, based on the nighttime flux decomposition method (xxx ref) (`NT' in the table, variable \texttt{GPP\textunderscore NT\textunderscore VUT\textunderscore REF} in FLUXNET 2015 data). Alternative GPP data used based on the daytime flux decomposition method (xxx ref) (`DT' in the table, variable \texttt{GPP\textunderscore DT\textunderscore VUT\textunderscore REF}), and based on an alternative method by Davis et al. (xxx unpublished??? xxx) (`Ty' in the table). For setups ORG, BRC, FULL, FULL\textunderscore FPARitp, and FULL\textunderscore EVI, data used for the model calibration is from all dates where (cleaned, see Section \ref{sec:datafiltering}) `NT' data is available. For setups FULL\textunderscore DT, FULL\textunderscore Ty, and FULL\textunderscore NTsub, data used for calibration is from all dates where data is available for all methods `DT', `NT', and `Ty'. `SM limit.' refers to whether or not soil moisture limitation (see Section \ref{sec:smlimit} is accounted for. `QYE(T)' refers to whether the temperature dependence of quantum yield efficiency after Bernacchi et al., 2003 (xxx add bibref) is accounted for. Column `QUE' specifies the calibrated value for quantum yield efficiency ($\varphi$), columns `a' and `b' specify the calibrated values for variables $a$ and $b$ in Eq. \ref{eq:y0}.}
+\label{tab:setups}
+\end{table}
+
+\clearpage
+
+\subsection{Model calibration}
+\label{sec:calib}
+The model calibration is restricted to the parameters determining the quantum efficiency of photosynthesis ($\widehat{\phi_0}$ or $\widehat{c_T}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity, quantified by AET/PET (parameters $\widehat{a_{\theta}}$ and $\widehat{a_{\theta}}$). We used  Generalised Simulated Annealing from the GenSA R package (xxx ref gensa) to search model parameters that minimise the root mean square error (RMSE) between observed and simulated daily GPP values. This algorithm is particularly suited find global minima of non-linear objective functions and a large number of local minima. 
+
+\subsection{Forcing data}
+
+\subsubsection{fAPAR}
+\label{sec:greennessdata}
+
+Different datasets were used to define fAPAR (Eq. \ref{eq:luemodel}). The standard dataset is MODIS FPAR MCD15A3H, collection 6 (xxx ref), which is given at a resolution of 500 m and 4 days. The data was filtered to remove data points where significant clouds were present, suspicious values equal to 1.00, and outliers (outside three times the inter-quartile range). Filtered values were replaced by the mean value for the respective day-of-year. Daily values were derived using a cubic smoothing spline (function \texttt{smooth.spline()} with parameter \texttt{spar=0.01} in R xxx ref Rcoreteam). MODIS EVI MOD13Q1 data, collection 6 (xxx ref), given at a resolution of 250 m and 8 days, was filtered based on the summary quality control flag, removing "cloudy" pixels. Gaps were filled and data splined to daily values as for FPAR MOD13Q1. All greenness data were downloaded from Google Earth Engine using the \texttt{google\textunderscore earth\textunderscore engine\textunderscore subsets} library (ref xxx gee subset). 
+
 \subsubsection{PPFD}
+\label{sec:ppfd}
+
 The daily photosynthetically active photon flux density (PPFD) is calculated from shortwave downwelling radiation as 
 \begin{equation}
     \text{PPFD} = 2.04 \cdot R_{\text{SW}} 
 \end{equation}
-$R_{\text{SW}}$ is provided by WATCH-WFDEI in units of W m$^{-2}$. The factor 2.04 (units: $\mu$mol J$^{-1}$) is adopted from SPLASH (Meek et al., 1984, see Davis et al., 2017). PPFD is converted to units of mol m$^{-2}$ d$^{-1}$ by multiplication with $(10^{-6} \cdot 60 \cdot 60 \cdot 24)$.
+$R_{\text{SW}}$ is incoming shortwave radiation from daily FLUXNET 2015 data (variable \texttt{SW\textunderscore IN\textunderscore F}). PPFD is converted to units of mol m$^{-2}$ d$^{-1}$.
 
-\section{Evaluation data description}
+\subsubsection{VPD}
+\label{sec:vpd}
 
-\subsection{GPP target data uncertainty: DT, NT, Ty}
+Vapour pressure deficit (VPD, $D$ in model derivation sections \ref{sec:theory}) is taken from daily FLUXNET 2015 data (variable \texttt{VPD\textunderscore F}) and represents means over half-hourly data. VPD is converted to Pa. 
 
-\subsection{Site selection}
+% is calculated from vapour pressure (CRU) or specific humidity (WATCH-WFDEI) input data. In general, $D$ is the difference between actual and saturation vapour pressure:
+% \begin{equation}
+%     D = e_a - e_s
+% \end{equation}
+% We calculate saturation vapour pressure ($e_s$, in Pa) following Allen et al. (2005) as a function of temperature  as
+% \begin{equation}
+% e_s = 611 \; \exp \left( {\frac{17.27\;T_C}{T_C+237.3}} \right)
+% \end{equation}
+% $T_C$ is the temperature expressed in units of degrees Celsius. Note that Allen et al. (2005) use 6.108 instead of 6.11. The Python implementation uses daily maximum and daily minimum temperature, which is equivalent to above formulation with $T=(T_{\text{min}}+T_{\text{max}})/2$. $e_a$ is provided by CRU as an input dataset. WATCH-WFDEI provides specific humidity data ($q$), which can be converted to the mass mixing ratio of water vapor to dry air ($w$) (dimensionless) by
+% \begin{equation}
+%     w = \frac{q}{1-q}
+% \end{equation}
+% and finally to actual vapour pressure by
+% \begin{equation}
+%     e_a = P \frac{w R_v}{R_d + w R_v}
+% \end{equation}
+% where $P$ is the atmospheric pressure (Pa), $R_v$ is the specific gas constant for water vapour and $R_d$ is the specific gas constant for dry air. The specific gas constants are calculated from the universal gas constant $R$ and the molecular mass $M$ as $R_{\text{specific}}=R/M$. ($R$ is 8.3143 J mol$^{-1}$ K$^{-1}$. The molecular mass of dry air is $M_d=$ 28.963 g mol$^{-1}$ and the molecular mass of water vapor is $M_v=$ 18.02 g mol$^{-1}$.) Atmospheric pressure is assumed to be at standard conditions (101325 Pa) corrected for local elevation (barometric formula adopted from SPLASH, Eq. 20 in Davis et al., 2017).
 
-\subsection{Data filtering}
+\subsubsection{Temperature}
+\label{sec:temperature}
+We use daily air temperature from the FLUXNET 2015 dataset (variable \texttt{T\textunderscore F}), defined as the mean over half-hourly data. This is a simplification, as we're not using leaf temperature which is more directly relevant for photosynthesis.
 
+\subsubsection{Precipitation}
+\label{sec:precipitation}
+We use precipitation data from the FLUXNET 2015 dataset (variable \texttt{P\textunderscore F}) to force the soil moisture model. Therein, net radiation and condensation is calculated based on latitude, elevation, and cloud cover.
 
-\section{Simulation protocol}
+\subsection{Evaluation data}
 
-Multiple calibration setups, multiple evaluations
+\subsubsection{GPP target data uncertainty: DT, NT, Ty}
+\label{sec:gppdata}
+
+\subsubsection{Site selection}
+\label{sec:sites}
+
+\subsubsection{Data filtering}
+\label{sec:datafiltering}
+
+\subsection{Evaluation methods}
+
+In addition to evaluating model-observation agreement statistics for GPP variability at different scales (Sec. \ref{sec:evalmethod_variability}), we evaluate the functional relationships of $\text{LUE} = \text{GPP} / (\text{PPFD} \cdot \text{fAPAR})$ with its drivers (Sec. \ref{sec:gam}), and the bias of simulated GPP during the course of drought events (Sec. \ref{sec:droughtresponse}).
+
+\subsubsection{Components of variability}
+\label{sec:evalmethod_variability}
+Different components of variability in are analyzed separately. We separate spatial (mean annual values by site), annual, and seasonal variability, and the variability in daily anomalies from the mean seasonal cycle. The seasonal variability is determined for different climatic zones (following Koeppen-Geiger classification). For each component of variability, we calculate the coefficient of determination ($R^2$), and the root mean square error (RMSE). These evaluations are implemented by the function \texttt{eval\textunderscore sofun()} provided as part of the rsofun R package (see StockerXXXX).
+
+\subsubsection{Functional relationships}
+\label{sec:gam}
+
+Functional relationships between light use efficiency and its predictors considered in the P-model are based on pooled data from all sites and available periods and are derived using Generalized Additive Models (GAMs). The procedure applied here is as follows. First, a GAM is trained on observational data using the \texttt{gam()}  function from the mgcv R package with method "REML" (xxx ref). The trained model is then applied to an evaluation dataset that is constructed separately. For each predictor $i \in (T, D, \theta)$, three vectors $\mathbf{x}_i, \mathbf{x}_j, \mathbf{x}_k$ are constructed. The first ($\mathbf{x}_i$) is an equally spaced sequence of values of predictor $i$, ranging from its minimum to its maximum in the training dataset. The length of $\mathbf{x}_i$ is $N_i=30$. The second and third vectors $\mathbf{x}_j, \mathbf{x}_k$ are constructed by randomly sampling (with replacement) $N_j=N_k=30$ values of predictors $(j,k)\neq i$, respectively, from the training dataset. Then, a matrix is constructed to contain all combinations $(x_{i,l}, x_{j,m}, x_{i,n})$ of elements of the three vectors with $l \in [1,N_i], m \in [1,N_j], n \in [1,N_k]$. Finally, quantiles are calculated for pooled data across predictors $(j,k)$ and all levels of predictor $i$. This is prodecure is implemented by the function \texttt{eval\textunderscore functionalrel()} provided as part of the rsofun R package (see StockerXXXX).
+
+\subsubsection{Drought response}
+\label{sec:droughtresponse}
+The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{Stocker2018newphyt} for XXX sites (XXX days before and XXX days after drought onset are taken). Drought events are defined as "fLUE droughts", where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold.  The data specifying the timing and duration of drought events for XXX sites was downloaded from \url{http://doi.org/10.5281/zenodo.1158524}. 
 
 \section{Evaluation results}
 
@@ -392,13 +498,14 @@ We evaluate the performance of the model in capturing multiple aspects of variab
 \begin{table}
 \centering
 \begin{tabular}{lllllll}
-  \hline
+  \toprule
   Setup & xdaily & spatial & annual & seasonal & daily\_var \\ 
-  \hline
+  \midrule
   ORG & 0.65 & 0.58 & 0.57 & 0.67 & 0.23 \\ 
   BRC & 0.68 & 0.61 & 0.60 & 0.71 & 0.23 \\ 
   FULL & 0.69 & 0.63 & 0.66 & 0.70 & 0.25 \\ 
   NULL & 0.65 & 0.59 & 0.55 & 0.69 & 0.22 \\ 
+  \bottomrule
   \end{tabular}
 \caption{$R^2$ of different models and for different components of variability} 
 \label{tab:rsq}
@@ -407,17 +514,20 @@ We evaluate the performance of the model in capturing multiple aspects of variab
 \begin{table}
 \centering
 \begin{tabular}{lllllll}
-  \hline
+  \toprule
   Setup & xdaily & spatial & annual & seasonal & daily\_var \\ 
-  \hline
+  \midrule
   ORG & 2.29 & 483 & 461 & 2.00 & 1.69 \\ 
   BRC & 2.18 & 458 & 440 & 1.88 & 1.69 \\ 
   FULL & 2.14 & 445 & 407 & 1.91 & 1.70 \\ 
   NULL & 2.28 & 476 & 478 & 1.94 & 1.66 \\ 
+  \bottomrule
   \end{tabular}
 \caption{RMSE of different models and for different components of variability} 
+\label{tab:rmse}
 \end{table}
 
+\clearpage
 
 \subsection{X-daily values}
 
@@ -427,7 +537,7 @@ Performance of the model is improved from ORG ($R^2=0.65$, RMSE$=2.29$), to BRC 
     \centering
     \includegraphics[width=0.7\textwidth]{fig/modobs_xdaily_FULL.pdf}
     \includegraphics[width=0.7\textwidth]{fig/modobs_xdaily_NULL.pdf}
-    \caption{Correlation of observed vs. modelled GPP values of all sites pooled, mean over 10-day periods.}
+    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 10-day periods.}
     \label{fig:modobs_xdaily}
 \end{figure}
 
@@ -441,7 +551,7 @@ Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE
     \centering
     \includegraphics[width=0.7\textwidth]{fig/modobs_spatial_annual_FULL.pdf}
     \includegraphics[width=0.7\textwidth]{fig/modobs_spatial_annual_NULL.pdf}
-    \caption{}
+    \caption{Correlation of modelled and observed annual GPP in simulation FULL (top) and the NULL model (bottom). The red line and text are based on means across years by site and represents spatial (across-site) variations. Black lines and text are based on annual values, one line for each site. Lines represent linear regressions. $R^2$ and RMSE statistics for annual values (black text) are based on pooled data from all sites.}
     \label{fig:modobs_spatialannual}
 \end{figure}
 
@@ -454,21 +564,23 @@ Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE
  by climate zone, FULL/ORG/BRC, NULL
  
 \begin{table}
+\caption{Description of Koeppen-Geiger climate zones and number of sites for which data is available per climate zone.} 
 \centering
 \begin{tabular}{lllrl}
-  \hline
+  \toprule
   Code & Hemisphere & N & Description \\ 
-  \hline
-  Cfb & north & 32 & Warm temperate fully humid with warm summer \\ 
-  Dfc & north & 25 & Snow fully humid cool summer \\ 
-  Csa & north & 20 & Warm temperate with dry \\ 
-  Dfb & north & 18 & Snow fully humid warm summer \\ 
-  Cfa & north & 12 & Warm temperate fully humid with hot summer \\ 
-  ET & north & 8 & Polar tundra \\ 
-  Aw & south & 7 & Equatorial savannah with dry winter \\ 
-  BSk & north & 5 & Arid Steppe cold \\ 
-  Cfb & south & 5 & Warm temperate fully humid with warm summer \\ 
+  \midrule
+   Cfb & north & 32 & Warm temperate fully humid with warm summer \\ 
+   Dfc & north & 25 & Snow fully humid cool summer \\ 
+   Csa & north & 20 & Warm temperate with dry \\ 
+   Dfb & north & 18 & Snow fully humid warm summer \\ 
+   Cfa & north & 12 & Warm temperate fully humid with hot summer \\ 
+   ET & north & 8 & Polar tundra \\ 
+   Aw & south & 7 & Equatorial savannah with dry winter \\ 
+   BSk & north & 5 & Arid Steppe cold \\ 
+   Cfb & south & 5 & Warm temperate fully humid with warm summer \\ 
    Csb & north & 5 & Warm temperate with dry \\ 
+  \midrule
    Dfa & north & 4 & Snow with fully humid hot summer \\ 
    BSh & south & 3 & Arid Steppe hot \\ 
    Bwk & south & 3 &  \\ 
@@ -485,9 +597,9 @@ Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE
    Cfa & south & 1 & Warm temperate fully humid with hot summer \\ 
    Csa & south & 1 & Warm temperate with dry \\ 
    Cwb & north & 1 & Warm temperate with dry winter and warm summer \\ 
-   \hline
+   \bottomrule
   \end{tabular}
-\caption{Description of Koeppen-Geiger climate zones and number of sites per climate zone } 
+  \label{tab:kgclimate}
 \end{table}
 
  \begin{figure}[!ht]
@@ -498,8 +610,8 @@ Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE
 \includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Cfbnorth_all.pdf}\\
 \includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Cfbsouth_all.pdf}
 \includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Csanorth_all.pdf}
-    \caption{}
-    \label{fig:modobs_spatialannual}
+    \caption{Mean seasonal cycle. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent different model setups. The red band represents 33/66 \% quantiles for the model setup `FULL'. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}), and $N$ given in the top right corner gives the number of sites within the respective climate zone for which data was used. Only climate zones are shown here for which data from at least five sites was available.}
+    \label{fig:season}
 \end{figure}
 
  \begin{figure}[!ht]
@@ -508,31 +620,97 @@ Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE
 \includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfbnorth_all.pdf}\\
 \includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfcnorth_all.pdf}
 \includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_ETnorth_all.pdf}
-    \caption{}
-    \label{fig:modobs_spatialannual}
+    \caption{Continued from Fig. \ref{fig:season}}
+    \label{fig:season2}
 \end{figure}
 
-
+\clearpage
 
 \subsection{Daily anomalies}
-scatter and histogram: FULL, NULL
+
+ \begin{figure}[!ht]
+    \centering
+%\includegraphics[width=0.4\textwidth]{fig/modobs_anomalies_daily_NULL.pdf}
+%\includegraphics[width=0.4\textwidth]{fig/modobs_anomalies_daily_FULL.pdf}\\
+%\includegraphics[width=0.4\textwidth]{fig/hist_anomalies_daily_NULL.pdf}
+%\includegraphics[width=0.4\textwidth]{fig/hist_anomalies_daily_FULL.pdf}
+    \caption{Daily anomalies from the mean seasonal cycle. Top row: The cloud of points illustrates daily anomalies from the mean seasonal cycle, blue lines are linear regressions for each site, and the red line is the linear regression of all data pooled. Bottom row: Histogram of daily anomalies from the mean seasonal cycle in the respective model and observations.}
+    \label{fig:modobs_anomalies}
+\end{figure}
+
+\clearpage
 
 \subsection{Greenness data}
-: EVI, FPAR, FPARitp
-spatial/annual
-Seasonality for subset of zones (boreal, temperate, arid)
+
+Model predictions are highly sensitive to the greenness data used as model forcing. We investigated whether certain aspects of model-data disagreement (using standard splined MODIS FPAR data as forcing) can be resolved when alternative greenness forcing data is applied. As alternatives, we used MODIS EVI and a linearly interpolated version of MODIS FPAR. In particular, we investigated the following aspects of model-data disagreement:
+\begin{itemize}
+    \item Early season GPP overestimation in Dfb and Dfc north 
+    \item Underestimation of GPP in mid-season in Cfb north
+    \item Underestimation of peak-season GPP in Aw south
+\end{itemize}
+
+ \begin{figure}[!ht]
+    \centering
+\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfb_north_greenness.pdf}
+\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfc_north_greenness.pdf}\\
+\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Cfb_north_greenness.pdf}
+\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Aw_south_greenness.pdf}
+    \caption{Mean seasonal cycle for model setus with different greenness forcing data. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent model setups, forced with different greenness data. The red band represents 33/66 \% quantiles for the model setup `FULL'. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}), and $N$ given in the top right corner gives the number of sites within the respective climate zone for which data was used. Climate zones shown here are illustrative examples.}
+    \label{fig:season_greenness}
+\end{figure}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{fig/modobs_spatial_annual_FULL.pdf}
+    \includegraphics[width=0.7\textwidth]{fig/modobs_spatial_annual_EVI.pdf}
+    \caption{Correlation of modelled and observed annual GPP for model setups using different greenness forcing data (MODIS FPAR MCD15A3H, splined in `FULL' and MODIS EVI MOD13Q1 in `EVI'). The red line and text are based on means across years by site and represents spatial (across-site) variations. Black lines and text are based on annual values, one line for each site. Lines represent linear regressions. $R^2$ and RMSE statistics for annual values (black text) are based on pooled data from all sites.}
+    \label{fig:modobs_spatialannual_greenness}
+\end{figure}
+
+\clearpage
 
 \subsection{GPP target data}
-Seasonality
 
-\subsection{Overview statistics}
-R2 table, RMSE table
+Are certain aspects of model-data disagreement related to uncertainty in the GPP flux decomposition? Above, we used NT data for calibration and evaluation. We additionally tested using DT and GePiSaT flux decomposition. Note that this evaluation is done only with a subset of the sites and data points from above, using only dates for which data is available in all three datasets. Therefore NT evaluations, repeated here, are not identical to the ones above. 
+\begin{itemize}
+    \item Early season GPP overestimation in Dfb and Dfc north 
+    \item Peak-season GPP overestimation in Csa north
+    \item Underestimation of peak-season GPP in Aw south
+\end{itemize}
+
+\begin{figure}[!ht]
+    \centering
+%\includegraphics[width=0.5\textwidth]{fig/modobs_xdaily_NT.pdf}
+%\includegraphics[width=0.5\textwidth]{fig/modobs_xdaily_DT.pdf}
+%\includegraphics[width=0.5\textwidth]{fig/modobs_xdaily_Ty.pdf}
+    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 10-day periods, determined from comparing respectively calibrated models to different observational GPP data (based on different flux decomposition methods, `DT' for the daytime method, `NT' for the nighttime method and `Ty' for the method by Davis et al. (xxx unpublished?))}
+    \label{fig:modobs_10d_gppdata}
+\end{figure}
+
+\clearpage
 
 \subsection{Functional relationships}
 
+\begin{figure}[!ht]
+\includegraphics[width=0.45\textwidth]{fig/functionalrel_gam_temp.pdf}
+\includegraphics[width=0.45\textwidth]{fig/functionalrel_gam_vpd.pdf}
+\includegraphics[width=0.45\textwidth]{fig/functionalrel_gam_soilm.pdf}
+    \caption{Functional relationship of LUE in response to temperature, VPD, and soil moisture. Functional relationships in different observational data (`NT', `DT', `Ty') are determined by GAMs. `P-model, GAM' is determined from the model outputs for the same data points as `NT', `DT', and `Ty'. `P-model' is determined from applying the model directly. A more detailed description of the method is given in Section \ref{sec:gam}}
+    \label{fig:functionalrel}
+\end{figure}
+
+\clearpage
 
 \subsection{Drought response}
 
+\begin{figure}[!ht]
+    \centering
+\includegraphics[width=0.8\textwidth]{fig/droughtresponse.pdf}
+    \caption{}
+    \label{fig:modobs_droughtresponse}
+\end{figure}
+
+\clearpage
 
 % \subsubsection{VPD}
 
@@ -606,7 +784,7 @@ The features of variability in GPP, for which model-observation agreement is cal
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/modobs_spatial.pdf}
+    %\includegraphics[width=0.8\textwidth]{fig/modobs_spatial.pdf}
     \caption{Correlation of observed vs. modelled mean annual GPP by site.}
     \label{fig:modobs_spatial}
 \end{figure}
@@ -618,7 +796,7 @@ The features of variability in GPP, for which model-observation agreement is cal
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/modobs_anomalies_annual.pdf}
+    %\includegraphics[width=0.8\textwidth]{fig/modobs_anomalies_annual.pdf}
     \caption{Correlation of observed vs. modelled annual GPP anomalies from mean across multiple years.}
     \label{fig:modobs_iav}
 \end{figure}
@@ -630,7 +808,7 @@ The features of variability in GPP, for which model-observation agreement is cal
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{fig/modobs_spatial_annual.pdf}
+    %\includegraphics[width=0.8\textwidth]{fig/modobs_spatial_annual.pdf}
     \caption{Spatial and annual correlation of observed over modelled annual GPP by site.}
     \label{fig:modobs_spatialannual}
 \end{figure}
@@ -813,6 +991,254 @@ The features of variability in GPP, for which model-observation agreement is cal
   \hline
 \caption{Sites used for evaluation. Lon. is longitude, negative values indicate west longitude; Lat. is latitude, positive values indicate north latitude; Veg. is vegetation type: deciduous broadleaf forest (DBF); evergreen broadleaf forest (EBF); evergreen needleleaf forest (ENF); grassland (GRA); mixed deciduous and evergreen needleleaf forest (MF); savanna ecosystem (SAV); shrub ecosystem (SHR); wetland (WET).} 
 \end{longtable}
+
+%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
+%% PART 3.2.2 -- RELATIVE VISCOSITY OF WATER
+%% //////////////////////////////////////////////////////////////////////// %%
+\subsection{Relative Viscosity of Water}
+\label{sec:eta}
+The viscosity of water at a given temperature and pressure, $\eta$, may be calculated based on the methodology of \cite{huber09}. 
+The relative viscosity of water with respect to its value at 25 ${}^\circ$C, $\eta^\ast$, is calculated by the following ratio:
+%% ---------------------------------------------------------------%%
+%% eq:ns | Relative viscosity of water
+%% ---------------------------------------------------------------%%
+\nomenclature{$\eta^\ast$}{relative viscosity of water [unitless]}%
+\begin{equation}
+\label{eq:ns}
+    \eta^\ast = \frac{\eta}{\eta_{25}}
+\end{equation}
+
+\noindent where:\\
+\indent $\eta$ = viscosity of water at a given temperature and pressure [Pa s];\\
+\indent $\eta_{25}$ = viscosity at 25 ${}^\circ$C and standard pressure [8.90$\times 10^{-4}$ Pa s].\\
+
+%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
+%% PART 3.2.3 -- AMBIENT PARTIAL PRESSURE OF CO2
+%% //////////////////////////////////////////////////////////////////////// %%
+\subsection{Ambient Partial Pressure of CO$_2$}
+\label{sec:ca}
+The partial pressure of CO$_2$, $c_a$, is calculated based on the observed annual atmospheric CO$_2$ concentration (see \S \ref{sec:gepnoaa}). 
+The conversion can be done knowing the total atmospheric pressure, $P_{atm}$, and using Dalton's Law of Partial Pressure:
+%% ---------------------------------------------------------------%%
+%% eq:pp | Partial Pressure Convertion
+%% ---------------------------------------------------------------%%
+\begin{equation}
+\label{eq:pp}
+    p_x = 1\times 10^{-6}\; ppm_x\; P_{atm}
+\end{equation}
+
+\noindent where:\\
+\indent $p_x$ = partial pressure of gas \textit{x} [Pa];\\
+\indent $ppm_x$ = parts-per-million concentration of gas \textit{x} [ppm];\\
+\indent $P_{atm}$ = total atmospheric pressure [Pa].\\
+
+\noindent For instances when $P_{atm}$ is unknown, the elevation-dependent atmospheric pressure may be computed using the Barometric Formula, assuming a linear decrease in temperature with height within the troposphere and a mean adiabatic lapse rate \parencite{berberan97}:
+%% ---------------------------------------------------------------%%
+%% eq:pz | Atmospheric pressure as a function of elevation
+%% ---------------------------------------------------------------%%
+\nomenclature{$P_{atm}$}{total atmospheric pressure [Pa]}%
+\begin{equation}
+\label{eq:pz}
+    P_{atm}\left( z \right) = P_{\circ} \left( 
+    	1 - \frac{L\; z}{T_{\circ}} 
+    \right)^{g\; M_a\; \left(R_u\; L\right)^{-1}}
+\end{equation}
+
+\noindent where:\\
+\indent $z$ = altitude above mean sea level [m];\\
+\indent $g$ = standard gravity [9.80665 m s$^{-2}$];\\
+\indent $P_{\circ}$ = base atmospheric pressure [101325 Pa];\\
+\indent $L$ = mean adiabatic lapse rate [0.0065 K m$^{-2}$];\\
+\indent $T_{\circ}$ = base temperature [288.15 K];\\
+\indent $M_a$ = molecular weight for dry air [0.028963 kg mol$^{-1}$];\\
+\indent $R_u$ = universal gas constant [8.3145 J mol$^{-1}$ K$^{-1}$].\\
+
+%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
+%% PART 3.2.4 -- VAPOR PRESSURE DEFICIT
+%% //////////////////////////////////////////////////////////////////////// %%
+\subsection{Vapor Pressure Deficit}
+\label{sec:d}
+The vapor pressure deficit, $D$, is based on the unit conversion of the observed VPD (see \S \ref{sec:gepvpd}) from kPa to Pa.
+
+%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+%% PHOTORESPIRATORY COMPENSATION POINT
+%% ///////////////////////////////////////////////////////
+\subsection{Photorespiratory Compensation Point}
+\label{sec:gs}
+The photorespiratory compensation point, $\Gamma^\ast$, is given by its value at standard temperature and atmospheric pressure $\Gamma^\ast_{25, p_0} = $ following \cite{bernacchi01xxx}, modified by temperature following an Arrhenius-type temperature response function $f_{\text{Arrh}}(T)$ with an activation energy of $\Delta H_a$, and corrected for atmospheric pressure. Values for parameters $\Gamma^\ast_{25, p_0}$, and $\Delta H_a$ are fixed and given in Tab. \ref{tab:params_fixed}.
+
+\begin{equation}
+\label{eq:gammastar}
+    \Gamma^\ast (T, z) = \Gamma^\ast_{25, p_0} \; f_{\text{Arrh}}(T) \; \frac{p(z)}{p(z_0)}
+\end{equation}
+
+
+\begin{equation}
+\label{eq:gsbasic}
+    \Gamma^\ast = \frac{O\: K_c\: V_\text{o,max}}
+                        {2\: K_o\: V_\text{c,max}}
+\end{equation}
+
+\noindent where:\\
+\indent $O$ = partial pressure of atmospheric O$_2$, [Pa];\\
+\indent $K_c$ = Michaelis-Menten constant for carboxylation [Pa];\\
+\indent $K_o$ = Michaelis-Menten constant for oxygenation [Pa];\\
+\indent $V_\text{c,max}$ = maximum rate of carboxylation [$\mu$mol~m$^{-2}$~s$^{-1}$];\\
+\indent $V_\text{o,max}$ = maximum rate of oxygenation [$\mu$mol~m$^{-2}$~s$^{-1}$].\\
+
+\noindent The temperature-dependency of $\Gamma^\ast$ is derived from the temperature dependencies of $K_c$, $K_o$, $V_\text{c,max}$, and $V_\text{o,max}$, which have been empirically solved by \cite{bernacchi01}. 
+Substituting the temperature-dependency equations for each term in Eq. \ref{eq:gsbasic}, results in the following expression:
+%% ---------------------------------------------------------------%%
+%% eq:gst | Temperature dependency of Gamma*
+%% ---------------------------------------------------------------%%
+\begin{equation}
+\label{eq:gst}
+    \Gamma^\ast = \exp \left(7.472 - \frac{\Delta H_a}{R_u\: T_k}\right) \frac{O}{2}
+\end{equation}
+
+\noindent where:\\
+\indent $\Delta H_a$ = activation energy for $\Gamma^\ast$ [37$\,$830 J mol$^{-1}$];\\
+\indent $R_u$ = universal gas constant [8.3145 J mol$^{-1}$ K$^{-1}$];\\
+\indent $O$ = partial pressure of atmospheric O$_2$, [Pa];\\
+\indent $T_k$ = leaf temperature [K].\\
+
+\noindent To account for changes in the atmospheric pressure, the partial pressure of O$_2$ may be expressed in terms of molar fraction based on Dalton's Law (see Eq. \ref{eq:pp}):
+%% ---------------------------------------------------------------%%
+%% eq:gstpa | Temperature & pressure dependency of Gamma*
+%% ---------------------------------------------------------------%%
+\begin{equation}
+\label{eq:gstpa}
+    \Gamma^\ast = 5\times 10^{-7}\: ppm_{O_2}\: P_{atm}\: \exp \left(7.472 - \frac{\Delta H_a}{R_u\: T_k}\right)
+\end{equation}
+
+\noindent where $ppm_{O_2}$ is the molar fraction of atmospheric O$_2$. Assuming a constant value for $ppm_{O_2}$ (i.e., 209476 ppm), $\Gamma^\ast$ may be simplified to:
+%% ---------------------------------------------------------------%%
+%% eq:gstpb | Temperature & pressure dependency of Gamma*
+%% ---------------------------------------------------------------%%
+\begin{equation}
+\label{eq:gstpb}
+    \Gamma^\ast = \exp \left(5.216 - \frac{\Delta H_a}{R_u\: T_k}\right)\: P_{atm}
+\end{equation}
+
+\noindent where:\\
+\indent $\Delta H_a$ = activation energy for $\Gamma^\ast$ [37$\,$830 J mol$^{-1}$];\\
+\indent $R_u$ = universal gas constant [8.31447 J mol$^{-1}$ K$^{-1}$];\\
+\indent $P_{atm}$ = atmospheric pressure [Pa];\\
+\indent $T_k$ = leaf temperature [K].\\
+
+\noindent Due to a general lack of understanding, the leaf temperature in Eq. \ref{eq:gst}, $T_k$, may be substituted by the ambient air temperature, $T_{air}$, in units of Kelvin. 
+
+%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+%% MICHAELIS-MENTON COEFFICIENT
+%% ///////////////////////////////////////////////////////
+\subsection{Michaelis-Menten Coefficient of Photosynthesis}
+\label{sec:kmm}
+The Michaelis-Menten coefficient of Rubisco-limited photosynthesis is a function of the Rubisco photosynthetic rates for O$_2$ and CO$_2$ \cite{farquhar80}:
+%% ------------------------------------------------------------------------ %%
+%% eq:michaelis | Michaelis Menten coefficient
+%% ------------------------------------------------------------------------ %%
+\begin{equation}
+\label{eq:michaelis}
+	K = K_c\: \left( 1 + \frac{O}{K_o} \right)
+\end{equation}
+
+\noindent where:\\
+\indent $K_c$ = Michaelis-Menten constant for CO$_2$ [Pa];\\
+\indent $K_o$ = Michaelis-Menten constant for O$_2$ [Pa];\\
+\indent $O$ = partial pressure of atmospheric O$_2$, [Pa].\\
+
+\noindent The Michaelis-Menten constants for CO$_2$ and O$_2$ ($K_c$ and $K_o$, respectively) have temperature dependencies, which have been empirically fit to the Arrhenius function and normalized to 25~$^\circ$C \parencite{farquhar80}:
+%% ------------------------------------------------------------------------ %%
+%% eq:kcko | Michaelis Menten Kc & Ko coefficients
+%% ------------------------------------------------------------------------ %%
+\nomenclature{$K_c$}{Michaelis-Menten constant for CO$_2$ [Pa]}%
+\nomenclature{$K_o$}{Michaelis-Menten constant for O$_2$ [Pa]}%
+\begin{subequations}
+\label{eq:kcko}
+\begin{align}
+	K_c&=K_{c25}\: \exp \left[ 
+    	\frac{\Delta H_{a,c}\: \left(T_k-298.15\right)}{298.15\: R_{u}\: T_k}
+    \right] \label{eq:kc} \\
+    K_o&=K_{o25}\: \exp \left[ 
+    	\frac{\Delta H_{a,o}\: \left(T_k-298.15\right)}{298.15\: R_{u}\: T_k}
+    \right] \label{eq:ko}
+\end{align}
+\end{subequations}
+
+\noindent where:\\
+\indent $K_{c25}$ = Michaelis-Menten constant for CO$_2$ at 25~$^{\circ}$C [Pa];\\
+\indent $K_{o25}$ = Michaelis-Menten constant for O$_2$ at 25~$^{\circ}$C [Pa];\\
+\indent $\Delta H_{a,c}$ = activation energy for carboxylation [79$\,$430 J mol$^{-1}$];\\
+\indent $\Delta H_{a,o}$ = activation energy for oxygenation [36$\,$380 J mol$^{-1}$];\\
+\indent $R_{u}$ = universal gas constant [8.31447 J mol$^{-1}$ K$^{-1}$];\\
+\indent $T_k$ = leaf temperature [K].\\
+
+\noindent Once again, leaf temperature, as in Eqns. \ref{eq:michaelis} and \ref{eq:kcko}, may be substituted by the ambient air temperature, $T_{air}$, converted to units of Kelvin. 
+
+The partial pressure values of $K_{c25}$ and $K_{o25}$ are based on the empirical temperature dependencies given by \cite{bernacchi01}, in mole fractions, converted to partial pressures by Dalton's Law (see Eq. \ref{eq:pp}):
+%% ------------------------------------------------------------------------ %%
+%% eq:kcko25 | Michaelis Menten Kc & Ko coefficients
+%% ------------------------------------------------------------------------ %%
+\nomenclature{$K_{c25}$}{Michaelis-Menten coefficient of carboxylation at 25~$^\circ$C [Pa]}%
+\nomenclature{$K_{o25}$}{Michaelis-Menten coefficient of oxygenation at 25~$^\circ$C [Pa]}%
+\begin{subequations}
+\label{eq:kcko25}
+\begin{align}
+	K_{c25}&=1\times 10^{-6} \exp \left[ 38.05 - 
+    	\frac{\Delta H_{a,c}}{298.15\: R_{u}}
+    \right]\: P_{atm} \label{eq:kc25} \\
+    K_{o25}&=1\times 10^{-3} \exp \left[ 20.30 - 
+    	\frac{\Delta H_{a,o}}{298.15\: R_{u}}
+    \right]\: P_{atm} \label{eq:ko25}
+\end{align}
+\end{subequations}
+
+\noindent The experiments to determine these values were conducted in a laboratory under ambient atmospheric conditions at the University of Illinois at Urbana-Champaign (Carl Bernacchi, personal communication, 24 March 2015) where the elevation is approximately 227 m above mean sea level. 
+The constant partial pressure of $K_{c25}$ is 39.93 Pa and the partial pressure of $K_{o25}$ is 27$\,$460 Pa (based on $P_{atm}$~=~98627~Pa).
+
+\subsubsection{Soil water holding capacity}
+
+The soil water balance is solved following the SPLASH model and accounting only for liquid water. WATCH-WFDEI $P_{\text{rain}}$ and $P_{\text{snow}}$ are summed and converted from kg m$^{-2}$ s$^{-1}$ to mm d$^{-1}$ by multiplication with $(60 \cdot 60 \cdot 24)$ s d$^{-1}$. 
+
+% I'm a bit confused. In the SPLASH documentation, we used the term 'soil holding capacity' to refer to what one may rather call the field capacity and expressed it in units of mm. What you termed 'water holding capacity, WHC' may be refered to as 'porosity' instead. We may rename terms in Eq. 77 of the SPLASH documentation (field capacity instead of soil moisture capacity) and write this as follows:
+
+% To obtain the total soil water holding capacity (WHC, in mm), we use data on soil depth ($d$, in m) and porosity ($\phi_0$, in $m_{H_{2}O}^{3} \cdot m_{Soil}^{-3}$) and calculate $W_m$ as
+% \begin{equation}
+%     W_m = \phi_0 \cdot d \cdot 10^{-3}
+% \end{equation}
+% Runoff is generated when ...
+
+
+% Where, the water holding capacity, defined as volumetric proportion, was estimated, following Hillel (1982), as the difference between field capacity and wilting point.
+% \begin{equation}
+% \text{WHC}=W_{\text{FC}}-W_{\text{PWP}}
+% \end{equation}
+
+% Field capacity and wilting point, were obtained from texture and organic matter content data, through pedotransfer functions, described in Saxton \& Rawls (2006) as follows:
+% \begin{equation}
+% W_{\text{FC}}= W_{\text{FC}}_{0}+(1.283\cdot W_{\text{FC}}_{0}^{2}-0.374\cdot W_{\text{FC}}_{0}-0.015)
+% \end{equation}
+% Where,
+% \begin{align}
+% W_{\text{FC}}_{0} &=-0.251f_{\text{sand}}+195f_{\text{clay}}+0.011f_{\text{OM}}\\                            &+0.006(f_{\text{sand}}\cdot f_{\text{OM}})\\
+%                   &-0.027(f_{\text{clay}}\cdot f_{\text{OM}})\\
+%                   &+0.452 (f_{\text{sand}}\cdot f_{\text{clay}})\\
+%                   +0.299
+% \end{align}
+% And,
+% \begin{equation}
+% W_{\text{PWP}}=W_{\text{PWP}}_{0}+(0.14\cdot W_{\text{PWP}}_{0}-0.02)
+% \end{equation}
+% Where,
+% \begin{align}
+% W_{\text{PWP}}_{0} &=0.024 f_{\text{sand}} + 0.487 f_{\text{clay}} + 0.006 f_{\text{OM}} \\
+%                   &+0.005 ( f_{\text{sand}}\cdot f_{\text{OM}} )\\
+%                   &-0.013( f_{\text{clay}}\cdot f_{\text{OM}} )\\
+%                   &+0.068( f_{\text{sand}} \cdot f_{\text{clay}} )\\
+%                   &+0.031
+% \end{align}
+% Where, $W_{\text{FC}}_{0}$ and $W_{\text{PWP}}_{0}$ are the field capacity and wilting point first solutions respectively. And, $f_{\text{sand}}$, $f_{\text{clay}}$, $f_{\text{OM}}$ are the sand, clay and organic matter contents.
+% Contents of sand, clay, organic matter and soil depth data were acquired from the ISRIC-SoilGrids web portal (ftp://ftp.soilgrids.org/data/aggregated/10km/), and resampled to 0.5$^{\circ}$ to match the meteorological data resolution.
 
 
 
