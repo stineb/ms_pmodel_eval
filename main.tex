@@ -9,6 +9,8 @@
 %  \renewcommand{\theequation}{S\arabic{equation}}
 
 \newcommand{\coo}{CO$_2$}
+\newcommand{\vcmax}{$V_{\text{cmax}}$}
+\newcommand{\jmax}{$J_{\text{max}}$}
 
 \begin{document}
 \pagestyle{headings}
@@ -27,329 +29,121 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-\begin{itemize}
-    \item Water-carbon trade-off, water use efficiency, $\chi = c_i:c_a$
-    \item Acclimation, time scales
-    \item Light use efficiency concept
-    \item Optimality concept for predicting $\chi$ and LUE.
-    \item Evaluation of predicted LUE and GPP (using prescribed greenness) with measured GPP at FLUXNET sites.
-    \item Evaluation focuses on different components of variability (spatial, annual, seasonal, daily anomalies), functional relationships, and the response to drought.
-    \item This paper describes the theory, the model implementation, and provides an comprehensive evaluation of predicted LUE and GPP with data from flux measurements.
-    \item Model benchmarking is challenging in general due to errors introduced by uncertain model forcing data and by uncertainties in the observational data used for evaluation. We address these points here with an additional focus on uncertainties in the greenness data (model forcing), and uncertainties in the GPP data, derived from different flux decomposition methods, used for evaluation. 
-    \item Sensitivities of processes to environmental conditions are key. It's generally challenging to derive them from continuous, not experimentally disturbed measurements. Here, we investigate functional relationships, determined from observations using Generalized Additive Models, and the response of LUE and GPP to drought, based on the soil moisture droughts detected by Stocker et al. (2018).
-    \item General patterns in model-data mismatch. Additional simulations conducted to investigate whether these can be resolved.
-    \item Value of this model is in providing a mechanistic and optimality-based LUE model that can be driven with observed greenness. Hence providing predicitions, grounded in basic ecological principles, and relying on a mimimum of prescribed model parameters.
-\end{itemize}
+Realistic, reliable and robust estimates of photosynthesis are crucial to understand variations in the carbon cycle, monitor forest and cropland productivity, and predict impacts of global environmental change on ecosystem functioning. Understanding how photosynthetic rates depend on temperature, humidity, solar radiation, CO$_2$ and soil moisture is at the core of this challenge and quantitative predictions of photosynthetic CO$_2$ assimilation over a wide range of conditions and spatial scales are the target of a range of photosynthesis models. Most widely used mechanistic photosynthesis models are funded in the Farquhar-von Caemmerer-Berry (FvCB) Model for C3 plants \citep{farquhar80, voncaemmerer81}. This formulation is used as an integral part of practically all Dynamic Vegetation Models (DVMs) and Earth System Models (ESMs) in use today (xxx cite some review?) and, in combination with stomatal conductance ($g_s$) models \citep{ball87, leuning95pce, medlyn11gcb}, couples water and carbon fluxes in and out of stomates at the leaf surface. In its essence, the FvCB model describes the saturating relationship between leaf-internal CO$_2$ concentrations ($c_i$) and assimilation ($A$), and how this relationship depends on absorbed photosynthetically active radiation (APAR). It simulates $A$ as the minimum of a light-limited and a Rubisco-limited assimilation rate. 
 
-\section{Methods}
+Although this can be considered a standard model for leaf-scale photosynthesis, DVM and ESM model results for ecosystem-level fluxes and their response to environmental factors remain divergent \citep{rogers17}. This is, i.a., due to assumptions that have to be made regarding photosynthetic parameters for which the FvCB model itself makes no prediction. This concerns in particular the maximum rate of Rubisco carboxylation (\vcmax\ ) and the maximum rate of electron transport (\jmax\ ) for ribulose-1,5-bisphosphate (RuBP) regeneration, which together determine the relationship between $c_i$ and $A$ in the FvCB model. 
 
-\subsection{Theory}
+Common approaches for determining the values of \vcmax\ and \jmax\ in DVMs are to prescribe fixed values of \vcmax\ and \jmax\  per plant functional type and attempt to simulate their distribution in space (Sitch et al. 2003) (more refs), or to use empirical relationships between leaf N and \vcmax\ and simulate leaf N internally (refs). While the FvCB model describes a non-linear relationship between (instantaneous) assimilation and absorbed light, it has been known for a long time that ecosystem production, integrated over longer time periods (weeks to months), scales linearly with the APAR (Monteith 1972). This observation underlies the light use efficiency (LUE) model which describes ecosystem-level photosynthesis (gross primary productivity, GPP) as the product of APAR and LUE as
+\begin{equation}
+\label{eq:luemodel}
+\text{GPP} = \text{PAR} \cdot \text{fAPAR} \cdot \text{LUE} \;,
+\end{equation}
+where PAR is the incident photosynthetically active radiation and fAPAR is the fraction of absorbed PAR. The LUE model serves as a simple and robust basis for a number of observation-driven GPP models that use fAPAR and PAR based on remote sensing data and combine this with different approaches for simulating LUE \citep{running04, zhang17scidat, field95rse}, or for forest growth models \citep{landsberg97fem}. Other remote sensing data-based models \citep{jiang16rse} apply the FvCB model in combination with vegetation cover and type data and prescribed \vcmax\ for a set of plant functional types.
+
+The model described here unifies the two approaches (FvCB and LUE models) by assuming that the photosynthetic machinery tends to coordinate \vcmax\ and \jmax\  in order to operate close to the intersection of the light-limited and Rubisco-limited assimilation rates (\textit{Coordination Hypothesis}, \cite{maire12po}). Daily-to-monthly average assimilation rates can thus be described as linear functions of absorbed PAR in the form of a LUE model (Eq. \ref{eq:lue}). Our model further assumes an optimality principle that balances the C cost of maintaining the transpiration and carboxylation (\vcmax\ ) capacities and thus arrives at a prediction for how \vcmax\ and $g_s$ acclimate to the environment and determine the ratio of leaf-internal to ambient CO$_2$ ($c_i:c_a = \chi$), given temperature ($T$), water vapour pressure deficit (VPD $= D$), atmospheric pressure ($p$) and ambient CO$_2$ concentrations.
+
+Taken together, the model presented here (thereafter referred to as the \textit{P-model}), provides a consistent, optimality-based theory for predicting the acclimation of leaf-level photosynthesis to its environment \citep{prentice14ecollett} and for simulating LUE while relying on a minimum of prescribed parameters \citep{wang17natpl}. In combination with prescribed PAR and remotely sensed fAPAR, it can thus be used to estimate GPP across diverse environmental conditions. Therefore, the P-model has the advantage over other widely used data-driven GPP models (e.g., MODIS, FLUXCOM) in that it accounts for effects by changing CO$_2$, and that it uses first principles to mechanistically resolve effects by $T$, $D$ and $p$, and thereby \textit{predicts} key photosynthetic parameters instead of relying on prescribed values. The theoretical approach is described in more detail in Section \ref{sec:theory} and a full derivation of equations is given in Appendix XXX. 
+
+The theory underlying the P-model has been described before by \cite{prentice14ecollett} and has been used to predict variations of $\chi$ \citep{wang17natpl}, \vcmax\ \citep{smith19ecollett}, and leaf nitrogen \citep{dong16bg} across environmental gradients and to simulate how changes in primary productivity have driven the terrestrial C sink over the past decades \citep{keenan17natcomm}. The purpose of the present paper is two-fold. First, it provides a recapitulation of the P-model`s underlying theory, and provides a complete description and reference for its implementation, along with version-controlled and open access model code (Fortran 90, xxx). A companion paper describes an R package to run the P-model, which provides the software for wrapping its implementation in different languages within a common framework and thereby serves to facilitate the model`s application in a wide variety of contexts and research communities. Second, this paper provides a comprehensive evaluation of the P-model as a LUE model for simulating GPP, using data from flux measurements (FLUXNET Tier 1 dataset). The evaluation focuses on different components of variability (spatial, annual, seasonal, daily anomalies), functional relationships to $T$ and $D$, and the GPP response to soil moisture drought.
+
+Here, we evaluate three P-model versions. The version `ORG' is the P-model in its ``original'' form, as used in \cite{wang17natpl} and \cite{keenan17natcomm}. Note however, that their implementation of the basic equations may differ slightly from the implementation presented here. A temperature-dependence of the quantum yield efficiency, held constant for previous publications using the P-model, was introduced in model version `BRC', based on the formulation given by \cite{bernacchi03pce}. Furthermore, Stocker et al. (2019) (xxx addref) identified a general bias of simulated GPP in the P-model (as well as in other remote sensing-based GPP models) that is closely related to the timing and magnitude of soil moisture effects on LUE. Therefore, we tested an additional P-model version (`FULL') that additionally uses an empirical soil moisture stress function. All versions are benchmarked against a null model (`NULL') where LUE is assumed to be constant in time and uniform across space. An additional null model (`NULLpft') is tested where a constant LUE is assumed for each plant functional types - an approach often employed by remote sensing-based GPP models (xxx ref).
+
+Benchmarking of data-driven models is challenging due to errors introduced by uncertain model forcing data \citep{ryu19rse} (climate and fAPAR data differences between sources) and by uncertainties in observational data used for evaluation. We address these two points here with an additional focus on uncertainties in the fAPAR data, which is used as model forcing (Sec. XXX), and assess the robustness of model evaluation subject to uncertainties in the GPP data, derived from different flux decomposition methods (Sec. XXX). Accurately simulating sensitivities of processes to environmental conditions is key for reliable model predictions. However, relying just on continuous, not experimentally disturbed measurements, as done here with FLUXNET data, it's challenging to derive functional relationships and to assess the sensitivity of simulated processes to single factors, in separation from co-varying drivers. Therefore, we investigate functional relationships, determined from observations using Generalized Additive Models (Sec. XXX), and assess the response of simulated GPP to known periods of soil moisture droughts, detected by \cite{stocker18newphyt} (Sec. XXX).
+
+\section{Theory}
 \label{sec:theory}
-The P-model centers around a prediction for the ratio of leaf-internal to ambient \coo ($c_i : c_a = \chi$) governed by the trade-off between the costs arising from the maintenance of carboxylation capacity ($V_{\mathrm{cmax}}$) and transpiration ($E$). 
-It is founded on the standard model for C3 plant photosynthesis (Section \ref{sec:farquhar}), the coordination hypothesis (Section \ref{sec:coordination}) and the least-cost hypothesis (Section \ref{sec:least-cost}).
 
-\textit{The following derivation and text is adopted and modified from Wang Han et al., 2017.}\\
+The theory underlying the P-model has been described by \cite{wang17natpl} and the derivation of equations is given therein. It is presented here again for completeness of the present model description. Please cite \cite{wang17natpl} when referring to the model theory. 
 
-\subsection{The standard model of C3 plant photosynthesis}
-\label{sec:farquhar}
-Following the Farquhar model for photosynthesis of C3 plants, instantaneous assimilation rates $A$ are limited either by the capacity of Rubisco for carboxylation of RuBP or the electron transport rate for the regeneration of RuBP. 
-The Rubisco-limited photosynthetic rate $A_C$ is given by:
+\subsection{Balancing carbon and water costs}
+\label{sec:watercarbon}
+The P-model centers around a prediction for the optimal ratio of leaf-internal to ambient \coo\ concentrations $c_i:c_a$ (termed $\chi$) that balances the costs associated with maintaining the transpiration stream ($E/A$) and the cost of maintaining a given carboxylation capacity ($V_{\mathrm{cmax}}/A$). The optimal balance is achieved when the two marginal costs are equal: 
 \begin{equation}
-\label{eq:rubiscolimited}
-    A_C = V_{\mathrm{cmax}} \; \frac{\chi\;c_a-\Gamma^{\ast}}{\chi\;c_a + K}
+\label{eq:optimality_chi}
+a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}\;.
 \end{equation}
-where $V_{\mathrm{cmax}}$ is the Rubisco activity, $c_a$ is the ambient partial pressure of CO$_2$, $\chi$ is the ratio of leaf-internal to ambient CO$_2$ partial pressures, $\Gamma^{\ast}$ is the \coo\ compensation point in the absence of mitochondrial respiration, and $K$ is the effective Michaelis-Menten coefficient of Rubisco for carboxylation. 
-Both $\Gamma^{\ast}$ and $K$ are influenced by the partial pressure of oxygen. 
-$V_{\mathrm{cmax}}$, $\Gamma^{\ast}$ and $K$ are temperature-dependent, following Arrhenius kinetics.
-
-The electron-transport limited photosynthetic rate $A_J$ is given by:
+Here, $a$ and $b$ are the respective unit costs. $b$ is assumed to be constant, and $a$ to scale linearly with the temperature-dependent viscosity of water $\eta(T)$. Below, we use $\beta = b / a'$, with $a = \eta^\ast a'$ and $\eta^\ast = \eta(T) / \eta(25^{\circ}\text{C})$. The optimal $\chi$ solves the above equation and, with $E = 1.6 g_s D$, and $A = g_s (1-\chi)$, and using the Rubisco-limited assimilation rate from the FvCB model:
 \begin{equation}
-\label{eq:lightlimited}
-    A_J = \phi_0 \; I\; \frac{\chi \; c_a - \Gamma^{\ast}}{\chi\;c_a + 2\Gamma^{\ast}}
+\label{eq:ac}
+A = A_C = V_{\mathrm{cmax}} \; \frac{\chi c_a-\Gamma^{\ast}}{\chi c_a + K}\; ,
 \end{equation}
-for low PPFD (I) where $\phi_0$ is the intrinsic quantum efficiency of photosynthesis. 
-With increasing PPFD, $I$ must be substituted with a saturating function of the electron-transport capacity $J_{\mathrm{max}}$; various empirical functions have been used. 
-The actual photosynthetic rate is then given by:
+the optimal $\chi$ is given by
 \begin{equation}
-    A = \min(A_C, A_J)
+\label{eq:chiopt}
+\chi = \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\;,
 \end{equation}
-
-\subsubsection{The coordination hypothesis}
-\label{sec:coordination}
-Light use efficiency (LUE) models provide a powerful method and estimate assimilation rates as a linear function of absorbed light over a given time interval. 
-But the connection between the Farquhar and LUE models is not obvious. 
-Equation \ref{eq:lightlimited} predicts that electron-transport limited photosynthesis is proportional to absorbed PPFD but only applies at relatively low PPFD, and in any case, Equation \ref{eq:rubiscolimited} for Rubisco-limited photosynthesis is expected to apply at high PPFD. 
-The conundrum is this: how can GPP (the time-integral of photosynthesis) be proportional to PPFD, which is the basis of the LUE model, if the response of photosynthesis to PPFD saturates, as it should according to the Farquhar model? This question has surfaced occasionally in the literature, but not been fully resolved. 
-Medlyn10 reviewed some alternative explanations.
- 
-One of the explanations discussed by Medlyn10 invokes the co-ordination (or co-limitation) hypothesis, which states that $V_{\mathrm{cmax}}$ of leaves at any level in the canopy acclimates spatially and temporally to the prevailing daytime incident PPFD in such a way as to be neither in excess (entailing additional, futile maintenance respiration), nor less than required for full exploitation of the available light. 
-In other words, under typical daytime condition when most photosynthesis takes place, the following is valid:
+with 
 \begin{equation}
-\label{eq:coordination}
-    A_J \approx A_C
+\label{eq:xi}
+\xi = \sqrt{\frac{\beta (K+\Gamma^{\ast})}{1.6 \eta^{\ast}}}\;.
 \end{equation}
-This hypothesis also requires that $J_{\mathrm{max}}$ maintain a ratio to $V_{\mathrm{cmax}}$ such that strong limitation by $J_{\mathrm{max}}$ is avoided. 
-Evidence for the co-ordination hypothesis was presented by Haxeltine and Prentice11, and Dewar12, who noted that it can explain many otherwise unexplained responses of C3 plants to environmental changes: including changes in leaf C:N ratios along environmental gradients, and the widely observed reduction of $V_{\mathrm{cmax}}$ under experimentally increased atmospheric CO2. More recently Maire et al.13 showed very good agreement between typical daytime values of $A_J$ and $A_C$ as calculated under the prevailing growth conditions for 31 species (293 data points) based on published studies. 
-The co-ordination hypothesis allows a simple approximation by which equation S2 is applied to predict GPP over time scales for which acclimation of $V_{\mathrm{cmax}}$ is possible, with $I$ now representing daily, rather than instantaneous, PPFD.
+Here, $K$ is the Michaelis-Menten coefficient for Rubisco-limited assimilation (see Sec. \ref{sec:kmm}), and $\Gamma^{\ast}$ is the photorespiratory compensation point (see Sec. \ref{sec:gs}). See Appendix \ref{app:steps_watercarbon} for intermediate steps. Note that the Coordination Hypothesis has not explicitly been assumed here, but because both terms in Eq. \ref{eq:optimality_chi} are divided by $A$, the solution is independent of whether the Rubisco-limited rate $A_C$ or the light-limited rate $A_J$ (see below) is followed.
 
-\subsubsection{The least-cost hypothesis}
-\label{sec:least-cost}
-Missing from the Farquhar model is an equation to predict χ, which constrains both the Rubisco- and electron-transport limited rates of carbon fixation and therefore appears in both equations S1 and S2. 
-$\chi$ at any moment must be consistent both with the rate of carbon fixation and with the rate of diffusion of \coo\ through the stomata. 
-Although the mechanism of stomatal control is still an active research topic, there is abundant evidence that $\chi$ is closely regulated to remain within a narrow range. 
-All current Earth System Models include a 'closure' that predicts either stomatal conductance or $\chi$. 
-The most commonly used closures are the one-parameter Ball-Berry equation14 and the two-parameter Leuning equation15 (or equivalently, the ‘Jacobs closure’16). 
-Both are empirical, and incomplete in the sense that they allow $\chi$ to react only to relative humidity (Ball-Berry) or VPD (Leuning/Jacobs). 
-Although superficially similar, these equations make substantially different predictions. 
-For example, Ball-Berry allows $\chi$ to approach unity as VPD tends to zero, whereas Leuning/Jacobs caps $\chi$ at a maximum value. 
-Both equations are usually implemented with different parameter values for different PFTs, but with no strong basis for the distinctions.
-
-The least-cost hypothesis by Prentice et al. (2014), first proposed by Wright et al. (2003), states that $\chi$ should minimize the combined cost (per unit of assimilation) of maintaining the capacities for carboxylation and transpiration. 
-If $a$ and $b$ are dimensionless cost factors (maintenance respiration per unit assimilation) for the maximum rates of water transport ($E$) and carbon fixation ($V_{\mathrm{cmax}}$) respectively, the optimality criterion is:
+With this prediction for $\chi$, the equation for the light-limited assimilation rate from the FvCB model can be used to write
 \begin{equation}
-\label{eq:leastcost}
-    a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}
+\label{eq:aj}
+        A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{\chi c_a - \Gamma^{\ast}}{\chi c_a + 2\Gamma^{\ast}}}_{m} \;.
+\end{equation}
+This equation has the form of a LUE model (Eq. \ref{eq:luemodel}) in that $A_J$ scales linearly with $I_{\mathrm{abs}}$. Using Eqs. \ref{eq:xi} and \ref{eq:ciopt}, $m$ can be expressed directly as
+\begin{equation}
+\label{eq:m_lue}
+    m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}} \;.
 \end{equation}
 
-\subsubsubsection{Predicting $\chi$}
-The following section provides a derivation of optimal $\chi$ using Fick's Law, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
-Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
-According to the Fick's Law of diffusion:
-\begin{align}
-\label{eq:fick}
-    E &= 1.6 \; g_s \; D \\
-    A &= g_s \; c_a \; (1-\chi)
-\end{align}
-Therefore,
-\begin{equation}
-    E/A = \frac{1.6 \; D}{c_a\;(1-\chi)}
-\end{equation}
-The derivative term on the left-hand-side of Eq.\label{eq:leastcost} can thus be written as
-\begin{equation}
-\label{eq:partial1}
-    \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
-\end{equation}
-Using Equation \ref{eq:rubiscolimited} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:leastcost} can be written as
-\begin{equation}
-\label{eq:partial2}
-    \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}
-\end{equation}
-Using equations \ref{eq:partial1} and \ref{eq:partial2}, Eq. \ref{eq:leastcost} can be written as
-\begin{equation}
-    a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
-\end{equation}
-and solved for $\chi$:
-\begin{align}
-    \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
-    \xi &= \sqrt{\frac{b\;K}{1.6\;a}}
-\end{align}
-The exact solution, without the simplification $\Gamma^{\ast}=0$, is 
-\begin{align}
-\label{eq:chi_exact}
-    \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\\
-    \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
-\end{align}
-This can also be written as
-\begin{equation}
-\label{eq:ci}
-    c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \\ 
-\end{equation}
-\clearpage
+Eq. \ref{eq:m_lue} provides the basis for predicting \coo\ assimilation rates in the form of a LUE model (Eq. \ref{eq:luemodel}) from an optimality principle that balances water and carbon costs and that can be expressed as a function of $T$ and $p$ (both affecting $\Gamma^{\ast}$, $K$, and $\eta^\ast$), $D$, and $c_a$. This approach is applied here to simulate mean daily GPP as a function of average daytime levels of environmental factors ($I_{\mathrm{abs}}$, $T$, $p$, and $D$). However, doing so implicitly assumes that \vcmax\ acclimates so that $A_J=A_C$, or, in other words, to just use the available light under average daytime conditions. Evidence for this coordination was presented by \cite{chen93}, \cite{haxeltine96}, and \cite{maire12po}. 
 
-With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
-\begin{equation}
-\label{eq:lue}
-        A_J = \phi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
-\end{equation}
-Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
-\begin{equation}
-    m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
-\end{equation}
-This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure.
+The prediction of optimal $\chi$ implies a set of corollaries (see Appendix \ref{sec:corollary}). An estimate for stomatal conductance ($g_s$) and the intrinsic water use efficiency (iWUE = $A/g_s$) directly follow from the optimal water-carbon balance (Eq. \ref{eq:optimality_chi}). By assuming $A_J=A_C$, we can further derive \vcmax , as well as dark respiration ($R_d$), which is a function of \vcmax . Note, that \cite{smith19ecollett} used a different approach to introduce effects by \jmax\ limitation, which is not described here.
 
-\subsubsection{Introducing $J_{\mathrm{max}}$ limitation}
-Equation \ref{eq:lue} is correct only if the response of GPP ($A$) to increasing PPFD remains linear up to the co-limitation point. 
-By considering a non-rectangular hyperbola relationship between $A_J$ and $I_{\mathrm{abs}}$ (ref 26), we allow for the effect of finite $J_{\mathrm{max}}$:
+\subsection{Introducing \jmax\ limitation}
+\label{sec:jmax}
+Eq. \ref{eq:aj} assumes that the light response of $A$ is linear up to the coordination point. In reality, rates are saturating towards high light levels due to effects by the limited electron transport rate $J$, necessary for the regeneration of ribulose-1,5,- bisphosphate (RuBP), which reaches a maximum \jmax . To account for this effect, Eq. \ref{eq:aj} has to be modified. This is implemented here following the formulation by \cite{smith37}, using a non-rectangular hyperbola relationship between $A_J$ and $I_{\mathrm{abs}}$ to allow for the effect of finite $J_{\mathrm{max}}$:
 \begin{equation}
 \label{eq:ajlim}
-    A_J = \phi_0 \; I_{\mathrm{abs}} \; m \; \underbrace{ \frac{1}{\sqrt{1+ \left( \frac{4\;\phi_0\;I_{\mathrm{abs}}}{J_{\mathrm{max}}} \right)^{2}}} }_{L}
+    A_J = \varphi_0 \; I_{\mathrm{abs}} \; m \; \underbrace{ \frac{1}{\sqrt{1+ \left( \frac{4\;\varphi_0\;I_{\mathrm{abs}}}{J_{\mathrm{max}}} \right)^{2}}} }_{L}
 \end{equation}
-In the following, we aim for an expression of the limitation factor $L$ as a function of a $J_{\mathrm{max}}$ cost factor $c^{\ast}$. 
-We define two dimensionless quantities, $a_0$ and $k$:
-\begin{equation}
-\label{eq:a0}
-    a_0 = \frac{J_{\mathrm{max}}}{4\;\phi_0\;I_{\mathrm{abs}}}
-\end{equation}
-\begin{equation}
-    k = \frac{J_{\mathrm{max}}}{4\;V_{\mathrm{cmax}}}\;.
-\end{equation}
-The model equations for $A_J$ and $A_C$ can then be re-written as:
-\begin{equation}
-\label{eq:ajlim2}
-    A_J = \phi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \frac{1}{\sqrt{1+a_0^{-2}}}
-\end{equation}
-and
-\begin{equation}
-    A_C = \frac{J_{\mathrm{max}}}{4\;k} \cdot \frac{c_i - \Gamma^{\ast}}{c_i + K}
-\end{equation}
-Under the assumption of the coordination hypothesis, we set again $A_J = A_C$ and solve for $k$ to define the ratio of $J_{\mathrm{max}}$ to $V_{\mathrm{cmax}}$:
-\begin{equation}
-\label{eq:k}
-    k = \frac{c_i + 2\Gamma^{\ast}}{c_i + K} \; \sqrt{a_0^2 + 1}
-\end{equation}
-Solving Eq. \ref{eq:k} for $a_0$ and substituting this into Eq. \ref{eq:ajlim} we can express the $J_{\mathrm{max}}$ limitation factor $L$ as:
-\begin{equation}
-\label{eq:ajlim3}
-    L = \frac{1}{\sqrt{1 - \left( \frac{c_i+2\Gamma^{\ast}}{k(c_i+K)} \right)^{2}}}
-\end{equation}
-
-To obtain an estimate of the optimum value of $J_{\mathrm{max}}$ we assume that (a) there is a cost associated with $J_{\mathrm{max}}$ that is equal to the product of $J_{\mathrm{max}}$ and a constant $c$, and (b) that the value of $J_{\mathrm{max}}$ maximizes the benefit ($A_J$) minus the cost. 
-This maximum is obtained when
+Following this equation, $A_J$ is no longer linear with respect to $I_{\mathrm{abs}}$ and thus does not have the form of a LUE model. However, \jmax\ can be assumed to acclimate on longer time scales to $I_{\mathrm{abs}}$, so that the marginal gain in assimilation $A$ per unit change in \jmax\ is equal to the unit cost of maintaining \jmax .
 \begin{equation}
 \label{eq:jmaxpartial}
-    \frac{\partial A_J}{\partial a_0} = c \; \frac{\partial J_{\mathrm{max}}}{\partial a_0}\;.
+    \frac{\partial A}{\partial J_{\mathrm{max}}} = c 
 \end{equation}
-Using Eq. \ref{eq:ajlim2}, the left-hand-side of Eq. \ref{eq:jmaxpartial} is 
+The unit cost $c$ is assumed to include the maintenance of light-harvesting complexes and various proteins involved in the electron transport chain. The cost of maintaining a given \jmax\ is thus assumed to scale linearly with \jmax\ and that this proportionality is constant ($c$ is constant). By taking the derivative of Eq. \ref{eq:ajlim} with respect to \jmax\ and re-arranging terms (see Appendix XXX \ref{app:steps_jmaxlim} for intermediate steps), the \jmax\ limitation factor $L$ can be expressed as
 \begin{equation}
-    \frac{\partial A_J}{\partial a_0} = \phi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \left( a_0^{-2} + 1 \right) ^{-2/3} a_0^{-3}
+    L = \sqrt{ 1 - \left( \frac{c^\ast}{m} \right)^{2/3} }
 \end{equation}
-Using Eq. \ref{eq:a0}, the right-hand-side of Eq. \ref{eq:jmaxpartial} is 
-\begin{equation}
-    \frac{\partial J_{\mathrm{max}}}{\partial a_0} = 4 \; \phi_0 \; I_{\mathrm{abs}}\;.
-\end{equation}
-Now, we can solve Eq. \ref{eq:jmaxpartial} for $a_0^2$:
-\begin{equation}
-\label{eq:a0}
-a_0^2 = \frac{(c_i - \Gamma^{\ast})^{2/3}}{c^{2/3} \; (c_i+2\Gamma^{\ast})^{2/3}}-1
-\end{equation}
-and use this in Eq. \ref{eq:k} to solve for $k^2$:
-\begin{equation}
-\label{eq:k2}
-k^2 = (c_i+ \Gamma^{\ast})^{4/3} \; (c_i - \Gamma^{\ast})^{2/3} \; (c_i + K)^{-2} \; c^{-2/3}
-\end{equation}
-and for $c$:
-\begin{equation}
-\label{eq:c}
-    c = \frac{(c_i+2\Gamma^{\ast})^2\;(c_i-\Gamma^{\ast})}{k^3\;(c_i+K)^3}
-\end{equation}
-Eq. \ref{eq:k2} can be plugged into Eq. \ref{eq:ajlim3} to express $L$ as
-\begin{equation}
-    L = \sqrt{1-c^{2/3} \; \left( \frac{c_i+2\Gamma^{\ast}}{c_i-\Gamma^{\ast}}\right)^{2/3}  }
-\end{equation}
-Using the prediction of $c_i$ from Eq. \ref{eq:ci}, this can be written as
-\begin{equation}
-    L =  \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
-\end{equation}
-The revised LUE model thus becomes
+with $c^\ast = 4c$. Hence, $A_J$ is again expressed as a linear function of absorbed light. $c^\ast$ can be estimated from typical values of \jmax $:$\vcmax $=$ 1.88 \citep{kattge07} and $\chi =$ 0.8 \citep{lloyd94} to $c^\ast = 0.41$ \citep{wang17natpl}. The revised LUE model thus becomes
 \begin{equation}
 \label{eq:ajlim4}
-    A_J = \phi_0 \; I_{\mathrm{abs}} \; m'
+    A = \varphi_0 \; I_{\mathrm{abs}} \; m'
 \end{equation}
 with
 \begin{equation}
     m' = m \; \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
 \end{equation}
-Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq. \ref{eq:c}) c = 0.41.
 
-% \subsubsection{Corollary of the $\chi$ prediction}
-% \subsubsubsection{Stomatal conductance}
-% Stomatal conductance $g_s$ follows from the prediction of $\chi$ given by Eq. \ref{eq:chi_exact} and $g_s = A / ( c_a\;(1-\chi) )$ (from Eq. \ref{eq:fick}). Stomatal contuctance can thus be written as
-% \begin{equation}
-%     g_s = \left( 1 + \frac{\xi}{\sqrt{D}} \right) \frac{A}{c_a}
-% \end{equation}
-% This is equivalent to the form derived by Medlyn et al., 2011, apart from the $g_0$ parameter that is missing here.
+\section{Methods}
+\label{sec:methods}
 
-% $g_s$ also follows from the predictions of $A$ and $ci$, using Eq. \ref{eq:fick}. The stomatal conductance to water vapour (not CO$_2$) is:
-% \begin{equation}
-% g_s^W = \frac{1.6 \; p\; A}{c_a - c_i}
-% \end{equation}
-% With $g_s^W$ commonly expressed in units of mol H$_2$O m$^{-2}$ s$^{-1}$, $g_s$ in P-model being the stomatal conductance to CO$_2$, and $c_i$ (and $c_a$) defined as CO$_2$ partial pressure in units of Pa, multiplication with atmospheric pressure $p$ (Pa) and the factor 1.6 to convert stomatal conductance to CO$_2$ into stomatal conductance to H$_2$O are required.
-
-% Note that in the P-model output, $c_i$ is given in ppm.
-
-% \subsubsubsection{Intrinsic water use efficiency}
-% The intrinsic water use efficiency (iWUE) is defined as the ratio of assimilation over stomatal conductance (to water). With Eq. \ref{eq:fick} this is
-% \begin{equation}
-%     \mathrm{iWUE} = A / g_s^W = \frac{c_a - c_i}{1.6\;p}
-% \end{equation}
-% With $A$ expressed in units of mol CO$_2$ m$^{-2}$ s$^{-1}$, and $g_s^W$ in units of mol H$_2$O m$^{-2}$ s$^{-1}$, iWUE is unitless. The factor 1.6 accounts for the difference in diffusivity between CO$_2$ and H$_2$O. In all above calculations, $c_a$ and $c_i$ are expressed as partial pressure of CO$_2$ in units of Pa. Division by the atmospheric pressure $p$ converts $(c_a - c_i)$ to unitless.
-
-
-% \subsubsubsection{$V_{\mathrm{cmax}}$}
-
-% Rearranging Eq. \ref{eq:rubiscolimited} and $\gamma=\Gamma^{\ast}/c_a$ and $\kappa=K/c_a$ gives
-% \begin{equation*}
-%     V_{\mathrm{cmax}} = A_C\;\frac{\chi+\kappa}{\chi-\gamma}
-% \end{equation*}
-% With the coordination $A_J=A_C$ (Eq. \ref{eq:coordination}) and Eq. \ref{eq:lue}, $V_{\mathrm{cmax}}$ can be written as
-% \begin{equation}
-%     \label{eq:vcmax}
-%     V_{\mathrm{cmax}} = \phi_0\;I_{\mathrm{abs}}\;\frac{\chi+\kappa}{\chi+2\gamma}
-% \end{equation}
-% %Normalising to standard temperature (25$^{\circ}$C) gives $V_{\mathrm{cmax25}}$ as
-% %\begin{equation}
-% %    V_{\mathrm{cmax25}} = V_{\mathrm{cmax}} \; \exp\Bigg(\frac{\Delta H_{\mathrm{Vcmax}}}{R}\Big( \frac{1}{T_{K25}} - \frac{1}{T_K} \Big)\Bigg)
-% %\end{equation}
-% %with $\Delta H_{\mathrm{Vcmax}}=65330$ J mol$^{-1}$, $R = 8.3145$ J mol$^{-1}$ K$^{-1}$, $T_K$ is the ambient temperature in Kelvin, and $T_{K25}$ is 25$^{\circ}$C in Kelvin (298.15 K).
-% %Wang Han (in prep.) implemented this as
-% Normalising to standard temperature (25$^{\circ}$C) gives $V_{\mathrm{cmax25}}$ as
-% \begin{equation}
-% \label{eq:vcmaxsens}
-%     V_{\mathrm{cmax25}} = V_{\mathrm{cmax}}\; f_V^{-1}  = V_{\mathrm{cmax}} \; \Bigg( \exp\Big( \frac{H_a(T_K-T_{K25})}{T_KT_{K25}R}\;\frac{1+\exp( \frac{T_{K25}\Delta S-H_d}{RT_{K25}} )}{1+\exp( \frac{T_K\Delta S - H_d}{RT_K} )} \Big) \Bigg)^{-1}
-% \end{equation}
-% with $H_a$ being the activation energy (71513 J mol$^{-1}$), $R$ is the universal gas constant (8.3145 J mol$^{-1}$ K$^{-1}$), $T_K$ is the ambient temperature in Kelvin, and $T_{K25}$ is 25$^{\circ}$C in Kelvin (298.15 K). $H_d$ is the deactivation energy (200000 J mol$^{-1}$), and $\Delta S$ is an entropy term (J mol$^{-1}$ K$^{-1}$) calculated using a linear relationship with $T$ from Kattge and Knorr (2007), with a slope of 1.07 J mol$^{-1}$ K$^{-2}$ and intercept of 668.39 J mol$^{-1}$ K$^{-1}$. 
-% %Wang Han (in prep.) implemented this as
-% %\begin{equation}
-% %    V_{\mathrm{cmax25}} = V_{\mathrm{cmax}} \; \exp\Bigg( \frac{H_a(T-T_{\text{ref}})}{T_{\text{ref}}TR}\;\frac{1+\exp( \frac{T_{\text{ref}}\Delta S - H_d}{RT_{\text{ref}}}  )}{1+\exp( \frac{T\Delta S-H_d}{RT} )} \Bigg)
-% %\end{equation}
-
-% \subsubsubsection{Dark respiration $R_{\mathrm{d}}$}
-
-% Dark respiration at standard temperature $R_{\mathrm{d25}}$ is calculated as being proportional to $V_{\mathrm{cmax25}}$:
-% \begin{equation}
-% \label{eq:rd25}
-%     R_{\mathrm{d25}} = b_0 \; V_{\mathrm{cmax25}}
-% \end{equation}
-% where $b_0 = 0.014$. 
-% Dark respiration follows a different temperature sensitivity. Following Heskel et al. (2016):
-% \begin{equation}
-% \label{eq:rdsens}
-%     R_{\mathrm{d}} =  R_{\mathrm{d25}}\; f_R  = R_{\mathrm{d25}} \exp \Big(  0.1012(T_{K25}-T_K) - 0.0005(T_{K25}^2-T_K^2) \Big) 
-% \end{equation}
-% By combining Equations \ref{eq:vcmaxsens}, \ref{eq:rd25}, and \ref{eq:rdsens}, $R_d$ at growth temperature $T$ can directly be calculated from $V_{\mathrm{cmax}}$
-% \begin{equation}
-%     R_d = b_0 \frac{f_R}{f_V}\;V_{\mathrm{cmax}}
-% \end{equation}
-
-%Dark respiration at ambient temperature follows a sensitivity with a different activation energy than $\Delta H_{\mathrm{Vcmax}}$:
-%\begin{equation}
-%    R_{\mathrm{d}} = R_{\mathrm{d25}} \Bigg( \exp\Bigg(\frac{\Delta H_{\mathrm{Rd}}}{R}\Big( \frac{1}{T_{K25}} - \frac{1}{T_K} \Big)\Bigg) \Bigg)^{-1}
-%\end{equation}
-
-\subsubsection{The light use efficiency model}
+\subsection{The light use efficiency model}
 \label{sec:luemodel}
-For the further model description, we refer to ecosystem-scale quantities and 
-
-\begin{equation}
-\text{GPP} = \text{fAPAR} \cdot \text{PPFD} \cdot \text{LUE}
-\label{eq:luemodel}
-\end{equation}
+$A$ is commonly expressed in units mol m$^{-2}$ s$^{-1}$. For the further model description and evaluation, we refer to ecosystem-scale quantities and in mass units of assimilated C and model GPP (g C m$^{-2}$ d$^{-1}$) following Eq. \ref{eq:luemodel}
 with 
 \begin{align}
-    \text{GPP} &= A_J \\
-    \text{fAPAR} \cdot \text{PPFD} &= I_{\text{abs}} \\
-    \text{LUE} &= \beta(\theta) \; \phi_0(T) \; m'
+    \text{fAPAR} \cdot \text{PPFD} &\mathrel{\widehat{=}} I_{\text{abs}} \\
+    \label{eq:lue_identification}
+    \text{LUE} &\mathrel{\widehat{=}} \varphi_0(T) \; \beta(\theta) \; m' \; M_C
 \end{align}
+Here, $M_C$ is the molar mass of carbon (12.0107 g mol$^{-1}$) to convert from molar units to mass units, and PPFD is the photosynthetic photon flux density integrated over a day (mol d$^{-1}$). fAPAR is unitless and integrates across the canopy, i.e., from fluxes per unit leaf area to fluxes per unit ground area. Note that the quantum yield parameter $\varphi_0$ is modelled here to be temperature-dependent, and an additional soil moisture stress factor ($\beta (\theta)$) is included for modelling LUE (see below).
 
-\paragraph{Temperature dependence}
-The temperature dependence of quantum yield efficiency ($\phi_0(T)$) is modelled following the temperature dependence of the maximum quantum yield of photosystem II in light-adapted tobacco leaves, determined by Bernacchi et al., 2003 (xxx add bibref) as 
+\subsubsection{Temperature dependence}
+
+The temperature dependence of quantum yield efficiency ($\varphi_0(T)$, unitless) is modelled following the temperature dependence of the maximum quantum yield of photosystem II in light-adapted tobacco leaves, determined by \cite{bernacchi03pce} as 
 \begin{equation}
-\phi_0(T) = a_T \; b_T \; ( 0.352 + 0.022\;T - 0.00034\;T^2 )
+\varphi_0(T) = a_L \; b_L \; ( 0.352 + 0.022\;T - 0.00034\;T^2 )
 \end{equation}
-where $a_T$ is the leaf absorptance, and $b_T$ is the fraction of absorbed light that reaches photosystem II. $(a_T \cdot b_T)$ is treated as a single calibratable parameter (see Section \ref{sec:calib}), and further referred to as $\widehat{c_T}\equiv a_t\;b_b$. Note that the temperature dependence of quantum yield efficiency was not accounted for in earlier publications with the P-model (xxx refs) and $\phi_0$ was treated as a constant. Here, we conducted simulations both with constant and temperature-dependent $\phi_0$. For the former, $\phi_0$ was treated as a single calibratable parameter (below referred to as $\widehat{\phi_0}$), and implicitly includes the factors for leaf absorbtance, light attenuation before reaching chloroplasts. Both $\widehat{c_T}$ and $\widehat{\phi_0}$ implicitly account for incomplete utilization of the spectrum of incident PPFD.
+where $a_L$ is the leaf absorptance, and $b_L$ is the fraction of absorbed light that reaches photosystem II. Here, $(a_L \cdot b_L)$ is treated as a single calibratable parameter (see Section \ref{sec:calib}) and is further referred to as $\widehat{c_L}\equiv a_L\; b_L$. (All calibratable parameters are thereafter indicated by a hat over the symbol.) Note that the temperature dependence of quantum yield efficiency was not accounted for in earlier publications with the P-model \citep{keenan17natcomm, wang17natpl} and $\varphi_0$ was treated as a constant. To test the effect of this temperature dependence on simulated GPP, we conducted alternative simulations, where a constant $\widehat{\varphi_0}$ was calibrated instead (see Sec. \ref{sec:protocol}). Note, that $\varphi_0$  includes the factor $a_L$ for incomplete leaf absorbtance, which is commonly quantified in separation of the quantum yield efficiency and is assumed a value of 0.72-0.88 in models \citep{rogers17}. Calibrated values $\widehat{\varphi_0}$ are accordingly lower than values for the intrinsic quantum yield reported from experimental studies \citep{long93, singsaas01} and should be regarded as an \textit{effective} quantum yield efficiency. Note that an additional temperature dependence is in $m'$ in Eq. \ref{eq:lue_identification}.
 
-\paragraph{Soil moisture stress}
-$\beta(\theta)$ is a soil moisture stress function. We use results by Stocker et al. (2018) (xxx add bibref) to fit a soil moisture stress functions ($\beta(\theta)\simeq\text{fLUE}$) based on two general patterns. First, the functional form of $\beta(\theta)$ can be approximated by a quadratic function that approaches 1 for soil moisture above a certain threshold $\theta^{\ast}$ and held constant at 1 for soil moisture values above that. Here $\theta$ is the plant-available soil water, expressed as a fraction of field capacity. The general form is:
+\subsubsection{Soil moisture stress}
+$\beta(\theta)$ is a soil moisture stress function. We use results by \cite{stocker18newphyt} to fit a soil moisture stress functions ($\beta(\theta)\simeq\text{fLUE}$) based on two general patterns. First, the functional form of $\beta(\theta)$ can be approximated by a quadratic function that approaches 1 for soil moisture above a certain threshold $\theta^{\ast}$ and held constant at 1 for soil moisture values above that. Here $\theta$ is the plant-available soil water, expressed as a fraction of field capacity. The general form is:
 \begin{equation}
     \beta =
 \begin{cases}
@@ -357,34 +151,21 @@ $\beta(\theta)$ is a soil moisture stress function. We use results by Stocker et
     1,              & \theta > \theta^{\ast}
 \end{cases}
 \end{equation}
-Second, the sensitivity of $\beta(\theta)$ to extreme soil dryness ($\theta \rightarrow 0$) is related to the mean aridity. The dryness-related decline in $\beta(\theta)$ is particularly strong in driest climates, whereas a smaller reduction in $\beta(\theta)$ when soil water gets depleted is recorded at intermediate aridity. In the equation above, the sensitivity parameter $q$ is defined by the maximum $\beta$ reduction at low soil moisture $\beta_0\equiv\beta(\theta=\theta_0)$, leading to $q=(\beta_0-1)/(\theta^{\ast}-\theta_0)^2$. Note that $q$ has a negative value. $\beta_0$ is modelled as a linear function of the mean aridity, quantified by the mean annual ratio of AET/PET:
+Second, the sensitivity of $\beta(\theta)$ to extreme soil dryness ($\theta \rightarrow 0$) is related to the mean aridity. The dryness-related decline in $\beta(\theta)$ is particularly strong in driest climates, whereas a smaller reduction in $\beta(\theta)$ when soil water gets depleted is recorded at intermediate aridity. In the equation above, the sensitivity parameter $q$ is defined by the maximum $\beta$ reduction at low soil moisture $\beta_0\equiv\beta(\theta=\theta_0)$, leading to $q=(\beta_0-1)/(\theta^{\ast}-\theta_0)^2$. Note that $q$ has a negative value. $\beta_0$ is modelled as a linear function of the mean aridity, quantified by the mean annual ratio of actual over potential evapotranspiration (AET/PET):
 \begin{equation}
 \beta_0 = \widehat{a_{\theta}} + \widehat{b_{\theta}} (\text{AET}/\text{PET})
 \end{equation}
 $\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$ are treated as calibratable parameters. 
 
-Soil moisture ($\theta$) was simulated using the SPLASH model, which treats soil water storage as a single bucket and calculates potential evapotranspiration based on Priestly-Taylor (xxx ref). Here, we account for a variable water holding capacity calculated based soil porosity and depth data from SoilGrids (xxx ref, see Appendix XXX). The soil water balance model is described in detail in xxx ref Davis. 
-
-\begin{table}
-\centering
-\begin{tabular}{llll}
-	\toprule
-    Symbol     & Value     &  Description   &  Reference   \\
-	\midrule
-    \beta      & 146       &  Ratio of unit costs, Eq. xxx   &  xxxx   \\
-	\bottomrule
-\end{tabular}
-\caption{Model parameters used for all setups.}
-\label{tab:params}
-\end{table}
+Soil moisture ($\theta$), AET, and PET are simulated using the SPLASH model \cite{davis17}, which treats soil water storage as a single bucket and calculates potential evapotranspiration based on Priestly-Taylor. Here, we account for a variable water holding capacity calculated based soil porosity and depth data from SoilGrids (xxx ref, see Appendix XXX).
 
 \subsection{Simulation protocol}
 \label{sec:protocol}
-To investigate model performance in dependence of alternative choices for model forcing data (defining fAPAR), alternative model setups (variable/fixed soil moisture and temperature effects), and alternative observational target data for calibration (GPP based on different flux decompositions), we conducted multiple simulation sets. Parameters ($\widehat{c_T}$, $\widehat{a_{\theta}}$, and $\widehat{b_{\theta}}$) are calibrated and evaluated against respective observational data for each simulation set separately.
+To investigate model performance in dependence of alternative choices for model forcing data (defining fAPAR), alternative model setups (variable/fixed soil moisture and temperature effects), and alternative observational target data for calibration (GPP based on different flux decompositions), we conducted multiple simulation sets. Parameters ($\widehat{c_L}$, $\widehat{a_{\theta}}$, and $\widehat{b_{\theta}}$) are calibrated and evaluated against respective observational data for each simulation set separately.
 
-The simulation set ORG corresponds to the model as used in xxx ref Wang Han et al., 2017. That is, the quantum efficiency of photosynthesis ($\widehat{\phi_0}$) is fixed, and without accounting for soil moisture stress ($\theta=1$). The model is forced with fAPAR data taken as MODIS FPAR, splined to daily values (see also Section \ref{sec:greennessdata}, and calibrated against GPP data from FLUXNET 2015 based on the nighttime decomposition method ('NT'). All simulation setups are described in Tab. \ref{tab:setups}. The simulation set BRC is identical to ORG, except that  $\widehat{\phi_0}$ is allowed to vary with temperature. In the simulation set FULL, soil moisture stress is additionally accounted for.
+The simulation set ORG corresponds to the model as used in \cite{wang17natpl}. That is, the quantum efficiency of photosynthesis is fixed ($\widehat{\varphi_0}$ is calibrated, instead of $\widehat{c_L}$), and without accounting for soil moisture stress ($\beta (\theta)=1$). The model is forced with fAPAR data based on MODIS FPAR, splined to daily values (see Section \ref{sec:greennessdata}, and is calibrated against GPP data from FLUXNET 2015 based on the nighttime decomposition method ('NT') (see Section \ref{sec:datafiltering}). All simulation setups are described in Tab. \ref{tab:setups}. The simulation set BRC is identical to ORG, except that  $\widehat{\varphi_0}$ is allowed to vary with temperature and $\widehat{c_L}$ is calibrated. In the simulation set FULL, soil moisture stress is additionally accounted for, and $\widehat{c_L}$, $\widehat{a_{\theta}}$, and $\widehat{b_{\theta}}$ are simultaneously calibrated.
 
-Additional simulations account for both temperature and soil moisture effects. The simulation set FULL\textunderscore FPARitp also uses MODIS FPAR (MCD15A3H) data for fAPAR, but with daily values as linear interpolations of original data, which is given for 4-day intervals. This is used to investigate whether the smoothed values of the splined data (standard) are responsible for the general underestimation of maximum GPP values during the height of the growing season. The simulation set FULL\textunderscore EVI uses MODIS EVI (MOD13Q1), splined to daily from 8-daily data, to assess to which degree model performance depends on fAPAR forcing data. See Section \ref{sec:greennessdata} for more information.
+All additional simulations account for both temperature and soil moisture effects. The simulation set FULL\textunderscore FPARitp also uses MODIS FPAR (MCD15A3H) data for fAPAR, but with daily values as linear interpolations of original data, which is given for 4-day intervals. This is used to investigate whether the smoothed values of the splined data (standard) are responsible for the general underestimation of maximum GPP values during the height of the growing season. The simulation set FULL\textunderscore EVI uses MODIS EVI (MOD13Q1), splined to daily from 8-daily data, to assess to which degree model performance depends on fAPAR forcing data. See Section \ref{sec:greennessdata} for more information.
 
 Additional simulation sets FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are used to investigate the dependence of (apparent) model performance on the observational data source to which it is calibrated. Here, the model is calibrated to GPP data derived using different CO$_2$ flux decomposition methods. We use GPP data based on the nighttime decomposition method (xxx ref reichstein) for FULL\textunderscore NTsub, the daytime decomposition method (xxx ref) for FULL\textunderscore DT, and an alternative decomposition method used for model-data comparison in Wang Han et al., 2017 (xxx ref) for FULL\textunderscore Ty. The latter method determines a constant background respiration rate as the (fitted) asymptote of CO$_2$ exchange fluxes with PPFD tending towards zero. This data is publicly available at XXX. Calibration and evaluation of FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are done only for sites and dates where observational data is given from all three datasets (DT, NT, and Ty), hence the distiction between FULL\textunderscore NTsub and FULL. The model calibration is implemented within the rsofun R package (function \texttt{calib\textunderscore sofun()}, see accompanying paper Stocker et al., XXX).
 
@@ -392,7 +173,7 @@ Additional simulation sets FULL\textunderscore DT, FULL\textunderscore NTsub, an
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lllllllll}
 	\toprule
-    Setup name                 &  fAPAR data              &  GPP      &  Calibration set  &  SM limit.  &  \widehat{\phi_0} &  \widehat{c_T}    &  $\widehat{a_{\theta}}$  &  $\widehat{b_{\theta}}$   \\
+    Setup name                 &  fAPAR data              &  GPP      &  Calibration set  &  SM limit.  &  \widehat{\varphi_0} &  \widehat{c_L}    &  $\widehat{a_{\theta}}$  &  $\widehat{b_{\theta}}$   \\
 	\midrule
     ORG                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  0.0500 &  --     &  -- & --   \\
     BRC                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  --     &  0.0832 &  -- & --   \\
@@ -414,7 +195,7 @@ Additional simulation sets FULL\textunderscore DT, FULL\textunderscore NTsub, an
 
 \subsection{Model calibration}
 \label{sec:calib}
-The model calibration is restricted to the parameters determining the quantum efficiency of photosynthesis ($\widehat{\phi_0}$ or $\widehat{c_T}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity, quantified by AET/PET (parameters $\widehat{a_{\theta}}$ and $\widehat{a_{\theta}}$). We used  Generalised Simulated Annealing from the GenSA R package (xxx ref gensa) to search model parameters that minimise the root mean square error (RMSE) between observed and simulated daily GPP values. This algorithm is particularly suited find global minima of non-linear objective functions and a large number of local minima. 
+The model calibration is restricted to the parameters determining the quantum efficiency of photosynthesis ($\widehat{\varphi_0}$ or $\widehat{c_L}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity, quantified by AET/PET (parameters $\widehat{a_{\theta}}$ and $\widehat{a_{\theta}}$). We used  Generalised Simulated Annealing from the GenSA R package (xxx ref gensa) to search model parameters that minimise the root mean square error (RMSE) between observed and simulated daily GPP values. This algorithm is particularly suited find global minima of non-linear objective functions and a large number of local minima. 
 
 \subsection{Forcing data}
 
@@ -437,23 +218,23 @@ $R_{\text{SW}}$ is incoming shortwave radiation from daily FLUXNET 2015 data (va
 
 Vapour pressure deficit (VPD, $D$ in model derivation sections \ref{sec:theory}) is taken from daily FLUXNET 2015 data (variable \texttt{VPD\textunderscore F}) and represents means over half-hourly data. VPD is converted to Pa. 
 
-% is calculated from vapour pressure (CRU) or specific humidity (WATCH-WFDEI) input data. In general, $D$ is the difference between actual and saturation vapour pressure:
-% \begin{equation}
-%     D = e_a - e_s
-% \end{equation}
-% We calculate saturation vapour pressure ($e_s$, in Pa) following Allen et al. (2005) as a function of temperature  as
-% \begin{equation}
-% e_s = 611 \; \exp \left( {\frac{17.27\;T_C}{T_C+237.3}} \right)
-% \end{equation}
-% $T_C$ is the temperature expressed in units of degrees Celsius. Note that Allen et al. (2005) use 6.108 instead of 6.11. The Python implementation uses daily maximum and daily minimum temperature, which is equivalent to above formulation with $T=(T_{\text{min}}+T_{\text{max}})/2$. $e_a$ is provided by CRU as an input dataset. WATCH-WFDEI provides specific humidity data ($q$), which can be converted to the mass mixing ratio of water vapor to dry air ($w$) (dimensionless) by
-% \begin{equation}
-%     w = \frac{q}{1-q}
-% \end{equation}
-% and finally to actual vapour pressure by
-% \begin{equation}
-%     e_a = P \frac{w R_v}{R_d + w R_v}
-% \end{equation}
-% where $P$ is the atmospheric pressure (Pa), $R_v$ is the specific gas constant for water vapour and $R_d$ is the specific gas constant for dry air. The specific gas constants are calculated from the universal gas constant $R$ and the molecular mass $M$ as $R_{\text{specific}}=R/M$. ($R$ is 8.3143 J mol$^{-1}$ K$^{-1}$. The molecular mass of dry air is $M_d=$ 28.963 g mol$^{-1}$ and the molecular mass of water vapor is $M_v=$ 18.02 g mol$^{-1}$.) Atmospheric pressure is assumed to be at standard conditions (101325 Pa) corrected for local elevation (barometric formula adopted from SPLASH, Eq. 20 in Davis et al., 2017).
+is calculated from vapour pressure (CRU) or specific humidity (WATCH-WFDEI) input data. In general, $D$ is the difference between actual and saturation vapour pressure:
+\begin{equation}
+    D = e_a - e_s
+\end{equation}
+We calculate saturation vapour pressure ($e_s$, in Pa) following Allen et al. (2005) as a function of temperature  as
+\begin{equation}
+e_s = 611 \; \exp \left( {\frac{17.27\;T_C}{T_C+237.3}} \right)
+\end{equation}
+$T_C$ is the temperature expressed in units of degrees Celsius. Note that Allen et al. (2005) use 6.108 instead of 6.11. The Python implementation uses daily maximum and daily minimum temperature, which is equivalent to above formulation with $T=(T_{\text{min}}+T_{\text{max}})/2$. $e_a$ is provided by CRU as an input dataset. WATCH-WFDEI provides specific humidity data ($q$), which can be converted to the mass mixing ratio of water vapor to dry air ($w$) (dimensionless) by
+\begin{equation}
+    w = \frac{q}{1-q}
+\end{equation}
+and finally to actual vapour pressure by
+\begin{equation}
+    e_a = P \frac{w R_v}{R_d + w R_v}
+\end{equation}
+where $P$ is the atmospheric pressure (Pa), $R_v$ is the specific gas constant for water vapour and $R_d$ is the specific gas constant for dry air. The specific gas constants are calculated from the universal gas constant $R$ and the molecular mass $M$ as $R_{\text{specific}}=R/M$. ($R$ is 8.3143 J mol$^{-1}$ K$^{-1}$. The molecular mass of dry air is $M_d=$ 28.963 g mol$^{-1}$ and the molecular mass of water vapor is $M_v=$ 18.02 g mol$^{-1}$.) Atmospheric pressure is assumed to be at standard conditions (101325 Pa) corrected for local elevation (barometric formula adopted from SPLASH, Eq. 20 in Davis et al., 2017).
 
 \subsubsection{Temperature}
 \label{sec:temperature}
@@ -473,6 +254,7 @@ We use precipitation data from the FLUXNET 2015 dataset (variable \texttt{P\text
 
 \subsubsection{Data filtering}
 \label{sec:datafiltering}
+GPP predictions by the RS models are compared to daily GPP estimates from the FLUXNET 2015 Tier 1 data set (downloaded on 13 November, 2016). We used GPP based on the nighttime partitioning method (ref xxx) (GPP_NT_VUT_REF), filtered negative daily GPP values, data for which more than 50\% of the half-hourly data are gap-filled and for which the daytime and nighttime partitioning methods (GPP_DT_VUT_REF and GPP_NT_VUT_REF, respectively) are inconsistent, i.e., the upper and lower 2.5\% quantiles of the difference between GPP values quantified by each method.
 
 \subsection{Evaluation methods}
 
@@ -489,7 +271,7 @@ Functional relationships between light use efficiency and its predictors conside
 
 \subsubsection{Drought response}
 \label{sec:droughtresponse}
-The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{Stocker2018newphyt} for XXX sites (XXX days before and XXX days after drought onset are taken). Drought events are defined as "fLUE droughts", where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold.  The data specifying the timing and duration of drought events for XXX sites was downloaded from \url{http://doi.org/10.5281/zenodo.1158524}. 
+The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{Stocker2018newphyt} for XXX sites (XXX days before and XXX days after drought onset are taken). Drought events ("fLUE droughts") are periods of consecutive days where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold. The data specifying the timing and duration of drought events for XXX sites was downloaded from \url{http://doi.org/10.5281/zenodo.1158524}. We then re-arranged the data to align all drought events at all sites and computed quantiles per day, where 'day' is defined with respect to the onset of each drough. 
 
 \section{Evaluation results}
 
@@ -816,7 +598,7 @@ The features of variability in GPP, for which model-observation agreement is cal
 \clearpage
 
 
-\section{Sites and data processing}
+\section{Appendix}
 
 \begin{longtable}{lrrlllrl}
   \hline
@@ -992,209 +774,498 @@ The features of variability in GPP, for which model-observation agreement is cal
 \caption{Sites used for evaluation. Lon. is longitude, negative values indicate west longitude; Lat. is latitude, positive values indicate north latitude; Veg. is vegetation type: deciduous broadleaf forest (DBF); evergreen broadleaf forest (EBF); evergreen needleleaf forest (ENF); grassland (GRA); mixed deciduous and evergreen needleleaf forest (MF); savanna ecosystem (SAV); shrub ecosystem (SHR); wetland (WET).} 
 \end{longtable}
 
-%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
-%% PART 3.2.2 -- RELATIVE VISCOSITY OF WATER
-%% //////////////////////////////////////////////////////////////////////// %%
-\subsection{Relative Viscosity of Water}
-\label{sec:eta}
-The viscosity of water at a given temperature and pressure, $\eta$, may be calculated based on the methodology of \cite{huber09}. 
-The relative viscosity of water with respect to its value at 25 ${}^\circ$C, $\eta^\ast$, is calculated by the following ratio:
-%% ---------------------------------------------------------------%%
-%% eq:ns | Relative viscosity of water
-%% ---------------------------------------------------------------%%
-\nomenclature{$\eta^\ast$}{relative viscosity of water [unitless]}%
-\begin{equation}
-\label{eq:ns}
-    \eta^\ast = \frac{\eta}{\eta_{25}}
-\end{equation}
 
-\noindent where:\\
-\indent $\eta$ = viscosity of water at a given temperature and pressure [Pa s];\\
-\indent $\eta_{25}$ = viscosity at 25 ${}^\circ$C and standard pressure [8.90$\times 10^{-4}$ Pa s].\\
 
-%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
-%% PART 3.2.3 -- AMBIENT PARTIAL PRESSURE OF CO2
-%% //////////////////////////////////////////////////////////////////////// %%
-\subsection{Ambient Partial Pressure of CO$_2$}
-\label{sec:ca}
-The partial pressure of CO$_2$, $c_a$, is calculated based on the observed annual atmospheric CO$_2$ concentration (see \S \ref{sec:gepnoaa}). 
-The conversion can be done knowing the total atmospheric pressure, $P_{atm}$, and using Dalton's Law of Partial Pressure:
-%% ---------------------------------------------------------------%%
-%% eq:pp | Partial Pressure Convertion
-%% ---------------------------------------------------------------%%
-\begin{equation}
-\label{eq:pp}
-    p_x = 1\times 10^{-6}\; ppm_x\; P_{atm}
-\end{equation}
-
-\noindent where:\\
-\indent $p_x$ = partial pressure of gas \textit{x} [Pa];\\
-\indent $ppm_x$ = parts-per-million concentration of gas \textit{x} [ppm];\\
-\indent $P_{atm}$ = total atmospheric pressure [Pa].\\
-
-\noindent For instances when $P_{atm}$ is unknown, the elevation-dependent atmospheric pressure may be computed using the Barometric Formula, assuming a linear decrease in temperature with height within the troposphere and a mean adiabatic lapse rate \parencite{berberan97}:
-%% ---------------------------------------------------------------%%
-%% eq:pz | Atmospheric pressure as a function of elevation
-%% ---------------------------------------------------------------%%
-\nomenclature{$P_{atm}$}{total atmospheric pressure [Pa]}%
-\begin{equation}
-\label{eq:pz}
-    P_{atm}\left( z \right) = P_{\circ} \left( 
-    	1 - \frac{L\; z}{T_{\circ}} 
-    \right)^{g\; M_a\; \left(R_u\; L\right)^{-1}}
-\end{equation}
-
-\noindent where:\\
-\indent $z$ = altitude above mean sea level [m];\\
-\indent $g$ = standard gravity [9.80665 m s$^{-2}$];\\
-\indent $P_{\circ}$ = base atmospheric pressure [101325 Pa];\\
-\indent $L$ = mean adiabatic lapse rate [0.0065 K m$^{-2}$];\\
-\indent $T_{\circ}$ = base temperature [288.15 K];\\
-\indent $M_a$ = molecular weight for dry air [0.028963 kg mol$^{-1}$];\\
-\indent $R_u$ = universal gas constant [8.3145 J mol$^{-1}$ K$^{-1}$].\\
-
-%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
-%% PART 3.2.4 -- VAPOR PRESSURE DEFICIT
-%% //////////////////////////////////////////////////////////////////////// %%
-\subsection{Vapor Pressure Deficit}
-\label{sec:d}
-The vapor pressure deficit, $D$, is based on the unit conversion of the observed VPD (see \S \ref{sec:gepvpd}) from kPa to Pa.
 
 %% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 %% PHOTORESPIRATORY COMPENSATION POINT
 %% ///////////////////////////////////////////////////////
 \subsection{Photorespiratory Compensation Point}
 \label{sec:gs}
-The photorespiratory compensation point, $\Gamma^\ast$, is given by its value at standard temperature and atmospheric pressure $\Gamma^\ast_{25, p_0} = $ following \cite{bernacchi01xxx}, modified by temperature following an Arrhenius-type temperature response function $f_{\text{Arrh}}(T)$ with an activation energy of $\Delta H_a$, and corrected for atmospheric pressure. Values for parameters $\Gamma^\ast_{25, p_0}$, and $\Delta H_a$ are fixed and given in Tab. \ref{tab:params_fixed}.
-
+The temperature and pressure-dependent photorespiratory compensation point $\Gamma^\ast(T,p)$ is calculated from its value at standard temperature ($T_0=$ 25${^\circ}$C) and atmospheric pressure ($p_0 = $101325 Pa), referred to as $\Gamma^\ast_{25, p_0}$. It is modified by temperature following an Arrhenius-type temperature response function $f_{\text{Arrh}}(T_K, \Delta H_{\Gamma\ast})$ with activation energy $\Delta H_{\Gamma\ast}$, and is corrected for atmospheric pressure $p(z)$ at elevation $z$. 
 \begin{equation}
 \label{eq:gammastar}
-    \Gamma^\ast (T, z) = \Gamma^\ast_{25, p_0} \; f_{\text{Arrh}}(T) \; \frac{p(z)}{p(z_0)}
+    \Gamma^\ast (T_K, z) = \Gamma^\ast_{25, p_0} \; f_{\text{Arrh}}(T_K, \Delta H_{\Gamma\ast}) \; \frac{p(z)}{p_0}
 \end{equation}
+Values of $\Delta H_{\Gamma\ast}$ and $\Gamma^\ast_{25, p_0}$ are taken from \cite{bernacchi01}. The latter is converted to Pa and standardised to $p_0$ simply by multiplication with $p_0$ ($\Gamma^\ast_{25, p_0} = 42.75\; \mu$mol mol$^{-1} \cdot 10^{-6} \cdot 101325$ Pa $ = 4.332$ Pa). $\Delta H_{\Gamma\ast}$ is 37830 J mol$^{-1}$. All parameter values are summarised in Tab. \ref{tab:params}. The function $p(z)$ is defined in Sec \ref{sec:press}. Note that $T_K$ indicates that the respective temperature value is given in Kelvin and $T_{K,0}=$ 298.15 K.
 
+To correct for effects by temperature following the Arrhenius Equation with its form $x(T_K)=\exp(c-\Delta H_a/(T_K R))$, the temperature-correction function $f_{\text{Arrh}}(T_K, \Delta H_a)$, used in Eq. \ref{eq:gammastar} and further equations below, is given by:
+\begin{equation}
+    f_{\text{Arrh}}(T_K) = x(T_K)/x(T_{K,0}) = \exp \left( \frac{\Delta H (T_K - T_{K,0})}{T_{K,0}\: R\: T_K} \right) 
+\end{equation}
+where $\Delta H$ is the respective activation energy (e.g., $\Delta H_{\Gamma\ast}$ in Eq. \ref{eq:gammastar}), and $R$ is the universal gas constant (8.3145 J mol$^{-1}$ K$^{-1}$).
 
+\subsubsection{Deriving $\Gamma^\ast$}
+The temperature and pressure dependency of $\Gamma^\ast$ follows from the temperature dependencies of $K_c$, $K_o$, $V_\text{c,max}$, and $V_\text{o,max}$ and the pressure dependency of $pO_2(p)$:
 \begin{equation}
 \label{eq:gsbasic}
-    \Gamma^\ast = \frac{O\: K_c\: V_\text{o,max}}
-                        {2\: K_o\: V_\text{c,max}}
+    \Gamma^\ast (T_K, p) = \frac{pO_2(p)\: K_c(T_K)\: V_\text{omax}(T_K)}
+                        {2\: K_o(T_K)\: V_\text{cmax}(T_K)}
 \end{equation}
-
-\noindent where:\\
-\indent $O$ = partial pressure of atmospheric O$_2$, [Pa];\\
-\indent $K_c$ = Michaelis-Menten constant for carboxylation [Pa];\\
-\indent $K_o$ = Michaelis-Menten constant for oxygenation [Pa];\\
-\indent $V_\text{c,max}$ = maximum rate of carboxylation [$\mu$mol~m$^{-2}$~s$^{-1}$];\\
-\indent $V_\text{o,max}$ = maximum rate of oxygenation [$\mu$mol~m$^{-2}$~s$^{-1}$].\\
-
-\noindent The temperature-dependency of $\Gamma^\ast$ is derived from the temperature dependencies of $K_c$, $K_o$, $V_\text{c,max}$, and $V_\text{o,max}$, which have been empirically solved by \cite{bernacchi01}. 
-Substituting the temperature-dependency equations for each term in Eq. \ref{eq:gsbasic}, results in the following expression:
-%% ---------------------------------------------------------------%%
-%% eq:gst | Temperature dependency of Gamma*
-%% ---------------------------------------------------------------%%
+$pO_2(p)$ is the partial pressure of atmospheric oxygen (Pa) and scales linearly with $p(z)$. $K_c$ is the Michaelis-Menten constant for carboxylation (Pa); $K_o$ is the Michaelis-Menten constant for oxygenation (Pa); $V_\text{cmax}$ is maximum rate of carboxylation ($\mu$mol~m$^{-2}$~s$^{-1}$); and $V_\text{omax}$ is the maximum rate of oxygenation ($\mu$mol~m$^{-2}$~s$^{-1}$). The temperature-dependency equations for these four terms are given in Table 1 of \cite{bernacchi01} with respective scaling constants $c$ and activation energies $\Delta H_a$ as :
+\begin{subequations}
+\begin{align}
+    K_c(T_K) &= \exp(38.05-79.43/(T_K R)) \\
+    K_o(T_K) &= 1000 \cdot \exp(20.30-36.38/(T_K R)) \\
+    V_\text{o,max}(T_K) &= \exp(22.98-60.11/(T_K R)) \\
+    V_\text{c,max}(T_K) &= \exp(26.35-65.33/(T_K R))
+\end{align}
+\end{subequations}
+By substituting the temperature-dependency equations for each term in Eq. \ref{eq:gsbasic} and rearranging terms, $\Gamma^\ast$ can be written as
 \begin{equation}
-\label{eq:gst}
-    \Gamma^\ast = \exp \left(7.472 - \frac{\Delta H_a}{R_u\: T_k}\right) \frac{O}{2}
+    \label{eq:gsto}
+    \Gamma^\ast(T_K, z) = pO_2(z)\: \exp(6.779-37.83/(T_K R))\;.
 \end{equation}
-
-\noindent where:\\
-\indent $\Delta H_a$ = activation energy for $\Gamma^\ast$ [37$\,$830 J mol$^{-1}$];\\
-\indent $R_u$ = universal gas constant [8.3145 J mol$^{-1}$ K$^{-1}$];\\
-\indent $O$ = partial pressure of atmospheric O$_2$, [Pa];\\
-\indent $T_k$ = leaf temperature [K].\\
-
-\noindent To account for changes in the atmospheric pressure, the partial pressure of O$_2$ may be expressed in terms of molar fraction based on Dalton's Law (see Eq. \ref{eq:pp}):
-%% ---------------------------------------------------------------%%
-%% eq:gstpa | Temperature & pressure dependency of Gamma*
-%% ---------------------------------------------------------------%%
+With $pO_2(p)$ at standard atmospheric pressure (101325 Pa) taken to be 21000 Pa, and assuming a constant mixing ratio across the troposphere, its pressure dependence can be expressed as 
 \begin{equation}
-\label{eq:gstpa}
-    \Gamma^\ast = 5\times 10^{-7}\: ppm_{O_2}\: P_{atm}\: \exp \left(7.472 - \frac{\Delta H_a}{R_u\: T_k}\right)
+    \label{eq:oxy}
+    pO_2(p) = 0.2095 \cdot p(z)\;
 \end{equation}
-
-\noindent where $ppm_{O_2}$ is the molar fraction of atmospheric O$_2$. Assuming a constant value for $ppm_{O_2}$ (i.e., 209476 ppm), $\Gamma^\ast$ may be simplified to:
-%% ---------------------------------------------------------------%%
-%% eq:gstpb | Temperature & pressure dependency of Gamma*
-%% ---------------------------------------------------------------%%
+hence
 \begin{equation}
-\label{eq:gstpb}
-    \Gamma^\ast = \exp \left(5.216 - \frac{\Delta H_a}{R_u\: T_k}\right)\: P_{atm}
+    \label{eq:gstop}
+    \Gamma^\ast(T_K, p) = p(z) \exp(5.205-37.83/(T_K R))  % 6.779+\log(0.207254)=5.20519 
 \end{equation}
+We can use this to calculate $\Gamma^\ast$ at standard temperature ($T_K=$ 298.15 K) and pressure ($p(z)=$ 101325 Pa) as $\Gamma^\ast_{25, p_0} = 4.332$ Pa. 
 
-\noindent where:\\
-\indent $\Delta H_a$ = activation energy for $\Gamma^\ast$ [37$\,$830 J mol$^{-1}$];\\
-\indent $R_u$ = universal gas constant [8.31447 J mol$^{-1}$ K$^{-1}$];\\
-\indent $P_{atm}$ = atmospheric pressure [Pa];\\
-\indent $T_k$ = leaf temperature [K].\\
+Note that to convert Eq. \ref{eq:gsto} to the form corresponding to the one given by \citet{bernacchi01}, the partial pressure of oxygen ($pO_2$) has to be assumed at standard conditions. $pO_2$ is approximately 21000 Pa and with the standard atmospheric pressure of 101325 Pa, $pO_2$ can be converted from Pascals to parts-per-million (ppm) as $21000/101325 \times 10^6 = 207254$ ppm = $\exp(12.24)$ ppm. This can be combined with the exponent in Eq. \ref{eq:gsto} to $\exp(12.24) \cdot \exp(6.779) = \exp(19.02)$. This corresponds to the parameter values determining the temperature dependence of $\Gamma^\ast$ given by \citet{bernacchi01} as  $\Gamma^\ast = \exp(19.02-37.83/(T_K R))$.
 
-\noindent Due to a general lack of understanding, the leaf temperature in Eq. \ref{eq:gst}, $T_k$, may be substituted by the ambient air temperature, $T_{air}$, in units of Kelvin. 
+
+% FULL DERIVATION WITH STEPS
+% , results in the following expression:
+% \begin{equation}
+%     \Gamma^\ast = \frac{O}{2}\frac{\exp(38.05-79.43/(T_K R))}{1000 \exp(20.30-36.38/(T_K R))}\frac{\exp(22.98-60.11/(T_K R))}{\exp(26.35-65.33/(T_K R))}
+% \end{equation}
+
+% \noindent By separating each of the exponents based on the rule of addition returns the following:
+
+% \begin{equation}
+%     \Gamma^\ast = \frac{O}{2}\frac{\exp(38.05)\: \exp(-79.43/(T_K R))}{1000 \exp(20.30) \exp(-36.38/(T_K R))}\frac{\exp(22.98) \exp(-60.11/(T_K R))}{\exp(26.35) \exp(-65.33/(T_K R))}
+% \end{equation}
+
+% \noindent Sorting the terms based on their temperature-dependence and, using the rule of addition again, combining like terms yields the following:
+
+% \begin{equation}
+%     \Gamma^\ast = \frac{O}{2}\frac{\exp(61.03)}{1000 \exp(46.65)}\frac{\exp(101.71/(T_K R))}{\exp(139.54/(T_K R))}
+% \end{equation}
+
+% \noindent By using the rule of negative exponents and the rule of addition, the expression may be further simplified as follows:
+
+% \begin{equation}
+%     \Gamma^\ast = \frac{O}{2}\frac{\exp(14.38)}{1000}\exp(-37.83/(T_K R))
+% \end{equation}
+
+% \noindent Combining the two denominators returns a value of 2000. 
+% Note that $\exp(\ln(2000)) = 2000$ and that $\ln(2000) = 7.601$, such that:
+
+% \begin{equation}
+%     \Gamma^\ast = O\frac{\exp(14.38)}{\exp(7.601)}\exp(-37.83/(T_K R))
+% \end{equation}
+
+% \noindent and when simplified returns the following:
+
+% \begin{equation}
+%     \label{eq:gsto}
+%     \Gamma^\ast = O\: \exp(6.779-37.83/(T_K R))
+% \end{equation}
+
 
 %% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-%% MICHAELIS-MENTON COEFFICIENT
+%% MICHAELIS-MENTON COEFFICIENT xxxbeni
 %% ///////////////////////////////////////////////////////
 \subsection{Michaelis-Menten Coefficient of Photosynthesis}
 \label{sec:kmm}
-The Michaelis-Menten coefficient of Rubisco-limited photosynthesis is a function of the Rubisco photosynthetic rates for O$_2$ and CO$_2$ \cite{farquhar80}:
+The Michaelis-Menten coefficient $K$ of Rubisco-limited photosynthesis (Eq. \ref{eq:ac}) is determined by the Michalis-Menten constants for O$_2$ and CO$_2$ \citep{farquhar80}:
 %% ------------------------------------------------------------------------ %%
 %% eq:michaelis | Michaelis Menten coefficient
 %% ------------------------------------------------------------------------ %%
 \begin{equation}
 \label{eq:michaelis}
-	K = K_c\: \left( 1 + \frac{O}{K_o} \right)
+	K(T_K, p) = K_c(T_K)\: \left( 1 + \frac{pO_2(p)}{K_o(T_K)} \right) \;,
 \end{equation}
-
-\noindent where:\\
-\indent $K_c$ = Michaelis-Menten constant for CO$_2$ [Pa];\\
-\indent $K_o$ = Michaelis-Menten constant for O$_2$ [Pa];\\
-\indent $O$ = partial pressure of atmospheric O$_2$, [Pa].\\
-
-\noindent The Michaelis-Menten constants for CO$_2$ and O$_2$ ($K_c$ and $K_o$, respectively) have temperature dependencies, which have been empirically fit to the Arrhenius function and normalized to 25~$^\circ$C \parencite{farquhar80}:
+where $K_c$ is the Michaelis-Menten constant for CO$_2$ (Pa), $K_o$ is the Michaelis-Menten constant for O$_2$ (Pa), and $pO_2$ is the partial pressure of oxygen (Pa). $K_c$ and $K_o$ follow a temperature dependence, given by the Arrhenius Equation - analogously to the temperature dependence of $\Gamma^\ast$ (Eq. \ref{eq:gammastar}):
 %% ------------------------------------------------------------------------ %%
 %% eq:kcko | Michaelis Menten Kc & Ko coefficients
 %% ------------------------------------------------------------------------ %%
-\nomenclature{$K_c$}{Michaelis-Menten constant for CO$_2$ [Pa]}%
-\nomenclature{$K_o$}{Michaelis-Menten constant for O$_2$ [Pa]}%
 \begin{subequations}
 \label{eq:kcko}
 \begin{align}
-	K_c&=K_{c25}\: \exp \left[ 
-    	\frac{\Delta H_{a,c}\: \left(T_k-298.15\right)}{298.15\: R_{u}\: T_k}
-    \right] \label{eq:kc} \\
-    K_o&=K_{o25}\: \exp \left[ 
-    	\frac{\Delta H_{a,o}\: \left(T_k-298.15\right)}{298.15\: R_{u}\: T_k}
-    \right] \label{eq:ko}
+	K_c(T_K)& = K_{c25}\: f_{\text{Arrh}}(T_K, \Delta H_{Kc}) \label{eq:kc} \\
+    K_o(T_K)& = K_{o25}\: f_{\text{Arrh}}(T_K, \Delta H_{Ko}) \label{eq:ko}
 \end{align}
 \end{subequations}
+Values $\Delta H_{Kc} = 79430$ J mol$^{-1}$, $\Delta H_{Ko} = 36380$ J mol$^{-1}$, $K_{c25} = 39.97$ Pa, and $K_{o25} = 27480$ Pa are taken from \cite{bernacchi01} and (see also Tab. \ref{tab:params}). The latter two have been converted from $\mu$mol mol$^{-1}$ in \cite{bernacchi01} to units of Pa by multiplication with the standard atmosphere (101325 Pa). Note that $K_{c25}$ and $K_{o25}$ are rate constants and are independent of atmospheric pressure. Pressure-dependence of $K$ is solely in $pO_2(p)$ (see Eq. \ref{eq:oxy}).
 
-\noindent where:\\
-\indent $K_{c25}$ = Michaelis-Menten constant for CO$_2$ at 25~$^{\circ}$C [Pa];\\
-\indent $K_{o25}$ = Michaelis-Menten constant for O$_2$ at 25~$^{\circ}$C [Pa];\\
-\indent $\Delta H_{a,c}$ = activation energy for carboxylation [79$\,$430 J mol$^{-1}$];\\
-\indent $\Delta H_{a,o}$ = activation energy for oxygenation [36$\,$380 J mol$^{-1}$];\\
-\indent $R_{u}$ = universal gas constant [8.31447 J mol$^{-1}$ K$^{-1}$];\\
-\indent $T_k$ = leaf temperature [K].\\
+% where $K_{c25}$ is the Michaelis-Menten constant for CO$_2$ at 25~$^{\circ}$C (Pa), $K_{o25}$ is the Michaelis-Menten constant for O$_2$ at 25~$^{\circ}$C (Pa), $\Delta H_{a,c}$ is the activation energy for carboxylation [79$\,$430 J mol$^{-1}$], $\Delta H_{a,o}$ is the activation energy for oxygenation [36$\,$380 J mol$^{-1}$], $R$ is the universal gas constant [8.31447 J mol$^{-1}$ K$^{-1}$], and $T_K$ is the leaf temperature [K].
 
-\noindent Once again, leaf temperature, as in Eqns. \ref{eq:michaelis} and \ref{eq:kcko}, may be substituted by the ambient air temperature, $T_{air}$, converted to units of Kelvin. 
+% \noindent Once again, leaf temperature, as in Eqns. \ref{eq:michaelis} and \ref{eq:kcko}, may be substituted by the ambient air temperature, $T_{air}$, converted to units of Kelvin. 
 
-The partial pressure values of $K_{c25}$ and $K_{o25}$ are based on the empirical temperature dependencies given by \cite{bernacchi01}, in mole fractions, converted to partial pressures by Dalton's Law (see Eq. \ref{eq:pp}):
+% The partial pressure values of $K_{c25}$ and $K_{o25}$ are based on the empirical temperature dependencies given by \cite{bernacchi01}, in mole fractions, converted to partial pressures by Dalton's Law (see Eq. \ref{eq:pp}):
 %% ------------------------------------------------------------------------ %%
 %% eq:kcko25 | Michaelis Menten Kc & Ko coefficients
 %% ------------------------------------------------------------------------ %%
-\nomenclature{$K_{c25}$}{Michaelis-Menten coefficient of carboxylation at 25~$^\circ$C [Pa]}%
-\nomenclature{$K_{o25}$}{Michaelis-Menten coefficient of oxygenation at 25~$^\circ$C [Pa]}%
-\begin{subequations}
-\label{eq:kcko25}
-\begin{align}
-	K_{c25}&=1\times 10^{-6} \exp \left[ 38.05 - 
-    	\frac{\Delta H_{a,c}}{298.15\: R_{u}}
-    \right]\: P_{atm} \label{eq:kc25} \\
-    K_{o25}&=1\times 10^{-3} \exp \left[ 20.30 - 
-    	\frac{\Delta H_{a,o}}{298.15\: R_{u}}
-    \right]\: P_{atm} \label{eq:ko25}
-\end{align}
-\end{subequations}
+% \begin{subequations}
+% \label{eq:kcko25}
+% \begin{align}
+% 	K_{c25}&=1\times 10^{-6} \exp \left[ 38.05 - 
+%     	\frac{\Delta H_{a,c}}{298.15\: R}
+%     \right]\: P_{atm} \label{eq:kc25} \\
+%     K_{o25}&=1\times 10^{-3} \exp \left[ 20.30 - 
+%     	\frac{\Delta H_{a,o}}{298.15\: R}
+%     \right]\: P_{atm} \label{eq:ko25}
+% \end{align}
+% \end{subequations}
 
-\noindent The experiments to determine these values were conducted in a laboratory under ambient atmospheric conditions at the University of Illinois at Urbana-Champaign (Carl Bernacchi, personal communication, 24 March 2015) where the elevation is approximately 227 m above mean sea level. 
-The constant partial pressure of $K_{c25}$ is 39.93 Pa and the partial pressure of $K_{o25}$ is 27$\,$460 Pa (based on $P_{atm}$~=~98627~Pa).
+% \noindent The experiments to determine these values were conducted in a laboratory under ambient atmospheric conditions at the University of Illinois at Urbana-Champaign (Carl Bernacchi, personal communication, 24 March 2015) where the elevation is approximately 227 m above mean sea level. The constant partial pressure of $K_{c25}$ is 39.93 Pa and the partial pressure of $K_{o25}$ is 27$\,$460 Pa (based on $P_{atm}$~=~98627~Pa).
+
+%% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
+%% ATMOSPHERIC PRESSURE
+%% //////////////////////////////////////////////////////////////////////// %%
+\subsection{Atmospheric pressure}
+\label{sec:press}
+The elevation-dependence of atmospheric pressure is computed by assuming a linear decrease in temperature with elevation and a mean adiabatic lapse rate \citep{berberan97}:
+%% ---------------------------------------------------------------%%
+%% eq:pz | Atmospheric pressure as a function of elevation
+%% ---------------------------------------------------------------%%
+\begin{equation}
+\label{eq:pz}
+    p(z) = p_0 \left( 
+    	1 - \frac{L z}{T_{K,0}} 
+    \right)^{g M_a (R L)^{-1}} \;,
+\end{equation} 
+where: $z$ is the elevation above mean sea level (m), $g$ is the standard gravity (9.80665 m s$^{-2}$), $p_0$ is the standard atmospheric pressure at 0 m a.s.l. (101325 Pa), $L$ is the mean adiabatic lapse rate (0.0065 K m$^{-2}$), $M_a$ is the molecular weight for dry air (0.028963 kg mol$^{-1}$), and $R$ is the universal gas constant (8.3145 J mol$^{-1}$ K$^{-1}$). All parameter values that are held fixed in the model (not calibrated) are summarised in Tab. \ref{tab:params}.
+
+\subsection{Viscosity of water}
+Is calculated here following \cite{huber09}. The density of water is calculated following XXX.
+
+\subsection{Corollary of the $\chi$ prediction}
+\label{sec:corollary}
+
+\subsubsection{$V_{\mathrm{cmax}}$}
+With $A_J=A_C$, \vcmax\ can directly be derived as 
+\begin{equation}
+    \label{eq:vcmax}
+    V_{\mathrm{cmax}} = \varphi_0\;I_{\mathrm{abs}}\;\frac{c_i + K}{c_i + 2\Gamma^\ast} \;,
+\end{equation}
+where $c_i$ is determined by the optimal $\chi$, as given by Eq. \ref{eq:ciopt}. Normalising \vcmax\ to standard temperature (25$^{\circ}$C) following a modified Arrhenius function based on \cite{kattge07} gives $V_{\mathrm{cmax25}}$ as
+\begin{align}
+\label{eq:vcmaxsens}
+    V_{\mathrm{cmax25}} &= V_{\mathrm{cmax}} / f_V \\ 
+    f_V &= f_{\text{Arrh}}(T_K, \Delta H_V) \cdot \frac{1+\exp( (T_{K,0}\Delta S-H_d) / (T_{K,0} R) )}{1+\exp( (T_K\Delta S - H_d)/(T_K R) )}
+\end{align}
+with $H_V$ being the activation energy (71513 J mol$^{-1}$), $H_d$ is the deactivation energy (200000 J mol$^{-1}$), and $\Delta S$ is an entropy term (J mol$^{-1}$ K$^{-1}$) calculated using a linear relationship with $T$ from Kattge and Knorr (2007), with a slope of $b_S =$ 1.07 J mol$^{-1}$ K$^{-2}$ and intercept of $a_S = $ 668.39 J mol$^{-1}$ K$^{-1}$:
+\begin{equation}
+    \Delta S = a_S - b_S T
+\end{equation}
+
+
+
+\begin{table}
+\centering
+\begin{tabular}{lllll}
+	\toprule
+    Symbol     & Value   & Units         & Description           &  Reference   \\
+	\midrule
+    $\beta$      & 146     & 1             & Unit cost ratio, Eq. xxx & \cite{Wang2017-ls} \\
+	$\Gamma^\ast_{25, p_0}$ & 4.332 & Pa & Photorespiratory compensation point, SC & \cite{bernacchi01} \\
+	$K_{c25}$    & 39.97   & Pa            & MM coef. for CO$_2$, SC&  \cite{bernacchi01} \\
+	$K_{o25}$    & 27480   & Pa            & MM coef. for O$_2$, SC&  \cite{bernacchi01} \\
+	$\Delta H_{\Gamma\ast}$ & 37830 & J mol$^{-1}$ & Activation energy for $\Gamma^\ast$  & \cite{bernacchi01} \\
+	$\Delta H_{Kc}$ & 79430  & J mol$^{-1}$  & Activation energy for $K_c$&  \cite{bernacchi01} \\
+	$\Delta H_{Ko}$ & 36380  & J mol$^{-1}$  & Activation energy for $K_o$&  \cite{bernacchi01} \\
+	$H_V$        & 71513   & J mol$^{-1}$  & Activation energy for \vcmax\ & \cite{kattge07} \\
+	$H_d$        & 200000   & J mol$^{-1}$  & Deactivation energy for \vcmax\ & \cite{kattge07} \\
+	$p_0$        & 101325  & Pa            & Standard atmosphere   & -- \\
+	$g$          & 9.80665 & m s$^{-2}$    & Gravitation constant  & -- \\
+	$L$          & 0.0065  & K m$^{-2}$    & Adiabatic lapse rate  & -- \\
+	$R$          & 8.3145  & J mol$^{-1}$ K$^{-1}$ & Universal gas constant & -- \\
+	$M_a$        & 28.963  & g mol$^{-1}$  & Molecular mass of dry air & -- \\
+    $M_C$        & 12.0107 & g mol$^{-1} $ & Molecular mass of carbon & -- \\ 
+	$a_S$        & 668.39  & J mol$^{-1}$ K$^{-1}$ & Intercept for entropy term in Eq. \ref{eq:vcmaxsens} & \cite{kattge07} \\
+	$b_S$        & 1.07  & J mol$^{-1}$ K$^{-2}$ & Slope for entropy term in Eq. \ref{eq:vcmaxsens} & \cite{kattge07} \\
+	\bottomrule
+\end{tabular}
+\caption{Fixed parameters. 'SC' stands for 'at standard conditions' (25 $^{\circ}$C, 101325 Pa). 'MM coef.' refers to 'Michaelis Menten coefficient'.}
+\label{tab:params}
+\end{table}
+
+According to Eq. \ref{eq:vcmax}, \vcmax\ scales linearly with absorbed light. 
+
+
+\subsubsection{Stomatal conductance}
+Stomatal conductance $g_s$ follows from the prediction of $\chi$ given by Eq. \ref{eq:chi_exact} and $g_s = A / ( c_a\;(1-\chi) )$ (from Eq. \ref{eq:fick}). Stomatal contuctance can thus be written as
+\begin{equation}
+    g_s = \left( 1 + \frac{\xi}{\sqrt{D}} \right) \frac{A}{c_a}
+\end{equation}
+This is equivalent to the form derived by Medlyn et al., 2011, apart from the $g_0$ parameter that is missing here.
+
+$g_s$ also follows from the predictions of $A$ and $ci$, using Eq. \ref{eq:fick}. The stomatal conductance to water vapour (not CO$_2$) is:
+\begin{equation}
+g_s^W = \frac{1.6 \; p\; A}{c_a - c_i}
+\end{equation}
+With $g_s^W$ commonly expressed in units of mol H$_2$O m$^{-2}$ s$^{-1}$, $g_s$ in P-model being the stomatal conductance to CO$_2$, and $c_i$ (and $c_a$) defined as CO$_2$ partial pressure in units of Pa, multiplication with atmospheric pressure $p$ (Pa) and the factor 1.6 to convert stomatal conductance to CO$_2$ into stomatal conductance to H$_2$O are required.
+
+Note that in the P-model output, $c_i$ is given in ppm.
+
+\subsubsection{Intrinsic water use efficiency}
+The intrinsic water use efficiency (iWUE) is defined as the ratio of assimilation over stomatal conductance (to water). With Eq. \ref{eq:fick} this is
+\begin{equation}
+    \mathrm{iWUE} = A / g_s^W = \frac{c_a - c_i}{1.6\;p}
+\end{equation}
+With $A$ expressed in units of mol CO$_2$ m$^{-2}$ s$^{-1}$, and $g_s^W$ in units of mol H$_2$O m$^{-2}$ s$^{-1}$, iWUE is unitless. The factor 1.6 accounts for the difference in diffusivity between CO$_2$ and H$_2$O. In all above calculations, $c_a$ and $c_i$ are expressed as partial pressure of CO$_2$ in units of Pa. Division by the atmospheric pressure $p$ converts $(c_a - c_i)$ to unitless.
+
+
+\subsubsection{$V_{\mathrm{cmax}}$}
+
+%Normalising to standard temperature (25$^{\circ}$C) gives $V_{\mathrm{cmax25}}$ as
+%\begin{equation}
+   V_{\mathrm{cmax25}} = V_{\mathrm{cmax}} \; \exp\Bigg(\frac{\Delta H_{\mathrm{Vcmax}}}{R}\Big( \frac{1}{T_{K,0}} - \frac{1}{T_K} \Big)\Bigg)
+%\end{equation}
+%with $\Delta H_{\mathrm{Vcmax}}=65330$ J mol$^{-1}$, $R = 8.3145$ J mol$^{-1}$ K$^{-1}$, $T_K$ is the ambient temperature in Kelvin, and $T_{K,0}$ is 25$^{\circ}$C in Kelvin (298.15 K).
+%Wang Han (in prep.) implemented this as
+
+
+%Wang Han (in prep.) implemented this as
+%\begin{equation}
+%   V_{\mathrm{cmax25}} = V_{\mathrm{cmax}} \; \exp\Bigg( \frac{H_a(T-T_{\text{ref}})}{T_{\text{ref}}TR}\;\frac{1+\exp( \frac{T_{\text{ref}}\Delta S - H_d}{RT_{\text{ref}}}  )}{1+\exp( \frac{T\Delta S-H_d}{RT} )} \Bigg)
+%\end{equation}
+
+\subsubsection{Dark respiration $R_{\mathrm{d}}$}
+
+Dark respiration at standard temperature $R_{\mathrm{d25}}$ is calculated as being proportional to $V_{\mathrm{cmax25}}$:
+\begin{equation}
+\label{eq:rd25}
+    R_{\mathrm{d25}} = b_0 \; V_{\mathrm{cmax25}}
+\end{equation}
+where $b_0 = 0.014$. 
+Dark respiration follows a different temperature sensitivity. Following Heskel et al. (2016):
+\begin{equation}
+\label{eq:rdsens}
+    R_{\mathrm{d}} =  R_{\mathrm{d25}}\; f_R  = R_{\mathrm{d25}} \exp \Big(  0.1012(T_{K,0}-T_K) - 0.0005(T_{K,0}^2-T_K^2) \Big) 
+\end{equation}
+By combining Equations \ref{eq:vcmaxsens}, \ref{eq:rd25}, and \ref{eq:rdsens}, $R_d$ at growth temperature $T$ can directly be calculated from $V_{\mathrm{cmax}}$
+\begin{equation}
+    R_d = b_0 \frac{f_R}{f_V}\;V_{\mathrm{cmax}}
+\end{equation}
+
+%Dark respiration at ambient temperature follows a sensitivity with a different activation energy than $\Delta H_{\mathrm{Vcmax}}$:
+%\begin{equation}
+   R_{\mathrm{d}} = R_{\mathrm{d25}} \Bigg( \exp\Bigg(\frac{\Delta H_{\mathrm{Rd}}}{R}\Big( \frac{1}{T_{K,0}} - \frac{1}{T_K} \Big)\Bigg) \Bigg)^{-1}
+%\end{equation}
+
+
+
+\section{Methods}
+
+\subsection{Theory}
+\label{sec:theory}
+The P-model centers around a prediction for the ratio of leaf-internal to ambient \coo ($c_i : c_a \equiv \chi$) governed by the trade-off between the costs arising from the maintenance of carboxylation capacity ($V_{\mathrm{cmax}}$) and transpiration ($E$). 
+It is founded on the standard model for C3 plant photosynthesis (Section \ref{sec:farquhar}), the coordination hypothesis (Section \ref{sec:coordination}) and the least-cost hypothesis (Section \ref{sec:least-cost}).
+
+\textit{The following derivation and text is adopted and modified from Wang Han et al., 2017.}\\
+
+\subsection{The standard model of C3 plant photosynthesis}
+\label{sec:farquhar}
+Following the Farquhar model for photosynthesis of C3 plants, instantaneous assimilation rates $A$ are limited either by the capacity of Rubisco for carboxylation of RuBP or the electron transport rate for the regeneration of RuBP. 
+The Rubisco-limited photosynthetic rate $A_C$ is given by:
+\begin{equation}
+\label{eq:rubiscolimited}
+    A_C = V_{\mathrm{cmax}} \; \frac{\chi\;c_a-\Gamma^{\ast}}{\chi\;c_a + K}
+\end{equation}
+where $V_{\mathrm{cmax}}$ is the Rubisco activity, $c_a$ is the ambient partial pressure of CO$_2$, $\chi$ is the ratio of leaf-internal to ambient CO$_2$ partial pressures, $\Gamma^{\ast}$ is the \coo\ compensation point in the absence of mitochondrial respiration, and $K$ is the effective Michaelis-Menten coefficient of Rubisco for carboxylation. 
+Both $\Gamma^{\ast}$ and $K$ are influenced by the partial pressure of oxygen. 
+$V_{\mathrm{cmax}}$, $\Gamma^{\ast}$ and $K$ are temperature-dependent, following Arrhenius kinetics.
+
+The electron-transport limited photosynthetic rate $A_J$ is given by:
+\begin{equation}
+\label{eq:lightlimited}
+    A_J = \varphi_0 \; I\; \frac{\chi \; c_a - \Gamma^{\ast}}{\chi\;c_a + 2\Gamma^{\ast}}
+\end{equation}
+for low PPFD (I) where $\varphi_0$ is the intrinsic quantum efficiency of photosynthesis. 
+With increasing PPFD, $I$ must be substituted with a saturating function of the electron-transport capacity $J_{\mathrm{max}}$; various empirical functions have been used. 
+The actual photosynthetic rate is then given by:
+\begin{equation}
+    A = \min(A_C, A_J)
+\end{equation}
+
+\subsubsection{The coordination hypothesis}
+\label{sec:coordination}
+Light use efficiency (LUE) models provide a powerful method and estimate assimilation rates as a linear function of absorbed light over a given time interval. 
+But the connection between the Farquhar and LUE models is not obvious. 
+Equation \ref{eq:lightlimited} predicts that electron-transport limited photosynthesis is proportional to absorbed PPFD but only applies at relatively low PPFD, and in any case, Equation \ref{eq:rubiscolimited} for Rubisco-limited photosynthesis is expected to apply at high PPFD. 
+The conundrum is this: how can GPP (the time-integral of photosynthesis) be proportional to PPFD, which is the basis of the LUE model, if the response of photosynthesis to PPFD saturates, as it should according to the Farquhar model? This question has surfaced occasionally in the literature, but not been fully resolved. 
+Medlyn10 reviewed some alternative explanations.
+ 
+One of the explanations discussed by Medlyn10 invokes the co-ordination (or co-limitation) hypothesis, which states that $V_{\mathrm{cmax}}$ of leaves at any level in the canopy acclimates spatially and temporally to the prevailing daytime incident PPFD in such a way as to be neither in excess (entailing additional, futile maintenance respiration), nor less than required for full exploitation of the available light. 
+In other words, under typical daytime condition when most photosynthesis takes place, the following is valid:
+\begin{equation}
+\label{eq:coordination}
+    A_J \approx A_C
+\end{equation}
+This hypothesis also requires that $J_{\mathrm{max}}$ maintain a ratio to $V_{\mathrm{cmax}}$ such that strong limitation by $J_{\mathrm{max}}$ is avoided. 
+Evidence for the co-ordination hypothesis was presented by Haxeltine and Prentice11, and Dewar12, who noted that it can explain many otherwise unexplained responses of C3 plants to environmental changes: including changes in leaf C:N ratios along environmental gradients, and the widely observed reduction of $V_{\mathrm{cmax}}$ under experimentally increased atmospheric CO$_2$. More recently Maire et al.13 showed very good agreement between typical daytime values of $A_J$ and $A_C$ as calculated under the prevailing growth conditions for 31 species (293 data points) based on published studies. 
+The co-ordination hypothesis allows a simple approximation by which equation S2 is applied to predict GPP over time scales for which acclimation of $V_{\mathrm{cmax}}$ is possible, with $I$ now representing daily, rather than instantaneous, PPFD.
+
+\subsubsection{The least-cost hypothesis}
+\label{sec:least-cost}
+Missing from the Farquhar model is an equation to predict χ, which constrains both the Rubisco- and electron-transport limited rates of carbon fixation and therefore appears in both equations S1 and S2. 
+$\chi$ at any moment must be consistent both with the rate of carbon fixation and with the rate of diffusion of \coo\ through the stomata. 
+Although the mechanism of stomatal control is still an active research topic, there is abundant evidence that $\chi$ is closely regulated to remain within a narrow range. 
+All current Earth System Models include a 'closure' that predicts either stomatal conductance or $\chi$. 
+The most commonly used closures are the one-parameter Ball-Berry equation14 and the two-parameter Leuning equation15 (or equivalently, the ‘Jacobs closure’16). 
+Both are empirical, and incomplete in the sense that they allow $\chi$ to react only to relative humidity (Ball-Berry) or VPD (Leuning/Jacobs). 
+Although superficially similar, these equations make substantially different predictions. 
+For example, Ball-Berry allows $\chi$ to approach unity as VPD tends to zero, whereas Leuning/Jacobs caps $\chi$ at a maximum value. 
+Both equations are usually implemented with different parameter values for different PFTs, but with no strong basis for the distinctions.
+
+The least-cost hypothesis by Prentice et al. (2014), first proposed by Wright et al. (2003), states that $\chi$ should minimize the combined cost (per unit of assimilation) of maintaining the capacities for carboxylation and transpiration. 
+If $a$ and $b$ are dimensionless cost factors (maintenance respiration per unit assimilation) for the maximum rates of water transport ($E$) and carbon fixation ($V_{\mathrm{cmax}}$) respectively, the optimality criterion is:
+\begin{equation}
+    a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}
+\end{equation}
+
+\subsubsubsection{Predicting $\chi$}
+The following section provides a derivation of optimal $\chi$ using Fick's Law, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
+Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
+According to the Fick's Law of diffusion:
+\begin{align}
+\label{eq:fick}
+    E &= 1.6 \; g_s \; D \\
+    A &= g_s \; c_a \; (1-\chi)
+\end{align}
+Therefore,
+\begin{equation}
+    E/A = \frac{1.6 \; D}{c_a\;(1-\chi)}
+\end{equation}
+The derivative term on the left-hand-side of Eq.\label{eq:leastcost} can thus be written as
+\begin{equation}
+\label{eq:partial1}
+    \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
+\end{equation}
+Using Equation \ref{eq:rubiscolimited} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:leastcost} can be written as
+\begin{equation}
+\label{eq:partial2}
+    \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}
+\end{equation}
+Using equations \ref{eq:partial1} and \ref{eq:partial2}, Eq. \ref{eq:leastcost} can be written as
+\begin{equation}
+    a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
+\end{equation}
+and solved for $\chi$:
+\begin{align}
+    \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
+    \xi &= \sqrt{\frac{b\;K}{1.6\;a}}
+\end{align}
+The exact solution, without the simplification $\Gamma^{\ast}=0$, is 
+\begin{align}
+\label{eq:chi_exact}
+    \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\\
+    \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
+\end{align}
+This can also be written as
+\begin{equation}
+\label{eq:ci}
+    c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \\ 
+\end{equation}
+
+With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
+\begin{equation}
+\label{eq:lue}
+        A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
+\end{equation}
+Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
+\begin{equation}
+    m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
+\end{equation}
+This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure. Note that the unit cost $b$ is assumed to be constant, and $a$ only to vary with the temperature-dependent viscosity of water $\eta(T)$, calculated here following \cite{huber09}. The factor $\eta^\ast \equiv \eta(T) / \eta(25^{\circ}\text{C})$ is thus introduced by taking the unit cost of water as $a \eta^\ast$.
+
+\subsubsection{Introducing $J_{\mathrm{max}}$ limitation}
+Equation \ref{eq:lue} is correct only if the response of GPP ($A$) to increasing PPFD remains linear up to the co-limitation point. 
+By considering a non-rectangular hyperbola relationship between $A_J$ and $I_{\mathrm{abs}}$ (ref 26), we allow for the effect of finite $J_{\mathrm{max}}$:
+\begin{equation}
+\label{eq:ajlim}
+    A_J = \varphi_0 \; I_{\mathrm{abs}} \; m \; \underbrace{ \frac{1}{\sqrt{1+ \left( \frac{4\;\varphi_0\;I_{\mathrm{abs}}}{J_{\mathrm{max}}} \right)^{2}}} }_{L}
+\end{equation}
+In the following, we aim for an expression of the limitation factor $L$ as a function of a $J_{\mathrm{max}}$ cost factor $c^{\ast}$. 
+We define two dimensionless quantities, $a_0$ and $k$:
+\begin{equation}
+\label{eq:a0}
+    a_0 = \frac{J_{\mathrm{max}}}{4\;\varphi_0\;I_{\mathrm{abs}}}
+\end{equation}
+\begin{equation}
+    k = \frac{J_{\mathrm{max}}}{4\;V_{\mathrm{cmax}}}\;.
+\end{equation}
+The model equations for $A_J$ and $A_C$ can then be re-written as:
+\begin{equation}
+\label{eq:ajlim2}
+    A_J = \varphi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \frac{1}{\sqrt{1+a_0^{-2}}}
+\end{equation}
+and
+\begin{equation}
+    A_C = \frac{J_{\mathrm{max}}}{4\;k} \cdot \frac{c_i - \Gamma^{\ast}}{c_i + K}
+\end{equation}
+Under the assumption of the coordination hypothesis, we set again $A_J = A_C$ and solve for $k$ to define the ratio of $J_{\mathrm{max}}$ to $V_{\mathrm{cmax}}$:
+\begin{equation}
+\label{eq:k}
+    k = \frac{c_i + 2\Gamma^{\ast}}{c_i + K} \; \sqrt{a_0^2 + 1}
+\end{equation}
+Solving Eq. \ref{eq:k} for $a_0$ and substituting this into Eq. \ref{eq:ajlim} we can express the $J_{\mathrm{max}}$ limitation factor $L$ as:
+\begin{equation}
+\label{eq:ajlim3}
+    L = \frac{1}{\sqrt{1 - \left( \frac{c_i+2\Gamma^{\ast}}{k(c_i+K)} \right)^{2}}}
+\end{equation}
+
+To obtain an estimate of the optimum value of $J_{\mathrm{max}}$ we assume that (a) there is a cost associated with $J_{\mathrm{max}}$ that is equal to the product of $J_{\mathrm{max}}$ and a constant $c$, and (b) that the value of $J_{\mathrm{max}}$ maximizes the benefit ($A_J$) minus the cost. 
+This maximum is obtained when
+\begin{equation}
+\label{eq:jmaxpartial}
+    \frac{\partial A_J}{\partial a_0} = c \; \frac{\partial J_{\mathrm{max}}}{\partial a_0}\;.
+\end{equation}
+Using Eq. \ref{eq:ajlim2}, the left-hand-side of Eq. \ref{eq:jmaxpartial} is 
+\begin{equation}
+    \frac{\partial A_J}{\partial a_0} = \varphi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \left( a_0^{-2} + 1 \right) ^{-2/3} a_0^{-3}
+\end{equation}
+Using Eq. \ref{eq:a0}, the right-hand-side of Eq. \ref{eq:jmaxpartial} is 
+\begin{equation}
+    \frac{\partial J_{\mathrm{max}}}{\partial a_0} = 4 \; \varphi_0 \; I_{\mathrm{abs}}\;.
+\end{equation}
+Now, we can solve Eq. \ref{eq:jmaxpartial} for $a_0^2$:
+\begin{equation}
+\label{eq:a0}
+a_0^2 = \frac{(c_i - \Gamma^{\ast})^{2/3}}{c^{2/3} \; (c_i+2\Gamma^{\ast})^{2/3}}-1
+\end{equation}
+and use this in Eq. \ref{eq:k} to solve for $k^2$:
+\begin{equation}
+\label{eq:k2}
+k^2 = (c_i+ \Gamma^{\ast})^{4/3} \; (c_i - \Gamma^{\ast})^{2/3} \; (c_i + K)^{-2} \; c^{-2/3}
+\end{equation}
+and for $c$:
+\begin{equation}
+\label{eq:c}
+    c = \frac{(c_i+2\Gamma^{\ast})^2\;(c_i-\Gamma^{\ast})}{k^3\;(c_i+K)^3}
+\end{equation}
+Eq. \ref{eq:k2} can be plugged into Eq. \ref{eq:ajlim3} to express $L$ as
+\begin{equation}
+    L = \sqrt{1-c^{2/3} \; \left( \frac{c_i+2\Gamma^{\ast}}{c_i-\Gamma^{\ast}}\right)^{2/3}  }
+\end{equation}
+Using the prediction of $c_i$ from Eq. \ref{eq:ci}, this can be written as
+\begin{equation}
+    L =  \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
+\end{equation}
+The revised LUE model thus becomes
+\begin{equation}
+\label{eq:ajlim4}
+    A_J = \varphi_0 \; I_{\mathrm{abs}} \; m'
+\end{equation}
+with
+\begin{equation}
+    m' = m \; \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
+\end{equation}
+Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq. \ref{eq:c}) c = 0.41.
+
+
+
+
 
 \subsubsection{Soil water holding capacity}
 
@@ -1202,9 +1273,9 @@ The soil water balance is solved following the SPLASH model and accounting only 
 
 % I'm a bit confused. In the SPLASH documentation, we used the term 'soil holding capacity' to refer to what one may rather call the field capacity and expressed it in units of mm. What you termed 'water holding capacity, WHC' may be refered to as 'porosity' instead. We may rename terms in Eq. 77 of the SPLASH documentation (field capacity instead of soil moisture capacity) and write this as follows:
 
-% To obtain the total soil water holding capacity (WHC, in mm), we use data on soil depth ($d$, in m) and porosity ($\phi_0$, in $m_{H_{2}O}^{3} \cdot m_{Soil}^{-3}$) and calculate $W_m$ as
+% To obtain the total soil water holding capacity (WHC, in mm), we use data on soil depth ($d$, in m) and porosity ($\varphi_0$, in $m_{H_{2}O}^{3} \cdot m_{Soil}^{-3}$) and calculate $W_m$ as
 % \begin{equation}
-%     W_m = \phi_0 \cdot d \cdot 10^{-3}
+%     W_m = \varphi_0 \cdot d \cdot 10^{-3}
 % \end{equation}
 % Runoff is generated when ...
 
@@ -1274,10 +1345,65 @@ The soil water balance is solved following the SPLASH model and accounting only 
 % Contents of sand, clay, organic matter and soil depth data were acquired from the ISRIC-SoilGrids web portal (ftp://ftp.soilgrids.org/data/aggregated/10km/), and resampled to 0.5$^{\circ}$ to match the meteorological data resolution.
 % \clearpage
 
+
+
+% %% \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ %%
+% %% VAPOR PRESSURE DEFICIT
+% %% //////////////////////////////////////////////////////////////////////// %%
+% \subsection{Vapor Pressure Deficit}
+% \label{sec:d}
+% It has long been known that evapotranspiration is affected by atmospheric vapor pressure, or the amount of moisture in the air. 
+% Vapor pressure deficit (VPD) is a common metric used to describe the driving force for evapotranspiration.  
+% VPD is defined as the difference between the saturation vapor pressure, $e_s$, which varies with ambient temperature, and the actual vapor pressure, $e_d$:
+% %% ---------------------------------------------------------------%%
+% %% eq:vpd_basic | Basic vapor pressure deficit equation
+% %% ---------------------------------------------------------------%%
+% \begin{equation}
+% \label{eq:vpd_basic}
+%     \text{VPD} = e_s - e_d
+% \end{equation} 
+
+% In order to estimate VPD, the saturation vapor pressure can be calculated from the air temperature \parencite[Eq. 5.1]{abtew13}:
+% %% ---------------------------------------------------------------%%
+% %% eq:es | Saturation vapor pressure
+% %% ---------------------------------------------------------------%%
+% \nomenclature{$e_s$}{saturation vapor pressure [kPa]}%
+% \begin{equation}
+% \label{eq:es}
+%     e_s = 0.611 \exp \left( \frac{17.27\; T_{air}}{T_{air} + 237.3} \right)
+% \end{equation}
+
+% \noindent where:\\
+% \indent $e_s$ = saturation vapor pressure [kPa];\\
+% \indent $T_{air}$ = air temperature [$^{\circ}$C].\\
+
+% \noindent The air temperature in Eq. \ref{eq:es}, $T_{air}$, may reflect a variety of quantities, such as the 24-hour mean air temperature, the daily maximum air temperature, the daily minimum air temperature, or the average air temperature.  
+% The latter quantity is used in the calculation of VPD by means of CRU TS 3.21 monthly average daily temperature, tmp, which is the also the average of the monthly average maximum and minimum daily temperatures (tmx and tmn, respectively).  
+% The CRU TS 3.21 dataset also includes a measure of monthly vapor pressure, vap, in units of hectopascals (hPa).
+% The full expression for calculating VPD based on CRU TS 3.21 datasets is then:
+% %% ---------------------------------------------------------------%%
+% %% eq:vpd | Vapor pressure deficit
+% %% ---------------------------------------------------------------%%
+% \nomenclature{$\text{VPD}$}{vapor pressure deficit [kPa]}
+% \begin{equation}
+% \label{eq:vpd}
+%     \text{VPD} = 0.611 \exp \left( \frac{17.27\; \text{tmp}}
+%                  {0.5\; \text{tmp} + 237.3} \right) - 0.10\; \text{vap}
+% \end{equation}
+
+% \noindent where:\\
+% \indent VPD = monthly average vapor pressure deficit [kPa];\\
+% \indent tmp = monthly average daily mean temperature [$^{\circ}$C];\\
+% \indent vap = monthly average vapor pressure [hPa].\\
+
+% The monthly VPD calculated from Eq. \ref{eq:vpd} is used to calculate the vapor pressure deficit, $D$, based on the unit conversion of the observed VPD from kPa to Pa.
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \addcontentsline{toc}{section}{References}
 \bibliographystyle{copernicus}
-\bibliography{bibliography.bib}
+\bibliography{beni.bib}
 
 % \begin{appendix} 
 % \section{Appendix}
