@@ -4323,7 +4323,7 @@
 }
 
 @article{gee_subset, 
-	title={khufkens/gee_subset: Google Earth Engine subset script & library}, 
+	title={khufkens/gee\textunderscore subset: Google Earth Engine subset script & library}, 
 	DOI={10.5281/zenodo.833789}, 
 	publisher={Zenodo}, 
 	author={Koen Hufkens}, 
@@ -8206,16 +8206,144 @@ url = {http://ntrs.nasa.gov/search.jsp?R=19680025707}
 	year = {1991}
 }
 
+@article{lasslop10,
+	title = "Separation of net ecosystem exchange into assimilation and respiration using a light response curve approach: critical issues and global evaluation",
+	abstract = "The measured net ecosystem exchange (NEE) of CO2 between the ecosystem and the atmosphere reflects the balance between gross CO2 assimilation [gross primary production (GPP)] and ecosystem respiration (R-eco). For understanding the mechanistic responses of ecosystem processes to environmental change it is important to separate these two flux components. Two approaches are conventionally used: (1) respiration measurements made at night are extrapolated to the daytime or (2) light-response curves are fit to daytime NEE measurements and respiration is estimated from the intercept of the ordinate, which avoids the use of potentially problematic nighttime data. We demonstrate that this approach is subject to biases if the effect of vapor pressure deficit (VPD) modifying the light response is not included. We introduce an algorithm for NEE partitioning that uses a hyperbolic light response curve fit to daytime NEE, modified to account for the temperature sensitivity of respiration and the VPD limitation of photosynthesis. Including the VPD dependency strongly improved the model's ability to reproduce the asymmetric diurnal cycle during periods with high VPD, and enhances the reliability of R-eco estimates given that the reduction of GPP by VPD may be otherwise incorrectly attributed to higher R-eco. Results from this improved algorithm are compared against estimates based on the conventional nighttime approach. The comparison demonstrates that the uncertainty arising from systematic errors dominates the overall uncertainty of annual sums (median absolute deviation of GPP: 47 g C m(-2) yr(-1)), while errors arising from the random error (median absolute deviation: similar to 2 g C m(-2) yr(-1)) are negligible. Despite site-specific differences between the methods, overall patterns remain robust, adding confidence to statistical studies based on the FLUXNET database. In particular, we show that the strong correlation between GPP and R-eco is not spurious but holds true when quasi-independent, i.e. daytime and nighttime based estimates are compared.",
+	keywords = "response curve, hyperbolic light, GPP, FLUXNET, eddy covariance, flux partitioning, R-eco, uncertainty",
+	author = "Gitta Lasslop and Markus Reichstein and Dario Papale and Richardson, {Andrew D.} and Almut Arneth and Alan Barr and Paul Stoy and Georg Wohlfahrt",
+	year = "2010",
+	doi = "10.1111/j.1365-2486.2009.02041.x",
+	language = "English",
+	volume = "16",
+	pages = "187--208",
+	journal = "Global Change Biology",
+	issn = "1354-1013",
+	publisher = "Wiley-Blackwell",
+	number = "1",
+}
 
+@misc{modis_fpar_6,
+	author = {Myneni, R. and Knyazikhin, Y. and Park, T.},
+	year = {2015},
+	title = {{MOD15A3H MODIS/Combined Terra+Aqua Leaf Area Index/FPAR Daily L4 Global 500m SIN Grid}},
+	doi = {10.5067/MODIS/MOD15A3H.006},
+	howpublished= {\url{http://doi.org/10.5067/MODIS/MOD15A3H.006}},
+}
 
+@misc{modis_evi_6,
+	author = {Didan, K.},
+	title = {{MOD13Q1 MODIS/Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid V006}},
+	doi = {doi.org/10.5067/MODIS/MOD13Q1.006},
+	howpublished= {\url{https://doi.org/10.5067/MODIS/MOD13Q1.006}},
+	year = {2015}
+}
 
+@Misc{falge17,
+	author={Falge, E. and Aubinet, M. and Bakwin, P. S. and Baldocchi, D. and Berbigier, P. and Bernhofer, C. and Black, T. A. and Ceulemans, R. and Davis, K. J. and Dolman, A. J. and Goldstein, A. and Goulden, M. L. and Granier, A. and Hollinger, D. Y. and Jarvis, P. G. and Jensen, N. and Pilegaard, K. and Katul, G. and Kyaw Tha Paw, P. and Law, B. E. and Lindroth, A. and Loustau, D. and Mahli, Y. and Monson, R. and Moncrieff, P. and Moors, E. and Munger, J. W. and Meyers, T. and Oechel, W. and Schulze, E. -d and Thorgeirsson, H. and Tenhunen, J. and Valentini, R. and Verma, S. B. and Vesala, T. and Wofsy, S. C.},
+	title={{FLUXNET} Research Network Site Characteristics, Investigators, and Bibliography, 2016},
+	year={2017},
+	publisher={ORNL Distributed Active Archive Center},
+	abstract={FLUXNET is a global network of micrometeorological tower sites that use eddy covariance methods to measure the exchanges of carbon dioxide, water vapor, and energy between terrestrial ecosystems and the atmosphere. This dataset provides information from the ORNL DAAC-hosted FLUXNET site database which was discontinued in 2016. The files provided contain a list of investigators associated with each tower site, site locations and environmental data, and a bibliography of papers that used FLUXNET data. For more up to date information on FLUXNET sites, see http://fluxnet.fluxdata.org/.},
+	doi={10.3334/ornldaac/1530},
+	url={https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1530}
+}
 
+@article{mgcv,
+	 ISSN = {13697412, 14679868},
+	 URL = {http://www.jstor.org/stable/41057423},
+	 abstract = {Recent work by Reiss and Ogden provides a theoretical basis for sometimes preferring restricted maximum likelihood (REML) to generalized cross-validation (GCV) for smoothing parameter selection in semiparametric regression. However, existing REML or marginal likelihood (ML) based methods for semiparametric generalized linear models (GLMs) use iterative REML or ML estimation of the smoothing parameters of working linear approximations to the GLM. Such indirect schemes need not converge and fail to do so in a non-negligible proportion of practical analyses. By contrast, very reliable prediction error criteria smoothing parameter selection methods are available, based on direct optimization of GCV, or related criteria, for the GLM itself. Since such methods directly optimize properly defined functions of the smoothing parameters, they have much more reliable convergence properties. The paper develops the first such method for REML or ML estimation of smoothing parameters. A Laplace approximation is used to obtain an approximate REML or ML for any GLM, which is suitable for efficient direct optimization. This REML or ML criterion requires that Newton-Raphson iteration, rather than Fisher scoring, be used for GLM fitting, and a computationally stable approach to this is proposed. The REML or ML criterion itself is optimized by a Newton method, with the derivatives required obtained by a mixture of implicit differentiation and direct methods. The method will cope with numerical rank deficiency in the fitted model and in fact provides a slight improvement in numerical robustness on the earlier method of Wood for prediction error criteria based smoothness selection. Simulation results suggest that the new REML and ML methods offer some improvement in mean-square error performance relative to GCV or Akaike's information criterion in most cases, without the small number of severe undersmoothing failures to which Akaike's information criterion and GCV are prone. This is achieved at the same computational cost as GCV or Akaike's information criterion. The new approach also eliminates the convergence failures of previous REML-or ML-based approaches for penalized GLMs and usually has lower computational cost than these alternatives. Example applications are presented in adaptive smoothing, scalar on function regression and generalized additive model selection.},
+	 author = {Simon N. Wood},
+	 journal = {Journal of the Royal Statistical Society. Series B (Statistical Methodology)},
+	 number = {1},
+	 pages = {3--36},
+	 publisher = {[Royal Statistical Society, Wiley]},
+	 title = {Fast stable restricted maximum likelihood and marginal likelihood estimation of semiparametric generalized linear models},
+	 volume = {73},
+	 year = {2011}
+}
 
+@misc{flue,
+  author       = {Stocker, Benjamin},
+  title        = {fLUE},
+  month        = jan,
+  year         = 2018,
+  doi          = {10.5281/zenodo.1158524},
+  url          = {https://doi.org/10.5281/zenodo.1158524}
+}
 
+@article{fick1855,
+	author = {Fick, Adolf},
+	title = {Ueber Diffusion},
+	journal = {Annalen der Physik},
+	volume = {170},
+	number = {1},
+	pages = {59-86},
+	doi = {10.1002/andp.18551700105},
+	url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/andp.18551700105},
+	eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/andp.18551700105},
+	year = {1855}
+}
 
+@Article{wong79,
+	author={Wong, S. C. and Cowan, I. R. and Farquhar, G. D.},
+	title={Stomatal conductance correlates with photosynthetic capacity},
+	journal={Nature},
+	year={1979},
+	volume={282},
+	number={5737},
+	pages={424-426},
+	abstract={Previous studies on the Physiology of stomata in higher plants suggest that stomata influence the rate of CO2 fixation in leaf mesophyll tissue. We believe that an equally important stomatal function has not been fully recognised; that stomatal aperture is determined by the capacity of the mesophyll tissue to fix carbon. We altered the capacity of leaves to fix carbon by various means, and found invariably that the diffusive conductance of the epidermis to CO2 transfer, g, (which mainly depends on the number and dimensions of the stomata) changes in nearly the same proportion as the rate of assimilation of CO2. Thus, the intercellular concentration of CO2 (ci), calculated as ci = ca-A/g (where ca is ambient concentration of CO2, A is assimilation rate of CO2), tends to remain constant providing ca is kept constant. We used routine techniques1 to measure A and estimate g in leaves placed singly in chambers. Conductance takes account of CO2 transfer through both stomata and leaf boundary layer, the conductance of the latter being 0.5 mol m-2 s-1.},
+	issn={1476-4687},
+	doi={10.1038/282424a0},
+	url={https://doi.org/10.1038/282424a0}
+}
 
+@article{beer09gbc,
+	author = {Beer, C. and Ciais, P. and Reichstein, M. and Baldocchi, D. and Law, B. E. and Papale, D. and Soussana, J.-F. and Ammann, C. and Buchmann, N. and Frank, D. and Gianelle, D. and Janssens, I. A. and Knohl, A. and Köstner, B. and Moors, E. and Roupsard, O. and Verbeeck, H. and Vesala, T. and Williams, C. A. and Wohlfahrt, G.},
+	title = {Temporal and among-site variability of inherent water use efficiency at the ecosystem level},
+	journal = {Global Biogeochemical Cycles},
+	volume = {23},
+	number = {2},
+	pages = {},
+	keywords = {water use efficiency, FLUXNET, eddy covariance},
+	doi = {10.1029/2008GB003233},
+	url = {https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2008GB003233},
+	eprint = {https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2008GB003233},
+	abstract = {Half-hourly measurements of the net exchanges of carbon dioxide and water vapor between terrestrial ecosystems and the atmosphere provide estimates of gross primary production (GPP) and evapotranspiration (ET) at the ecosystem level and on daily to annual timescales. The ratio of these quantities represents ecosystem water use efficiency. Its multiplication with mean daylight vapor pressure deficit (VPD) leads to a quantity which we call “inherent water use efficiency” (IWUE*). The dependence of IWUE* on environmental conditions indicates possible adaptive adjustment of ecosystem physiology in response to a changing environment. IWUE* is analyzed for 43 sites across a range of plant functional types and climatic conditions. IWUE* increases during short-term moderate drought conditions. Mean annual IWUE* varied by a factor of 3 among all sites. This is partly explained by soil moisture at field capacity, particularly in deciduous broad-leaved forests. Canopy light interception sets the upper limits to canopy photosynthesis, and explains half the variance in annual IWUE* among herbaceous ecosystems and evergreen needle-leaved forests. Knowledge of IWUE* offers valuable improvement to the representation of carbon and water coupling in ecosystem process models.},,
+	year = {2009}
+}
 
+@article{heskel16,
+	title = "Convergence in the temperature response of leaf respiration across biomes and plant functional types",
+	abstract = "Plant respiration constitutes a massive carbon flux to the atmosphere, and a major control on the evolution of the global carbon cycle. It therefore has the potential to modulate levels of climate change due to the human burning of fossil fuels. Neither current physiological nor terrestrial biosphere models adequately describe its short-term temperature response, and even minor differences in the shape of the response curve can significantly impact estimates of ecosystem carbon release and/or storage. Given this, it is critical to establish whether there are predictable patterns in the shape of the respiration-temperature response curve, and thus in the intrinsic temperature sensitivity of respiration across the globe. Analyzing measurements in a comprehensive database for 231 species spanning 7 biomes, we demonstrate that temperature-dependent increases in leaf respiration do not follow a commonly used exponential function. Instead,we find a decelerating function as leaves warm, reflecting a declining sensitivity to higher temperatures that is remarkably uniform across all biomes and plant functional types. Such convergence in the temperature sensitivity of leaf respiration suggests that there are universally applicable controls on the temperature response of plant energy metabolism, such that a single new function can predict the temperature dependence of leaf respiration for global vegetation. This simple function enables straightforward description of plant respiration in the land-surface components of coupled earth system models. Our cross-biome analyses shows significant implications for such fluxes in cold climates, generally projecting lower values compared with previous estimates.",
+	keywords = "Carbon exchange, Climate models, Q, Temperature sensitivity, Thermal response",
+	author = "Heskel, {Mary A.} and O'Sullivan, {Odhran S.} and Reich, {Peter B.} and Tjoelker, {Mark G.} and Weerasinghe, {Lasantha K.} and Aurore Penillard and Egerton, {John J.G.} and Danielle Creek and Bloomfield, {Keith J.} and Jen Xiang and Felipe Sinca and Stangl, {Zsofia R.} and {Martinez-De La Torre}, Alberto and Griffin, {Kevin L.} and Chris Huntingford and Vaughan Hurry and Patrick Meir and Turnbull, {Matthew H.} and Atkin, {Owen K.}",
+	year = "2016",
+	month = "4",
+	day = "5",
+	doi = "10.1073/pnas.1520282113",
+	language = "English (US)",
+	volume = "113",
+	pages = "3832--3837",
+	journal = "Proceedings of the National Academy of Sciences of the United States of America",
+	issn = "0027-8424",
+	number = "14",
+}
 
+@article{atkin15,
+	author = {Atkin, Owen K. and Bloomfield, Keith J. and Reich, Peter B. and Tjoelker, Mark G. and Asner, Gregory P. and Bonal, Damien and Bönisch, Gerhard and Bradford, Matt G. and Cernusak, Lucas A. and Cosio, Eric G. and Creek, Danielle and Crous, Kristine Y. and Domingues, Tomas F. and Dukes, Jeffrey S. and Egerton, John J. G. and Evans, John R. and Farquhar, Graham D. and Fyllas, Nikolaos M. and Gauthier, Paul P. G. and Gloor, Emanuel and Gimeno, Teresa E. and Griffin, Kevin L. and Guerrieri, Rossella and Heskel, Mary A. and Huntingford, Chris and Ishida, Françoise Yoko and Kattge, Jens and Lambers, Hans and Liddell, Michael J. and Lloyd, Jon and Lusk, Christopher H. and Martin, Roberta E. and Maksimov, Ayal P. and Maximov, Trofim C. and Malhi, Yadvinder and Medlyn, Belinda E. and Meir, Patrick and Mercado, Lina M. and Mirotchnick, Nicholas and Ng, Desmond and Niinemets, Ülo and O'Sullivan, Odhran S. and Phillips, Oliver L. and Poorter, Lourens and Poot, Pieter and Prentice, I. Colin and Salinas, Norma and Rowland, Lucy M. and Ryan, Michael G. and Sitch, Stephen and Slot, Martijn and Smith, Nicholas G. and Turnbull, Matthew H. and VanderWel, Mark C. and Valladares, Fernando and Veneklaas, Erik J. and Weerasinghe, Lasantha K. and Wirth, Christian and Wright, Ian J. and Wythers, Kirk R. and Xiang, Jen and Xiang, Shuang and Zaragoza-Castells, Joana},
+	title = {Global variability in leaf respiration in relation to climate, plant functional types and leaf traits},
+	journal = {New Phytologist},
+	volume = {206},
+	number = {2},
+	pages = {614-636},
+	keywords = {acclimation, aridity, climate models, leaf nitrogen (N), photosynthesis, plant functional types (PFTs), respiration, temperature},
+	doi = {10.1111/nph.13253},
+	url = {https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253},
+	eprint = {https://nph.onlinelibrary.wiley.com/doi/pdf/10.1111/nph.13253},
+	abstract = {Summary Leaf dark respiration (Rdark) is an important yet poorly quantified component of the global carbon cycle. Given this, we analyzed a new global database of Rdark and associated leaf traits. Data for 899 species were compiled from 100 sites (from the Arctic to the tropics). Several woody and nonwoody plant functional types (PFTs) were represented. Mixed-effects models were used to disentangle sources of variation in Rdark. Area-based Rdark at the prevailing average daily growth temperature (T) of each site increased only twofold from the Arctic to the tropics, despite a 20°C increase in growing T (8–28°C). By contrast, Rdark at a standard T (25°C, Rdark25) was threefold higher in the Arctic than in the tropics, and twofold higher at arid than at mesic sites. Species and PFTs at cold sites exhibited higher Rdark25 at a given photosynthetic capacity (Vcmax25) or leaf nitrogen concentration ([N]) than species at warmer sites. Rdark25 values at any given Vcmax25 or [N] were higher in herbs than in woody plants. The results highlight variation in Rdark among species and across global gradients in T and aridity. In addition to their ecological significance, the results provide a framework for improving representation of Rdark in terrestrial biosphere models (TBMs) and associated land-surface components of Earth system models (ESMs).},,
+	year = {2015}
+}
 
 
 
