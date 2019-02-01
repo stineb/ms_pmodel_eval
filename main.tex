@@ -11,6 +11,7 @@
 \newcommand{\coo}{CO$_2$}
 \newcommand{\vcmax}{$V_{\text{cmax}}$}
 \newcommand{\jmax}{$J_{\text{max}}$}
+\newcommand{\rsq}{$R^2$}
 
 \begin{document}
 \pagestyle{headings}
@@ -146,7 +147,7 @@ with
 Here, $M_C$ is the molar mass of carbon (12.0107 g mol$^{-1}$) to convert from molar units to mass units, and PPFD is the photosynthetic photon flux density integrated over a day (mol d$^{-1}$). fAPAR is unitless and integrates across the canopy, i.e., from fluxes per unit leaf area to fluxes per unit ground area. Note that the quantum yield parameter $\varphi_0$ is modelled here to be temperature-dependent, and an additional soil moisture stress factor ($\beta (\theta)$) is included for modelling LUE (see below).
 
 \subsubsection{Temperature dependence}
-
+\label{sec:tempstress}
 The temperature dependence of quantum yield efficiency ($\varphi_0(T)$, unitless) is modelled following the temperature dependence of the maximum quantum yield of photosystem II in light-adapted tobacco leaves, determined by \cite{bernacchi03pce} as 
 \begin{equation}
 \varphi_0(T) = a_L \; b_L \; ( 0.352 + 0.022\;T - 0.00034\;T^2 )
@@ -154,6 +155,7 @@ The temperature dependence of quantum yield efficiency ($\varphi_0(T)$, unitless
 where $a_L$ is the leaf absorptance, and $b_L$ is the fraction of absorbed light that reaches photosystem II. Here, $(a_L \cdot b_L)$ is treated as a single calibratable parameter (see Section \ref{sec:calib}) and is further referred to as $\widehat{c_L}\equiv a_L\; b_L$. (All calibratable parameters are thereafter indicated by a hat over the symbol.) Note that the temperature dependence of quantum yield efficiency was not accounted for in earlier publications with the P-model \citep{keenan17natcomm, wang17natpl} and $\varphi_0$ was treated as a constant. To test the effect of this temperature dependence on simulated GPP, we conducted alternative simulations, where a constant $\widehat{\varphi_0}$ was calibrated instead (see Sec. \ref{sec:protocol}). Note, that $\varphi_0$  includes the factor $a_L$ for incomplete leaf absorbtance, which is commonly quantified in separation of the quantum yield efficiency and is assumed a value of 0.72-0.88 in models \citep{rogers17}. Calibrated values $\widehat{\varphi_0}$ are accordingly lower than values for the intrinsic quantum yield reported from experimental studies \citep{long93, singsaas01} and should be regarded as an \textit{effective} quantum yield efficiency. Note that an additional temperature dependence is in $m'$ in Eq. \ref{eq:lue_identification}.
 
 \subsubsection{Soil moisture stress}
+\label{sec:soilmstress}
 $\beta(\theta)$ is a soil moisture stress function. We use results by \cite{stocker18newphyt} to fit a soil moisture stress functions ($\beta(\theta)\simeq\text{fLUE}$) based on two general patterns. First, the functional form of $\beta(\theta)$ can be approximated by a quadratic function that approaches 1 for soil moisture above a certain threshold $\theta^{\ast}$ and held constant at 1 for soil moisture values above that. Here $\theta$ is the plant-available soil water, expressed as a fraction of field capacity. The general form is:
 \begin{equation}
     \beta =
@@ -164,6 +166,7 @@ $\beta(\theta)$ is a soil moisture stress function. We use results by \cite{stoc
 \end{equation}
 Second, the sensitivity of $\beta(\theta)$ to extreme soil dryness ($\theta \rightarrow 0$) is related to the mean aridity. The dryness-related decline in $\beta(\theta)$ is particularly strong in driest climates, whereas a smaller reduction in $\beta(\theta)$ when soil water gets depleted is recorded at intermediate aridity. In the equation above, the sensitivity parameter $q$ is defined by the maximum $\beta$ reduction at low soil moisture $\beta_0\equiv\beta(\theta=\theta_0)$, leading to $q=(\beta_0-1)/(\theta^{\ast}-\theta_0)^2$. Note that $q$ has a negative value. $\beta_0$ is modelled as a linear function of the mean aridity, quantified by the mean annual ratio of actual over potential evapotranspiration (AET/PET):
 \begin{equation}
+\label{eq:soilmsensitivity}
 \beta_0 = \widehat{a_{\theta}} + \widehat{b_{\theta}} (\text{AET}/\text{PET})
 \end{equation}
 $\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$ are treated as calibratable parameters. 
@@ -187,19 +190,19 @@ All of the above-mentioned simulates are calibrated against GPP data based on th
 	\toprule
     Setup name                 &  fAPAR data              &  GPP      &  Calibration set  &  SM limit.  &  \widehat{\varphi_0} &  \widehat{c_L}    &  $\widehat{a_{\theta}}$  &  $\widehat{b_{\theta}}$   \\
 	\midrule
-    ORG                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  0.0500 &  --     &  -- & --   \\
-    BRC                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  --     &  0.0832 &  -- & --   \\
-    FULL                       &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  --     &  0.0885 &  0  & 0.687 \\
+    ORG                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  0.0492 &  --     &  -- & --   \\
+    BRC                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  --     &  0.0817 &  -- & --   \\
+    FULL                       &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  --     &  0.0870 &  0  & 0.685 \\
 	\midrule
-    FULL\textunderscore FPARitp &  FPAR MCD15A3H, itpl.   &  NT       &  valid NT data    &  yes        &  --     &  0.0860 &  0  & 0.700 \\
-    FULL\textunderscore EVI     &  EVI MOD13Q1, spl.      &  NT       &  valid NT data    &  yes        &  --     &  0.1317 &  0  & 0.770 \\
+    FULL\textunderscore FPARitp &  FPAR MCD15A3H, itpl.   &  NT       &  valid NT data    &  yes        &  --     &  0.0846 &  0  & 0.700 \\
+    FULL\textunderscore EVI     &  EVI MOD13Q1, spl.      &  NT       &  valid NT data    &  yes        &  --     &  0.1293 &  0  & 0.766 \\
 	\midrule
-    FULL\textunderscore DT      &  FPAR MCD15A3H, spl.    &  DT       &  valid NT, DT, Ty &  yes        &  --     &  0.0909 & 0   & 0.690 \\
-    FULL\textunderscore Ty      &  FPAR MCD15A3H, spl.    &  Ty       &  valid NT, DT, Ty &  yes        &  --     &  0.0886 & 0   & 0.722 \\
-    FULL\textunderscore NTsub   &  FPAR MCD15A3H, spl.    &  NT       &  valid NT, DT, Ty &  yes        &  --     &  0.0918 & 0   & 0.688 \\
+    FULL\textunderscore DT      &  FPAR MCD15A3H, spl.    &  DT       &  valid NT, DT, Ty &  yes        &  --     &  0.0891 & 0   & 0.690 \\
+    FULL\textunderscore Ty      &  FPAR MCD15A3H, spl.    &  Ty       &  valid NT, DT, Ty &  yes        &  --     &  0.0868 & 0   & 0.721 \\
+    FULL\textunderscore NTsub   &  FPAR MCD15A3H, spl.    &  NT       &  valid NT, DT, Ty &  yes        &  --     &  0.0899 & 0   & 0.690 \\
 	\bottomrule
 \end{tabular}}
-\caption{Model setups. The standard greenness data, used to define the model forcing for fAPAR is MODIS FPAR MCD15A3H, where the original data, given at 4-day intervals, is splined to daily values (see Section \ref{sec:greennessdata}). Alternative greenness forcing data is based on MODIS EVI MOD13Q1 (xxx ref), splined (`spl.') from 8-day intervals to daily, and MODIS FPAR MCD15A3H, linearly interpolated (`itpl.') from 4-day intervals to daily. Standard observational GPP data, used for model calibration and evaluation is from FLUXNET 2015 data, based on the nighttime flux decomposition method (xxx ref) (`NT' in the table, variable \texttt{GPP\textunderscore NT\textunderscore VUT\textunderscore REF} in FLUXNET 2015 data). Alternative GPP data used based on the daytime flux decomposition method (xxx ref) (`DT' in the table, variable \texttt{GPP\textunderscore DT\textunderscore VUT\textunderscore REF}), and based on an alternative method by Davis et al. (xxx unpublished??? xxx) (`Ty' in the table). For setups ORG, BRC, FULL, FULL\textunderscore FPARitp, and FULL\textunderscore EVI, data used for the model calibration is from all dates where (cleaned, see Section \ref{sec:datafiltering}) `NT' data is available. For setups FULL\textunderscore DT, FULL\textunderscore Ty, and FULL\textunderscore NTsub, data used for calibration is from all dates where data is available for all methods `DT', `NT', and `Ty'. `SM limit.' refers to whether or not soil moisture limitation (see Section \ref{sec:smlimit} is accounted for. `QYE(T)' refers to whether the temperature dependence of quantum yield efficiency after Bernacchi et al., 2003 (xxx add bibref) is accounted for. Column `QUE' specifies the calibrated value for quantum yield efficiency ($\varphi$), columns `a' and `b' specify the calibrated values for variables $a$ and $b$ in Eq. \ref{eq:y0}.}
+\caption{Model setups. The standard greenness data, used to define the model forcing for fAPAR is MODIS FPAR MCD15A3H, where the original data, given at 4-day intervals, is splined to daily values (see Section \ref{sec:greennessdata}). Alternative greenness forcing data is based on MODIS EVI MOD13Q1, splined (`spl.') from 8-day intervals to daily, and MODIS FPAR MCD15A3H, linearly interpolated (`itpl.') from 4-day intervals to daily. Standard observational GPP data, used for model calibration and evaluation is from FLUXNET 2015 data, based on the nighttime flux decomposition method (`NT' in the table, variable \texttt{GPP\textunderscore NT\textunderscore VUT\textunderscore REF} in FLUXNET 2015 data). Alternative GPP data used based on the daytime flux decomposition method (`DT' in the table, variable \texttt{GPP\textunderscore DT\textunderscore VUT\textunderscore REF}), and based on an alternative method \citep{wang17natpl} (`Ty' in the table). For setups ORG, BRC, FULL, FULL\textunderscore FPARitp, and FULL\textunderscore EVI, data used for the model calibration is from all dates where (cleaned, see Section \ref{sec:datafiltering}) `NT' data is available. For setups FULL\textunderscore DT, FULL\textunderscore Ty, and FULL\textunderscore NTsub, data used for calibration is from all dates where data is available for all methods `DT', `NT', and `Ty'. `SM limit.' refers to whether or not soil moisture limitation (see Section \ref{sec:soilmstress} is accounted for. `QYE(T)' refers to whether the temperature dependence of quantum yield efficiency after \cite{bernacchi03pce} is accounted for. Column `QUE' specifies the calibrated value for quantum yield efficiency ($\varphi$), columns `a' and `b' specify the calibrated values for variables $a_\theta$ and $b_\theta$ in Eq. \ref{eq:soilmsensitivity}.}
 \label{tab:setups}
 \end{table}
 
@@ -207,7 +210,7 @@ All of the above-mentioned simulates are calibrated against GPP data based on th
 
 \subsection{Model calibration}
 \label{sec:calib}
-The model calibration is restricted to the parameters determining the quantum efficiency of photosynthesis ($\widehat{\varphi_0}$ or $\widehat{c_L}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity, quantified by AET/PET (parameters $\widehat{a_{\theta}}$ and $\widehat{a_{\theta}}$). We used  Generalised Simulated Annealing from the GenSA R package \citep{gensa} to search model parameters that minimise the root mean square error (RMSE) between observed and simulated daily GPP values. This algorithm is particularly suited to find global minima of non-linear objective functions and a large number of local minima.
+The model calibration is restricted to the parameters determining the quantum efficiency of photosynthesis ($\widehat{\varphi_0}$ or $\widehat{c_L}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity, quantified by AET/PET (parameters $\widehat{a_{\theta}}$ and $\widehat{a_{\theta}}$). We used  Generalised Simulated Annealing from the \textit{GenSA} R package \citep{gensa} to search model parameters that minimise the root mean square error (RMSE) between observed and simulated daily GPP values. This algorithm is particularly suited to find global minima of non-linear objective functions and a large number of local minima.
 
 %The model calibration is implemented within the rsofun R package (function \texttt{calib\textunderscore sofun()}, see accompanying paper Stocker et al., XXX).
 
@@ -216,7 +219,7 @@ The model calibration is restricted to the parameters determining the quantum ef
 \subsubsection{fAPAR}
 \label{sec:greennessdata}
 
-Different datasets were used to define fAPAR (Eq. \ref{eq:luemodel}). The standard dataset is MODIS FPAR MCD15A3H, from Collection 6 \citep{modis_fpar_6}, which is given at a resolution of 500 m and 4 days. The data was filtered to remove data points where significant clouds were present, suspicious values equal to 1.00, and outliers (outside three times the inter-quartile range). Filtered values were replaced by the mean value for the respective day-of-year. Daily values were derived using a cubic smoothing spline (function \texttt{smooth.spline()} with parameter \texttt{spar=0.01} in R \citep{Rcoreteam}). MODIS EVI MOD13Q1 data, collection 6 \citep{modis_evi_6}, given at a resolution of 250 m and 8 days, was filtered based on the summary quality control flag, removing ``cloudy'' pixels. Gaps were filled and data splined to daily values as for FPAR MOD13Q1. All fAPAR data were downloaded from Google Earth Engine using the \texttt{google\textunderscore earth\textunderscore engine\textunderscore subsets} library \citep{gee_subset}. 
+Different datasets were used to define fAPAR (Eq. \ref{eq:luemodel}). The standard dataset is MODIS FPAR MCD15A3H, from Collection 6 \citep{modis_fpar_6}, which is given at a resolution of 500 m and 4 days. The data was filtered to remove data points where significant clouds were present, suspicious values equal to 1.00, and outliers (outside three times the inter-quartile range). Filtered values were replaced by the mean value for the respective day-of-year. Daily values were derived using a cubic smoothing spline (function \texttt{smooth.spline()} with parameter \texttt{spar=0.01} in R \citep{Rcoreteam}). MODIS EVI MOD13Q1 data, collection 6 \citep{modis_evi_6}, given at a resolution of 250 m and 8 days, was filtered based on the summary quality control flag, removing ``cloudy'' pixels. Gaps were filled and data splined to daily values as for FPAR MOD13Q1. All fAPAR data were downloaded from Google Earth Engine using the \textit{google\textunderscore earth\textunderscore engine\textunderscore subsets} library \citep{gee_subset}. 
 
 \subsubsection{Meteorological data}
 \label{sec:ppfd}
@@ -238,13 +241,13 @@ We use data from 68 sites for model calibration and 159 sites for evaluation (Fi
 
 \subsubsection{Data filtering}
 \label{sec:datafiltering}
-GPP predictions by the RS models are compared to daily GPP estimates from the FLUXNET 2015 Tier 1 data set (downloaded on 13 November, 2016). We used GPP based on the nighttime partitioning method \citep{Reichstein2005-mp} (GPP\textunderscore NT\textunderscore VUT\textunderscore REF) and filtered negative daily GPP values, data for which more than 50\% of the half-hourly data are gap-filled and for which the daytime and nighttime partitioning methods (GPP\textunderscore DT\textunderscore VUT\textunderscore REF and GPP\textunderscore NT\textunderscore VUT\textunderscore REF, respectively) are inconsistent, i.e., the upper and lower 2.5\% quantiles of the difference between GPP values quantified by each method. For additional simulation sets, model calibration and evaluation was done using GPP data based on the daytime partitioning method (GPP\textunderscore DT\textunderscore VUT\textunderscore REF) \citep{lasslop10} with analogous filtering steps. For all calibration and evaluation, we removed data points before the ``MODIS era'', which started on the 18th of February, 2000.
+GPP predictions by the RS models are compared to daily GPP estimates from the FLUXNET 2015 Tier 1 data set (downloaded on 13 November, 2016). We used GPP based on the nighttime partitioning method \citep{Reichstein2005-mp} (GPP\textunderscore NT\textunderscore VUT\textunderscore REF) and filtered negative daily GPP values, data for which more than 50\% of the half-hourly data are gap-filled and for which the daytime and nighttime partitioning methods (GPP\textunderscore DT\textunderscore VUT\textunderscore REF and GPP\textunderscore NT\textunderscore VUT\textunderscore REF, respectively) are inconsistent, i.e., the upper and lower 2.5\% quantiles of the difference between GPP values quantified by each method. For additional simulation sets, model calibration and evaluation was done using GPP data based on the daytime partitioning method (GPP\textunderscore DT\textunderscore VUT\textunderscore REF) \citep{lasslop10} with analogous filtering steps, and GPP data based on an alternative method that fits a constant ecosystem respiration rate as the net ecosystem exchange under conditions where PPFD tends to zero (FULL\textunderscore Ty, \cite{wang17natpl}). For all calibration and evaluation, we removed data points before the ``MODIS era'', which started on the 18th of February, 2000.
 
 \subsection{Evaluation methods}
 
 \subsubsection{Components of variability}
 \label{sec:evalmethod_variability}
-Different components of variability are analyzed separately. We separate spatial (mean annual values by site), annual, seasonal (mean by day-of-year), 5-daily, daily, and the variability in daily anomalies from the mean seasonal cycle. The seasonal variability is determined for different climatic zones (following Koeppen-Geiger classification, see Tab. \ref{tab:kgclimate}). Information about the association of sites with climatic zones is extracted from \cite{falge17}. Evaluations per climatic zone are done here only for zones that had at least five different site's data. For each component of variability, we calculate the adjusted coefficient of determination ($R^2_{\text{adj}}$, thereafter referred to as $R^2}$), and the root mean square error (RMSE).
+Different components of variability are analyzed separately. We separate spatial (mean annual values by site), annual, seasonal (mean by day-of-year), 5-daily, daily, and the variability in daily anomalies from the mean seasonal cycle. The seasonal variability is determined for different climatic zones (following Koeppen-Geiger classification, see Tab. \ref{tab:kgclimate}). Information about the association of sites with climatic zones is extracted from \cite{falge17}. Evaluations per climatic zone are done here only for zones that had at least five different site's data. For each component of variability, we calculate the adjusted coefficient of determination ($R^2_{\text{adj}}$, thereafter referred to as $R^2}$), and the root mean square error (RMSE). Figures of correlations between simulated and observed values additionally present the mean bias, the slope of the linear regression model, and the number of data points ($N$).
 
 \begin{table}
 \caption{Description of Koeppen-Geiger climate zones (based on \cite{falge17}) and number of sites for which data is available per climate zone.} 
@@ -273,14 +276,40 @@ Different components of variability are analyzed separately. We separate spatial
 \subsubsection{Functional relationships}
 \label{sec:gam}
 
-Functional relationships between light use efficiency and its predictors considered in the P-model are based on pooled data from all sites and are derived using Generalized Additive Models (GAMs). The procedure applied here is as follows. First, a GAM is trained on observational data using the \texttt{gam()}  function from the mgcv R package with method "REML" \citep{mgcv}. The trained model is then applied to an evaluation dataset that is constructed separately. For each predictor $i \in (T, D, \theta)$, three vectors $\mathbf{x}_i, \mathbf{x}_j, \mathbf{x}_k$ are constructed. The first ($\mathbf{x}_i$) is an equally spaced sequence of values of predictor $i$, ranging from its minimum to its maximum in the training dataset. The length of $\mathbf{x}_i$ is $N_i=30$. The second and third vectors $\mathbf{x}_j, \mathbf{x}_k$ are constructed by randomly sampling (with replacement) $N_j=N_k=30$ values of predictors $(j,k)\neq i$, respectively, from the training dataset. Then, a matrix is constructed to contain all combinations $(x_{i,l}, x_{j,m}, x_{k,n})$ of elements of the three vectors with $l \in [1,N_i], m \in [1,N_j], n \in [1,N_k]$. Finally, quantiles are calculated for pooled data across predictors $(j,k)$ and all levels of predictor $i$.
+Functional relationships between light use efficiency and its predictors considered in the P-model are based on pooled data from all sites and are derived using Generalized Additive Models (GAMs). The procedure applied here is as follows. First, a GAM is trained on observational data using the \texttt{gam()} function from the \textit{mgcv} R package with method REML \citep{mgcv}. Using all date's data pooled, we trained four models using LUE as targets for training, where LUE is quantified using Eq. \ref{eq:luemodel}, based on observed GPP from the three different flux decomposition methods (see Sec. \ref{sec:datafiltering}) and simulated LUE from the P-model. We use tempearature ($T$), VPD ($D$), and soil moisture ($\theta$) as model predictors. The P-model additionally requires elevation and ambient \coo\ as inputs. However, these variables do not vary at short time scales. The trained models are then applied to an evaluation dataset that is constructed separately as follows. For each predictor $i \in (T, D, \theta)$, three vectors $\mathbf{x}_i, \mathbf{x}_j, \mathbf{x}_k$ are constructed. The first ($\mathbf{x}_i$) is an equally spaced sequence of values of predictor $i$, ranging from its minimum to its maximum in the training dataset. The length of $\mathbf{x}_i$ is $N_i=30$. The second and third vectors $\mathbf{x}_j, \mathbf{x}_k$ are constructed by randomly sampling (with replacement) $N_j=N_k=30$ values of predictors $(j,k)\neq i$, respectively, from the training dataset. Then, a matrix is constructed to contain all combinations $(x_{i,l}, x_{j,m}, x_{k,n})$ of elements of the three vectors with $l \in [1,N_i], m \in [1,N_j], n \in [1,N_k]$. Finally, quantiles are calculated for pooled data across predictors $(j,k)$ and all levels of predictor $i$.
 
 \subsubsection{Drought response}
 \label{sec:droughtresponse}
 The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{stocker18newphyt} for 32 (xxx check this number, include in table 5) sites (20 days before and 80 days after drought onset are taken). Drought events ("fLUE droughts") are periods of consecutive days where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold. The data specifying the timing and duration of drought events was downloaded from \textit{Zenodo} \citep{flue}. We then re-arranged the data to align all drought events at all sites and computed quantiles per day, where 'day' is defined with respect to the onset of each drought event. 
 
 \section{Evaluation results}
+\label{sec:results}
 
+\subsection{Variability across scales}
+
+We first evaluate the model performance with respect to pooled data from all 159 sites, aggregated to 5-day totals (60’450 data points). Evaluations with respect to alternative choices for fAPAR data and GPP data are presented in Sections \ref{sec:results_greennessdata} and \ref{sec:results_gppdata}. 
+
+The P-model, as used in \cite{wang17natpl} (version referred to as ORG), captures 65\% of the variance in observed GPP. Model performance both with respect to explained variance ($R^2$) and the RMSE is improved when additionally accounting for effects of temperature on the quantum yield efficiency (BRC, $R^2 = 68$\%), and when additionally factoring in an empirical soil moisture stress function (FULL, $R^2 = 70$\%). The NULL model with temporally constant and spatially uniform LUE, fitted to the data, performed equally well as ORG, but is outperformed by model versions BRC and FULL. All performance statistics are given in Tables \ref{tab:rsq} and \ref{tab:rmse}. A NULL model where LUE is constant but distinguished between vegetation types (NULLpft) performs as well as BRC. 
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_FULL.pdf}
+    \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_NULL.pdf}
+    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 5-day periods, for the model versions FULL (left) and NULL (right).}
+    \label{fig:modobs_xdaily}
+\end{figure}
+
+The differences in the performance of different P-model setups are similar across all scales. Additional explanatory power is introduced by accounting for the temperature effects on quantum yield efficiency and by simulated soil moisture stress. The FULL setup of the P-model generally achieves the highest \rsq\ values and the lowest RMSE and outperforms the NULL and NULLpft models. Below, we highlight a limited set of particularly notable findings.
+
+The correlation between simulated and observed annual total GPP is slightly lower (\rsq : 0.57-0.67) than for values aggregated to 5-day periods (\rsq : 0.65-0.70). This is related to the fact that additional variability within a year (seasonal) is reliably simulated by all P-model versions (\rsq : 0.67-0.70). Surprisingly, the NULLpft model achieves the highest correlation for seasonal variations (\rsq : 0.72).
+
+Most of this variance is related to spatial variability, i.e. to differences in the means between sites. None of the P-model versions captures more than 6\% of the variance in the interannual variability  of GPP (``var(annual)'' in Tabs. \ref{tab:rsq} and \ref{tab:rmse}, quantified as the anomalies in annual totals, relative to the respective sites' multi-year mean).  
+Pooled data from all sites and all years
+
+
+Spatial variations are quantified as the variation in mean annual GPP across sites. Also 
+
+58\% of its variation is explained by 
 
 % Version 1.
 % \begin{table}
@@ -305,15 +334,23 @@ The bias in GPP (modelled minus observed) is calculated for each date belonging 
 \centering
 \begin{tabular}{lllllll}
   \toprule
-  Setup & xdaily & spatial & annual & seasonal & daily\_var \\ 
+  Setup & 5-daily & Spatial & Annual & Seasonal & var(daily) & var(annual) \\ 
   \midrule
-  ORG & 0.65 & 0.60 & 0.56 & 0.68 & 0.23 \\ 
-  BRC & 0.68 & 0.63 & 0.60 & 0.71 & 0.23 \\ 
-  FULL & 0.70 & 0.65 & 0.67 & 0.70 & 0.25 \\ 
-  NULL & 0.66 & 0.61 & 0.56 & 0.70 & 0.22 \\ 
+  ORG & 0.65 & 0.58 & 0.57 & 0.67 & 0.23 & 0.05 \\ 
+  BRC & 0.68 & 0.63 & 0.60 & 0.71 & 0.23 & 0.05 \\ 
+  FULL & 0.70 & 0.65 & 0.67 & 0.70 & 0.25 & 0.06 \\ 
+  NULL & 0.65 & 0.59 & 0.55 & 0.69 & 0.22 & 0.04 \\ 
+  NULLpft & 0.68 & 0.61 & 0.51 & 0.72 & 0.28 & 0.13 \\ 
+  \midrule
+  FULL\_FPARitp & 0.67 & 0.63 & 0.66 & 0.69 & 0.22 & 0.06 \\ 
+  FULL\_EVI & 0.68 & 0.54 & 0.45 & 0.71 & 0.30 & 0.15 \\ 
+  \midrule
+  FULL\_DT & 0.68 & 0.63 & 0.66 & 0.67 & 0.23 & 0.07 \\ 
+  FULL\_NTsub & 0.69 & 0.63 & 0.65 & 0.69 & 0.24 & 0.06 \\ 
+  FULL\_Ty & 0.69 &  &  & 0.68 & 0.37 &  \\ 
   \bottomrule
   \end{tabular}
-\caption{$R^2$ of different models and for different components of variability.} 
+\caption{$R^2$ of different model setups and for different components of variability.} 
 \label{tab:rsq}
 \end{table}
 
@@ -341,32 +378,29 @@ The bias in GPP (modelled minus observed) is calculated for each date belonging 
 \centering
 \begin{tabular}{lllllll}
   \toprule
-  Setup & xdaily & spatial & annual & seasonal & daily\_var \\ 
+  Setup & 5-daily & Spatial & Annual & Seasonal & var(daily) & var(annual) \\ 
   \midrule
-  ORG & 2.28 & 482.80 & 470.62 & 1.98 & 1.69 \\ 
-  BRC & 2.17 & 456.72 & 442.28 & 1.85 & 1.69 \\ 
-  FULL & 2.12 & 439.90 & 405.63 & 1.88 & 1.70 \\ 
-  NULL & 2.26 & 469.53 & 475.69 & 1.90 & 1.65 \\ 
+  ORG & 2.29 & 482.56 & 460.58 & 2.00 & 1.69 & 162.80 \\ 
+  BRC & 2.17 & 456.72 & 442.28 & 1.85 & 1.69 & 163.21 \\ 
+  FULL & 2.12 & 439.90 & 405.63 & 1.88 & 1.70 & 164.03 \\ 
+  NULL & 2.28 & 475.79 & 478.20 & 1.94 & 1.66 & 165.14 \\ 
+  NULLpft & 2.19 & 460.45 & 488.53 & 1.83 & 1.60 & 155.00 \\ 
+  \midrule
+  FULL\_FPARitp & 2.22 & 450.65 & 415.68 & 1.93 & 1.79 & 162.17 \\ 
+  FULL\_EVI & 2.21 & 506.61 & 523.15 & 1.89 & 1.62 & 152.73 \\ 
+  \midrule
+  FULL\_DT & 3.46 & 854.05 & 857.84 & 3.12 & 2.29 & 180.94 \\ 
+  FULL\_NTsub & 3.30 & 838.23 & 841.17 & 2.99 & 2.26 & 180.34 \\ 
+  FULL\_Ty & 2.89 &  &  & 2.75 & 1.94 &  \\ 
   \bottomrule
   \end{tabular}
-\caption{RMSE of different models and for different components of variability} 
+\caption{Root mean square error (RMSE) of different model setups and for different components of variability.} 
 \label{tab:rmse}
 \end{table}
 
 
 \clearpage
 
-\subsection{X-daily values}
-
-Performance of the model is improved from ORG ($R^2=0.65$, RMSE$=2.29$), to BRC ($R^2=0.68$, RMSE$=2.18$), and to FULL ($R^2=0.69$, RMSE$=2.14$). Model versions BRC and FULL (slightly) outperform the NULL model ($R^2=0.65$, RMSE$=2.28$).
-
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=0.7\textwidth]{fig/modobs_xdaily_FULL.pdf}
-    \includegraphics[width=0.7\textwidth]{fig/modobs_xdaily_NULL.pdf}
-    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 5-day periods.}
-    \label{fig:modobs_xdaily}
-\end{figure}
 
 \clearpage
 
@@ -481,9 +515,9 @@ Are certain aspects of model-data disagreement related to uncertainty in the GPP
 \subsection{Functional relationships}
 
 \begin{figure}[!ht]
-\includegraphics[width=0.45\textwidth]{fig/functionalrel_gam_temp.pdf}
-\includegraphics[width=0.45\textwidth]{fig/functionalrel_gam_vpd.pdf}
-\includegraphics[width=0.45\textwidth]{fig/functionalrel_gam_soilm.pdf}
+\includegraphics[width=0.5\textwidth]{fig/functionalrel_gam_temp.pdf}
+\includegraphics[width=0.5\textwidth]{fig/functionalrel_gam_vpd.pdf}
+\includegraphics[width=0.5\textwidth]{fig/functionalrel_gam_soilm.pdf}
     \caption{Functional relationship of LUE in response to temperature, VPD, and soil moisture. Functional relationships in different observational data (`NT', `DT', `Ty') are determined by GAMs. `P-model, GAM' is determined from the model outputs for the same data points as `NT', `DT', and `Ty'. `P-model' is determined from applying the model directly. A more detailed description of the method is given in Section \ref{sec:gam}}
     \label{fig:functionalrel}
 \end{figure}
@@ -975,214 +1009,6 @@ By combining Equations \ref{eq:vcmaxsens}, \ref{eq:rd25}, and \ref{eq:rdsens}, $
     R_d = b_0 \frac{f_R}{f_V}\;V_{\mathrm{cmax}}
 \end{equation}
 
-\section{Methods}
-
-\subsection{Theory}
-\label{sec:theory}
-The P-model centers around a prediction for the ratio of leaf-internal to ambient \coo ($c_i : c_a \equiv \chi$) governed by the trade-off between the costs arising from the maintenance of carboxylation capacity ($V_{\mathrm{cmax}}$) and transpiration ($E$). 
-It is founded on the standard model for C3 plant photosynthesis (Section \ref{sec:farquhar}), the coordination hypothesis (Section \ref{sec:coordination}) and the least-cost hypothesis (Section \ref{sec:least-cost}).
-
-\textit{The following derivation and text is adopted and modified from Wang Han et al., 2017.}\\
-
-\subsection{The standard model of C3 plant photosynthesis}
-\label{sec:farquhar}
-Following the Farquhar model for photosynthesis of C3 plants, instantaneous assimilation rates $A$ are limited either by the capacity of Rubisco for carboxylation of RuBP or the electron transport rate for the regeneration of RuBP. 
-The Rubisco-limited photosynthetic rate $A_C$ is given by:
-\begin{equation}
-\label{eq:rubiscolimited}
-    A_C = V_{\mathrm{cmax}} \; \frac{\chi\;c_a-\Gamma^{\ast}}{\chi\;c_a + K}
-\end{equation}
-where $V_{\mathrm{cmax}}$ is the Rubisco activity, $c_a$ is the ambient partial pressure of CO$_2$, $\chi$ is the ratio of leaf-internal to ambient CO$_2$ partial pressures, $\Gamma^{\ast}$ is the \coo\ compensation point in the absence of mitochondrial respiration, and $K$ is the effective Michaelis-Menten coefficient of Rubisco for carboxylation. 
-Both $\Gamma^{\ast}$ and $K$ are influenced by the partial pressure of oxygen. 
-$V_{\mathrm{cmax}}$, $\Gamma^{\ast}$ and $K$ are temperature-dependent, following Arrhenius kinetics.
-
-The electron-transport limited photosynthetic rate $A_J$ is given by:
-\begin{equation}
-\label{eq:lightlimited}
-    A_J = \varphi_0 \; I\; \frac{\chi \; c_a - \Gamma^{\ast}}{\chi\;c_a + 2\Gamma^{\ast}}
-\end{equation}
-for low PPFD (I) where $\varphi_0$ is the intrinsic quantum efficiency of photosynthesis. 
-With increasing PPFD, $I$ must be substituted with a saturating function of the electron-transport capacity $J_{\mathrm{max}}$; various empirical functions have been used. 
-The actual photosynthetic rate is then given by:
-\begin{equation}
-    A = \min(A_C, A_J)
-\end{equation}
-
-\subsubsection{The coordination hypothesis}
-\label{sec:coordination}
-Light use efficiency (LUE) models provide a powerful method and estimate assimilation rates as a linear function of absorbed light over a given time interval. 
-But the connection between the Farquhar and LUE models is not obvious. 
-Equation \ref{eq:lightlimited} predicts that electron-transport limited photosynthesis is proportional to absorbed PPFD but only applies at relatively low PPFD, and in any case, Equation \ref{eq:rubiscolimited} for Rubisco-limited photosynthesis is expected to apply at high PPFD. 
-The conundrum is this: how can GPP (the time-integral of photosynthesis) be proportional to PPFD, which is the basis of the LUE model, if the response of photosynthesis to PPFD saturates, as it should according to the Farquhar model? This question has surfaced occasionally in the literature, but not been fully resolved. 
-Medlyn10 reviewed some alternative explanations.
- 
-One of the explanations discussed by Medlyn10 invokes the co-ordination (or co-limitation) hypothesis, which states that $V_{\mathrm{cmax}}$ of leaves at any level in the canopy acclimates spatially and temporally to the prevailing daytime incident PPFD in such a way as to be neither in excess (entailing additional, futile maintenance respiration), nor less than required for full exploitation of the available light. 
-In other words, under typical daytime condition when most photosynthesis takes place, the following is valid:
-\begin{equation}
-\label{eq:coordination}
-    A_J \approx A_C
-\end{equation}
-This hypothesis also requires that $J_{\mathrm{max}}$ maintain a ratio to $V_{\mathrm{cmax}}$ such that strong limitation by $J_{\mathrm{max}}$ is avoided. 
-Evidence for the co-ordination hypothesis was presented by Haxeltine and Prentice11, and Dewar12, who noted that it can explain many otherwise unexplained responses of C3 plants to environmental changes: including changes in leaf C:N ratios along environmental gradients, and the widely observed reduction of $V_{\mathrm{cmax}}$ under experimentally increased atmospheric CO$_2$. More recently Maire et al.13 showed very good agreement between typical daytime values of $A_J$ and $A_C$ as calculated under the prevailing growth conditions for 31 species (293 data points) based on published studies. 
-The co-ordination hypothesis allows a simple approximation by which equation S2 is applied to predict GPP over time scales for which acclimation of $V_{\mathrm{cmax}}$ is possible, with $I$ now representing daily, rather than instantaneous, PPFD.
-
-\subsubsection{The least-cost hypothesis}
-\label{sec:least-cost}
-Missing from the Farquhar model is an equation to predict χ, which constrains both the Rubisco- and electron-transport limited rates of carbon fixation and therefore appears in both equations S1 and S2. 
-$\chi$ at any moment must be consistent both with the rate of carbon fixation and with the rate of diffusion of \coo\ through the stomata. 
-Although the mechanism of stomatal control is still an active research topic, there is abundant evidence that $\chi$ is closely regulated to remain within a narrow range. 
-All current Earth System Models include a 'closure' that predicts either stomatal conductance or $\chi$. 
-The most commonly used closures are the one-parameter Ball-Berry equation14 and the two-parameter Leuning equation15 (or equivalently, the ‘Jacobs closure’16). 
-Both are empirical, and incomplete in the sense that they allow $\chi$ to react only to relative humidity (Ball-Berry) or VPD (Leuning/Jacobs). 
-Although superficially similar, these equations make substantially different predictions. 
-For example, Ball-Berry allows $\chi$ to approach unity as VPD tends to zero, whereas Leuning/Jacobs caps $\chi$ at a maximum value. 
-Both equations are usually implemented with different parameter values for different PFTs, but with no strong basis for the distinctions.
-
-The least-cost hypothesis by Prentice et al. (2014), first proposed by Wright et al. (2003), states that $\chi$ should minimize the combined cost (per unit of assimilation) of maintaining the capacities for carboxylation and transpiration. 
-If $a$ and $b$ are dimensionless cost factors (maintenance respiration per unit assimilation) for the maximum rates of water transport ($E$) and carbon fixation ($V_{\mathrm{cmax}}$) respectively, the optimality criterion is:
-\begin{equation}
-    a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}
-\end{equation}
-
-\subsubsubsection{Predicting $\chi$}
-The following section provides a derivation of optimal $\chi$ using Fick's Law \citep{fick1855}, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
-Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
-According to the Fick's Law of diffusion:
-\begin{align}
-\label{eq:fick}
-    E &= 1.6 \; g_s \; D \\
-    A &= g_s \; c_a \; (1-\chi)
-\end{align}
-Therefore,
-\begin{equation}
-    E/A = \frac{1.6 \; D}{c_a\;(1-\chi)}
-\end{equation}
-The derivative term on the left-hand-side of Eq.\label{eq:leastcost} can thus be written as
-\begin{equation}
-\label{eq:partial1}
-    \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
-\end{equation}
-Using Equation \ref{eq:rubiscolimited} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:leastcost} can be written as
-\begin{equation}
-\label{eq:partial2}
-    \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}
-\end{equation}
-Using equations \ref{eq:partial1} and \ref{eq:partial2}, Eq. \ref{eq:leastcost} can be written as
-\begin{equation}
-    a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
-\end{equation}
-and solved for $\chi$:
-\begin{align}
-    \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
-    \xi &= \sqrt{\frac{b\;K}{1.6\;a}}
-\end{align}
-The exact solution, without the simplification $\Gamma^{\ast}=0$, is 
-\begin{align}
-\label{eq:chi_exact}
-    \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\\
-    \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
-\end{align}
-This can also be written as
-\begin{equation}
-\label{eq:ci}
-    c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \\ 
-\end{equation}
-
-With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
-\begin{equation}
-\label{eq:lue}
-        A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
-\end{equation}
-Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
-\begin{equation}
-    m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
-\end{equation}
-This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure. Note that the unit cost $b$ is assumed to be constant, and $a$ only to vary with the temperature-dependent viscosity of water $\eta(T)$, calculated here following \cite{huber09}. The factor $\eta^\ast = \eta(T) / \eta(25^{\circ}\text{C})$ is thus introduced by taking the unit cost of water as $a \eta^\ast$.
-
-\subsubsection{Introducing $J_{\mathrm{max}}$ limitation}
-Equation \ref{eq:lue} is correct only if the response of GPP ($A$) to increasing PPFD remains linear up to the co-limitation point. 
-By considering a non-rectangular hyperbola relationship between $A_J$ and $I_{\mathrm{abs}}$ (ref 26), we allow for the effect of finite $J_{\mathrm{max}}$:
-\begin{equation}
-\label{eq:ajlim}
-    A_J = \varphi_0 \; I_{\mathrm{abs}} \; m \; \underbrace{ \frac{1}{\sqrt{1+ \left( \frac{4\;\varphi_0\;I_{\mathrm{abs}}}{J_{\mathrm{max}}} \right)^{2}}} }_{L}
-\end{equation}
-In the following, we aim for an expression of the limitation factor $L$ as a function of a $J_{\mathrm{max}}$ cost factor $c^{\ast}$. 
-We define two dimensionless quantities, $a_0$ and $k$:
-\begin{equation}
-\label{eq:a0}
-    a_0 = \frac{J_{\mathrm{max}}}{4\;\varphi_0\;I_{\mathrm{abs}}}
-\end{equation}
-\begin{equation}
-    k = \frac{J_{\mathrm{max}}}{4\;V_{\mathrm{cmax}}}\;.
-\end{equation}
-The model equations for $A_J$ and $A_C$ can then be re-written as:
-\begin{equation}
-\label{eq:ajlim2}
-    A_J = \varphi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \frac{1}{\sqrt{1+a_0^{-2}}}
-\end{equation}
-and
-\begin{equation}
-    A_C = \frac{J_{\mathrm{max}}}{4\;k} \cdot \frac{c_i - \Gamma^{\ast}}{c_i + K}
-\end{equation}
-Under the assumption of the coordination hypothesis, we set again $A_J = A_C$ and solve for $k$ to define the ratio of $J_{\mathrm{max}}$ to $V_{\mathrm{cmax}}$:
-\begin{equation}
-\label{eq:k}
-    k = \frac{c_i + 2\Gamma^{\ast}}{c_i + K} \; \sqrt{a_0^2 + 1}
-\end{equation}
-Solving Eq. \ref{eq:k} for $a_0$ and substituting this into Eq. \ref{eq:ajlim} we can express the $J_{\mathrm{max}}$ limitation factor $L$ as:
-\begin{equation}
-\label{eq:ajlim3}
-    L = \frac{1}{\sqrt{1 - \left( \frac{c_i+2\Gamma^{\ast}}{k(c_i+K)} \right)^{2}}}
-\end{equation}
-
-To obtain an estimate of the optimum value of $J_{\mathrm{max}}$ we assume that (a) there is a cost associated with $J_{\mathrm{max}}$ that is equal to the product of $J_{\mathrm{max}}$ and a constant $c$, and (b) that the value of $J_{\mathrm{max}}$ maximizes the benefit ($A_J$) minus the cost. 
-This maximum is obtained when
-\begin{equation}
-\label{eq:jmaxpartial}
-    \frac{\partial A_J}{\partial a_0} = c \; \frac{\partial J_{\mathrm{max}}}{\partial a_0}\;.
-\end{equation}
-Using Eq. \ref{eq:ajlim2}, the left-hand-side of Eq. \ref{eq:jmaxpartial} is 
-\begin{equation}
-    \frac{\partial A_J}{\partial a_0} = \varphi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \left( a_0^{-2} + 1 \right) ^{-2/3} a_0^{-3}
-\end{equation}
-Using Eq. \ref{eq:a0}, the right-hand-side of Eq. \ref{eq:jmaxpartial} is 
-\begin{equation}
-    \frac{\partial J_{\mathrm{max}}}{\partial a_0} = 4 \; \varphi_0 \; I_{\mathrm{abs}}\;.
-\end{equation}
-Now, we can solve Eq. \ref{eq:jmaxpartial} for $a_0^2$:
-\begin{equation}
-\label{eq:a0}
-a_0^2 = \frac{(c_i - \Gamma^{\ast})^{2/3}}{c^{2/3} \; (c_i+2\Gamma^{\ast})^{2/3}}-1
-\end{equation}
-and use this in Eq. \ref{eq:k} to solve for $k^2$:
-\begin{equation}
-\label{eq:k2}
-k^2 = (c_i+ \Gamma^{\ast})^{4/3} \; (c_i - \Gamma^{\ast})^{2/3} \; (c_i + K)^{-2} \; c^{-2/3}
-\end{equation}
-and for $c$:
-\begin{equation}
-\label{eq:c}
-    c = \frac{(c_i+2\Gamma^{\ast})^2\;(c_i-\Gamma^{\ast})}{k^3\;(c_i+K)^3}
-\end{equation}
-Eq. \ref{eq:k2} can be plugged into Eq. \ref{eq:ajlim3} to express $L$ as
-\begin{equation}
-    L = \sqrt{1-c^{2/3} \; \left( \frac{c_i+2\Gamma^{\ast}}{c_i-\Gamma^{\ast}}\right)^{2/3}  }
-\end{equation}
-Using the prediction of $c_i$ from Eq. \ref{eq:ci}, this can be written as
-\begin{equation}
-    L =  \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
-\end{equation}
-The revised LUE model thus becomes
-\begin{equation}
-\label{eq:ajlim4}
-    A_J = \varphi_0 \; I_{\mathrm{abs}} \; m'
-\end{equation}
-with
-\begin{equation}
-    m' = m \; \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
-\end{equation}
-Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq. \ref{eq:c}) c = 0.41.
-
 
 
 
@@ -1190,6 +1016,7 @@ Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq.
 \subsubsection{Soil water holding capacity}
 
 The soil water balance is solved following the SPLASH model and accounting only for liquid water. WATCH-WFDEI $P_{\text{rain}}$ and $P_{\text{snow}}$ are summed and converted from kg m$^{-2}$ s$^{-1}$ to mm d$^{-1}$ by multiplication with $(60 \cdot 60 \cdot 24)$ s d$^{-1}$. 
+
 
 % I'm a bit confused. In the SPLASH documentation, we used the term 'soil holding capacity' to refer to what one may rather call the field capacity and expressed it in units of mm. What you termed 'water holding capacity, WHC' may be refered to as 'porosity' instead. We may rename terms in Eq. 77 of the SPLASH documentation (field capacity instead of soil moisture capacity) and write this as follows:
 
@@ -1264,6 +1091,214 @@ The soil water balance is solved following the SPLASH model and accounting only 
 % Where, $FC_{0}$ and $WP_{0}$ are the field capacity and wilting point first solutions respectively. And, S, C, OM are the sand, clay and organic matter contents.
 % Contents of sand, clay, organic matter and soil depth data were acquired from the ISRIC-SoilGrids web portal (ftp://ftp.soilgrids.org/data/aggregated/10km/), and resampled to 0.5$^{\circ}$ to match the meteorological data resolution.
 % \clearpage
+
+% \section{Methods}
+
+% \subsection{Theory}
+% \label{sec:theory}
+% The P-model centers around a prediction for the ratio of leaf-internal to ambient \coo ($c_i : c_a \equiv \chi$) governed by the trade-off between the costs arising from the maintenance of carboxylation capacity ($V_{\mathrm{cmax}}$) and transpiration ($E$). 
+% It is founded on the standard model for C3 plant photosynthesis (Section \ref{sec:farquhar}), the coordination hypothesis (Section \ref{sec:coordination}) and the least-cost hypothesis (Section \ref{sec:least-cost}).
+
+% \textit{The following derivation and text is adopted and modified from Wang Han et al., 2017.}\\
+
+% \subsection{The standard model of C3 plant photosynthesis}
+% \label{sec:farquhar}
+% Following the Farquhar model for photosynthesis of C3 plants, instantaneous assimilation rates $A$ are limited either by the capacity of Rubisco for carboxylation of RuBP or the electron transport rate for the regeneration of RuBP. 
+% The Rubisco-limited photosynthetic rate $A_C$ is given by:
+% \begin{equation}
+% \label{eq:rubiscolimited}
+%     A_C = V_{\mathrm{cmax}} \; \frac{\chi\;c_a-\Gamma^{\ast}}{\chi\;c_a + K}
+% \end{equation}
+% where $V_{\mathrm{cmax}}$ is the Rubisco activity, $c_a$ is the ambient partial pressure of CO$_2$, $\chi$ is the ratio of leaf-internal to ambient CO$_2$ partial pressures, $\Gamma^{\ast}$ is the \coo\ compensation point in the absence of mitochondrial respiration, and $K$ is the effective Michaelis-Menten coefficient of Rubisco for carboxylation. 
+% Both $\Gamma^{\ast}$ and $K$ are influenced by the partial pressure of oxygen. 
+% $V_{\mathrm{cmax}}$, $\Gamma^{\ast}$ and $K$ are temperature-dependent, following Arrhenius kinetics.
+
+% The electron-transport limited photosynthetic rate $A_J$ is given by:
+% \begin{equation}
+% \label{eq:lightlimited}
+%     A_J = \varphi_0 \; I\; \frac{\chi \; c_a - \Gamma^{\ast}}{\chi\;c_a + 2\Gamma^{\ast}}
+% \end{equation}
+% for low PPFD (I) where $\varphi_0$ is the intrinsic quantum efficiency of photosynthesis. 
+% With increasing PPFD, $I$ must be substituted with a saturating function of the electron-transport capacity $J_{\mathrm{max}}$; various empirical functions have been used. 
+% The actual photosynthetic rate is then given by:
+% \begin{equation}
+%     A = \min(A_C, A_J)
+% \end{equation}
+
+% \subsubsection{The coordination hypothesis}
+% \label{sec:coordination}
+% Light use efficiency (LUE) models provide a powerful method and estimate assimilation rates as a linear function of absorbed light over a given time interval. 
+% But the connection between the Farquhar and LUE models is not obvious. 
+% Equation \ref{eq:lightlimited} predicts that electron-transport limited photosynthesis is proportional to absorbed PPFD but only applies at relatively low PPFD, and in any case, Equation \ref{eq:rubiscolimited} for Rubisco-limited photosynthesis is expected to apply at high PPFD. 
+% The conundrum is this: how can GPP (the time-integral of photosynthesis) be proportional to PPFD, which is the basis of the LUE model, if the response of photosynthesis to PPFD saturates, as it should according to the Farquhar model? This question has surfaced occasionally in the literature, but not been fully resolved. 
+% Medlyn10 reviewed some alternative explanations.
+ 
+% One of the explanations discussed by Medlyn10 invokes the co-ordination (or co-limitation) hypothesis, which states that $V_{\mathrm{cmax}}$ of leaves at any level in the canopy acclimates spatially and temporally to the prevailing daytime incident PPFD in such a way as to be neither in excess (entailing additional, futile maintenance respiration), nor less than required for full exploitation of the available light. 
+% In other words, under typical daytime condition when most photosynthesis takes place, the following is valid:
+% \begin{equation}
+% \label{eq:coordination}
+%     A_J \approx A_C
+% \end{equation}
+% This hypothesis also requires that $J_{\mathrm{max}}$ maintain a ratio to $V_{\mathrm{cmax}}$ such that strong limitation by $J_{\mathrm{max}}$ is avoided. 
+% Evidence for the co-ordination hypothesis was presented by Haxeltine and Prentice11, and Dewar12, who noted that it can explain many otherwise unexplained responses of C3 plants to environmental changes: including changes in leaf C:N ratios along environmental gradients, and the widely observed reduction of $V_{\mathrm{cmax}}$ under experimentally increased atmospheric CO$_2$. More recently Maire et al.13 showed very good agreement between typical daytime values of $A_J$ and $A_C$ as calculated under the prevailing growth conditions for 31 species (293 data points) based on published studies. 
+% The co-ordination hypothesis allows a simple approximation by which equation S2 is applied to predict GPP over time scales for which acclimation of $V_{\mathrm{cmax}}$ is possible, with $I$ now representing daily, rather than instantaneous, PPFD.
+
+% \subsubsection{The least-cost hypothesis}
+% \label{sec:least-cost}
+% Missing from the Farquhar model is an equation to predict χ, which constrains both the Rubisco- and electron-transport limited rates of carbon fixation and therefore appears in both equations S1 and S2. 
+% $\chi$ at any moment must be consistent both with the rate of carbon fixation and with the rate of diffusion of \coo\ through the stomata. 
+% Although the mechanism of stomatal control is still an active research topic, there is abundant evidence that $\chi$ is closely regulated to remain within a narrow range. 
+% All current Earth System Models include a 'closure' that predicts either stomatal conductance or $\chi$. 
+% The most commonly used closures are the one-parameter Ball-Berry equation14 and the two-parameter Leuning equation15 (or equivalently, the ‘Jacobs closure’16). 
+% Both are empirical, and incomplete in the sense that they allow $\chi$ to react only to relative humidity (Ball-Berry) or VPD (Leuning/Jacobs). 
+% Although superficially similar, these equations make substantially different predictions. 
+% For example, Ball-Berry allows $\chi$ to approach unity as VPD tends to zero, whereas Leuning/Jacobs caps $\chi$ at a maximum value. 
+% Both equations are usually implemented with different parameter values for different PFTs, but with no strong basis for the distinctions.
+
+% The least-cost hypothesis by Prentice et al. (2014), first proposed by Wright et al. (2003), states that $\chi$ should minimize the combined cost (per unit of assimilation) of maintaining the capacities for carboxylation and transpiration. 
+% If $a$ and $b$ are dimensionless cost factors (maintenance respiration per unit assimilation) for the maximum rates of water transport ($E$) and carbon fixation ($V_{\mathrm{cmax}}$) respectively, the optimality criterion is:
+% \begin{equation}
+%     a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}
+% \end{equation}
+
+% \subsubsubsection{Predicting $\chi$}
+% The following section provides a derivation of optimal $\chi$ using Fick's Law \citep{fick1855}, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
+% Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
+% According to the Fick's Law of diffusion:
+% \begin{align}
+% \label{eq:fick}
+%     E &= 1.6 \; g_s \; D \\
+%     A &= g_s \; c_a \; (1-\chi)
+% \end{align}
+% Therefore,
+% \begin{equation}
+%     E/A = \frac{1.6 \; D}{c_a\;(1-\chi)}
+% \end{equation}
+% The derivative term on the left-hand-side of Eq.\label{eq:leastcost} can thus be written as
+% \begin{equation}
+% \label{eq:partial1}
+%     \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
+% \end{equation}
+% Using Equation \ref{eq:rubiscolimited} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:leastcost} can be written as
+% \begin{equation}
+% \label{eq:partial2}
+%     \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}
+% \end{equation}
+% Using equations \ref{eq:partial1} and \ref{eq:partial2}, Eq. \ref{eq:leastcost} can be written as
+% \begin{equation}
+%     a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
+% \end{equation}
+% and solved for $\chi$:
+% \begin{align}
+%     \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
+%     \xi &= \sqrt{\frac{b\;K}{1.6\;a}}
+% \end{align}
+% The exact solution, without the simplification $\Gamma^{\ast}=0$, is 
+% \begin{align}
+% \label{eq:chi_exact}
+%     \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\\
+%     \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
+% \end{align}
+% This can also be written as
+% \begin{equation}
+% \label{eq:ci}
+%     c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \\ 
+% \end{equation}
+
+% With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
+% \begin{equation}
+% \label{eq:lue}
+%         A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
+% \end{equation}
+% Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
+% \begin{equation}
+%     m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
+% \end{equation}
+% This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure. Note that the unit cost $b$ is assumed to be constant, and $a$ only to vary with the temperature-dependent viscosity of water $\eta(T)$, calculated here following \cite{huber09}. The factor $\eta^\ast = \eta(T) / \eta(25^{\circ}\text{C})$ is thus introduced by taking the unit cost of water as $a \eta^\ast$.
+
+% \subsubsection{Introducing $J_{\mathrm{max}}$ limitation}
+% Equation \ref{eq:lue} is correct only if the response of GPP ($A$) to increasing PPFD remains linear up to the co-limitation point. 
+% By considering a non-rectangular hyperbola relationship between $A_J$ and $I_{\mathrm{abs}}$ (ref 26), we allow for the effect of finite $J_{\mathrm{max}}$:
+% \begin{equation}
+% \label{eq:ajlim}
+%     A_J = \varphi_0 \; I_{\mathrm{abs}} \; m \; \underbrace{ \frac{1}{\sqrt{1+ \left( \frac{4\;\varphi_0\;I_{\mathrm{abs}}}{J_{\mathrm{max}}} \right)^{2}}} }_{L}
+% \end{equation}
+% In the following, we aim for an expression of the limitation factor $L$ as a function of a $J_{\mathrm{max}}$ cost factor $c^{\ast}$. 
+% We define two dimensionless quantities, $a_0$ and $k$:
+% \begin{equation}
+% \label{eq:a0}
+%     a_0 = \frac{J_{\mathrm{max}}}{4\;\varphi_0\;I_{\mathrm{abs}}}
+% \end{equation}
+% \begin{equation}
+%     k = \frac{J_{\mathrm{max}}}{4\;V_{\mathrm{cmax}}}\;.
+% \end{equation}
+% The model equations for $A_J$ and $A_C$ can then be re-written as:
+% \begin{equation}
+% \label{eq:ajlim2}
+%     A_J = \varphi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \frac{1}{\sqrt{1+a_0^{-2}}}
+% \end{equation}
+% and
+% \begin{equation}
+%     A_C = \frac{J_{\mathrm{max}}}{4\;k} \cdot \frac{c_i - \Gamma^{\ast}}{c_i + K}
+% \end{equation}
+% Under the assumption of the coordination hypothesis, we set again $A_J = A_C$ and solve for $k$ to define the ratio of $J_{\mathrm{max}}$ to $V_{\mathrm{cmax}}$:
+% \begin{equation}
+% \label{eq:k}
+%     k = \frac{c_i + 2\Gamma^{\ast}}{c_i + K} \; \sqrt{a_0^2 + 1}
+% \end{equation}
+% Solving Eq. \ref{eq:k} for $a_0$ and substituting this into Eq. \ref{eq:ajlim} we can express the $J_{\mathrm{max}}$ limitation factor $L$ as:
+% \begin{equation}
+% \label{eq:ajlim3}
+%     L = \frac{1}{\sqrt{1 - \left( \frac{c_i+2\Gamma^{\ast}}{k(c_i+K)} \right)^{2}}}
+% \end{equation}
+
+% To obtain an estimate of the optimum value of $J_{\mathrm{max}}$ we assume that (a) there is a cost associated with $J_{\mathrm{max}}$ that is equal to the product of $J_{\mathrm{max}}$ and a constant $c$, and (b) that the value of $J_{\mathrm{max}}$ maximizes the benefit ($A_J$) minus the cost. 
+% This maximum is obtained when
+% \begin{equation}
+% \label{eq:jmaxpartial}
+%     \frac{\partial A_J}{\partial a_0} = c \; \frac{\partial J_{\mathrm{max}}}{\partial a_0}\;.
+% \end{equation}
+% Using Eq. \ref{eq:ajlim2}, the left-hand-side of Eq. \ref{eq:jmaxpartial} is 
+% \begin{equation}
+%     \frac{\partial A_J}{\partial a_0} = \varphi_0 \; I_{\mathrm{abs}} \; \; \frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \left( a_0^{-2} + 1 \right) ^{-2/3} a_0^{-3}
+% \end{equation}
+% Using Eq. \ref{eq:a0}, the right-hand-side of Eq. \ref{eq:jmaxpartial} is 
+% \begin{equation}
+%     \frac{\partial J_{\mathrm{max}}}{\partial a_0} = 4 \; \varphi_0 \; I_{\mathrm{abs}}\;.
+% \end{equation}
+% Now, we can solve Eq. \ref{eq:jmaxpartial} for $a_0^2$:
+% \begin{equation}
+% \label{eq:a0}
+% a_0^2 = \frac{(c_i - \Gamma^{\ast})^{2/3}}{c^{2/3} \; (c_i+2\Gamma^{\ast})^{2/3}}-1
+% \end{equation}
+% and use this in Eq. \ref{eq:k} to solve for $k^2$:
+% \begin{equation}
+% \label{eq:k2}
+% k^2 = (c_i+ \Gamma^{\ast})^{4/3} \; (c_i - \Gamma^{\ast})^{2/3} \; (c_i + K)^{-2} \; c^{-2/3}
+% \end{equation}
+% and for $c$:
+% \begin{equation}
+% \label{eq:c}
+%     c = \frac{(c_i+2\Gamma^{\ast})^2\;(c_i-\Gamma^{\ast})}{k^3\;(c_i+K)^3}
+% \end{equation}
+% Eq. \ref{eq:k2} can be plugged into Eq. \ref{eq:ajlim3} to express $L$ as
+% \begin{equation}
+%     L = \sqrt{1-c^{2/3} \; \left( \frac{c_i+2\Gamma^{\ast}}{c_i-\Gamma^{\ast}}\right)^{2/3}  }
+% \end{equation}
+% Using the prediction of $c_i$ from Eq. \ref{eq:ci}, this can be written as
+% \begin{equation}
+%     L =  \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
+% \end{equation}
+% The revised LUE model thus becomes
+% \begin{equation}
+% \label{eq:ajlim4}
+%     A_J = \varphi_0 \; I_{\mathrm{abs}} \; m'
+% \end{equation}
+% with
+% \begin{equation}
+%     m' = m \; \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
+% \end{equation}
+% Taking typical values of $k$ = 0.4726 and $\chi$ = 0.820, we estimate (using Eq. \ref{eq:c}) c = 0.41.
 
 
 
