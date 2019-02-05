@@ -228,7 +228,7 @@ All meteorological forcing data is taken from the FLUXNET Tier 1 dataset, which 
 \subsection{Calibration and evaluation data}
 
 \subsubsection{Site selection}
-We use data from 68 sites for model calibration and 159 sites for evaluation (Fig. \ref{fig:map_sites}). The number of valid daily GPP data points for the calibration set is 160,061 and 260,284 for the evaluation set. The selection of sites used for calibration is based on the reliability of relationships between \coo\ fluxes, co-located greenness data, and meteorological variables. Specifically, we use data from sites used in \cite{stocker18newphyt} to train machine learning models for explaining relationships between LUE and environmental drivers. This led to excluding data from sites where the total number of data points was too low ($<$500 daily data points per site); where flux data appeared to be unreliable, leading to unreliably trained models; and where noise in the greenness data was particularly high. For the evaluation, we used data from all sites, except from seven sites where C4 vegetation is known to be present, based on information provided by the FLUXNET meta information. These sites are: AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3.
+We use data from 68 sites for model calibration and 153 sites for evaluation (Fig. \ref{fig:map_sites}). The number of valid daily GPP data points for the calibration set is 160,061 and 260,284 for the evaluation set. The selection of sites used for calibration is based on the reliability of relationships between \coo\ fluxes, co-located greenness data, and meteorological variables. Specifically, we use data from sites used in \cite{stocker18newphyt} to train machine learning models for explaining relationships between LUE and environmental drivers. This led to excluding data from sites where the total number of data points was too low ($<$500 daily data points per site); where flux data appeared to be unreliable, leading to unreliably trained models; and where noise in the greenness data was particularly high. For the evaluation, we used data from all sites, excluding croplands and data seven additional sites where C4 vegetation is known to be present, based on information provided by the FLUXNET meta information. These sites are: AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3.
 
 \begin{figure}[!ht]
     \centering
@@ -250,22 +250,21 @@ GPP predictions by the RS models are compared to daily GPP estimates from the FL
 Different components of variability are analyzed separately. We separate spatial (mean annual values by site), annual, seasonal (mean by day-of-year), 5-daily, daily, and the variability in daily anomalies from the mean seasonal cycle. The seasonal variability is determined for different climatic zones (following Koeppen-Geiger classification, see Tab. \ref{tab:kgclimate}). Information about the association of sites with climatic zones is extracted from \cite{falge17}. Evaluations per climatic zone are done here only for zones that had at least five different site's data. For each component of variability, we calculate the adjusted coefficient of determination ($R^2_{\text{adj}}$, thereafter referred to as $R^2}$), and the root mean square error (RMSE). Figures of correlations between simulated and observed values additionally present the mean bias, the slope of the linear regression model, and the number of data points ($N$).
 
 \begin{table}
-\caption{Description of Koeppen-Geiger climate zones (based on \cite{falge17}) and number of sites for which data is available per climate zone.} 
+\caption{Description of Koeppen-Geiger climate zones (based on \cite{falge17}) and number of sites for which data is available per climate zone and hemisphere. Only zones with data from more than three sites are shown.} 
 \centering
-\begin{tabular}{lllrl}
+\begin{tabular}{llll}
   \toprule
-  Code & Hemisphere & N & Description \\ 
+  Code & $N$ north & $N$ south & Description \\ 
   \midrule
-   Cfb & north & 32 & Warm temperate fully humid with warm summer \\ 
-   Dfc & north & 25 & Snow fully humid cool summer \\ 
-   Csa & north & 20 & Warm temperate with dry \\ 
-   Dfb & north & 18 & Snow fully humid warm summer \\ 
-   Cfa & north & 12 & Warm temperate fully humid with hot summer \\ 
-   ET & north & 8 & Polar tundra \\ 
-   Aw & south & 7 & Equatorial savannah with dry winter \\ 
-   BSk & north & 5 & Arid Steppe cold \\ 
-   Cfb & south & 5 & Warm temperate fully humid with warm summer \\ 
-   Csb & north & 5 & Warm temperate with dry \\ 
+   Aw   & -- & 5 &  Tropical savannah with dry winter \\ 
+   BSk  & 5 & -- & Arid steppe cold \\ 
+   Cfa  & 11 & -- & Warm temperate fully humid with hot summer \\ 
+   Cfb  & 19 & 5 & Warm temperate fully humid with warm summer \\ 
+   Csa  & 12 & -- & Warm temperate with dry and hot summer \\ 
+   Csb  & 4 & -- & Warm temperate with dry and warm summer \\ 
+   Dfb  & 17 & -- & Cold fully humid warm summer \\ 
+   Dfc  & 22 & -- & Cold fully humid cold summer \\ 
+   ET   & 4 & -- & Polar tundra \\ 
    \bottomrule
   \end{tabular}
   \label{tab:kgclimate}
@@ -287,9 +286,12 @@ The bias in GPP (modelled minus observed) is calculated for each date belonging 
 
 \subsection{Variability across scales}
 
-We first evaluate the model performance with respect to pooled data from all 159 sites, aggregated to 5-day totals (60’450 data points). Evaluations with respect to alternative choices for fAPAR data and GPP data are presented in Sections \ref{sec:results_greennessdata} and \ref{sec:results_gppdata}. 
+We first evaluate the model performance with respect to pooled data from all 153 sites, forced with splined MODIS FPAR data for fAPAR in Eq. \ref{eq:luemodel}, and evaluated against GPP data based on the NT flux decomposition. Evaluations with respect to alternative choices for fAPAR data and GPP data are presented in Sections \ref{sec:results_greennessdata} and \ref{sec:results_gppdata}. \rsq\ and RMSE values for all model setups are presented in Tables \ref{tab:rsq} and \ref{tab:rmse}.
 
-The P-model, as used in \cite{wang17natpl} (version referred to as ORG), captures 65\% of the variance in observed GPP. Model performance both with respect to explained variance ($R^2$) and the RMSE is improved when additionally accounting for effects of temperature on the quantum yield efficiency (BRC, $R^2 = 68$\%), and when additionally factoring in an empirical soil moisture stress function (FULL, $R^2 = 70$\%). The NULL model with temporally constant and spatially uniform LUE, fitted to the data, performed equally well as ORG, but is outperformed by model versions BRC and FULL. All performance statistics are given in Tables \ref{tab:rsq} and \ref{tab:rmse}. A NULL model where LUE is constant but distinguished between vegetation types (NULLpft) performs as well as BRC. 
+The differences in the performance of different model setups are similar across all scales. Additional explanatory power is introduced by accounting for the temperature effects on quantum yield efficiency and by simulated soil moisture stress. The FULL setup of the P-model generally achieves the highest \rsq\ values and the lowest RMSE and outperforms the NULL and NULLpft models.
+
+\subsubsection{5-day totals}
+The P-model, as used in \cite{wang17natpl} (version referred to as ORG), captures 65\% of the variance in observed GPP with data aggregated to 5-day totals (60’450 data points). Model performance both with respect to explained variance ($R^2$) and the RMSE is improved when additionally accounting for effects of temperature on the quantum yield efficiency (BRC, $R^2 = 68$\%), and when additionally factoring in an empirical soil moisture stress function (FULL, $R^2 = 70$\%, Fig. \ref{fig:modobs_xdaily}). The NULL model with temporally constant and spatially uniform LUE, fitted to the data, performed equally well as ORG, but is outperformed by model versions BRC and FULL. All performance statistics are given in Tables \ref{tab:rsq} and \ref{tab:rmse}. A NULL model where LUE is constant but distinguished between vegetation types (NULLpft) performs as well as BRC. 
 
 \begin{figure}[!ht]
     \centering
@@ -299,7 +301,37 @@ The P-model, as used in \cite{wang17natpl} (version referred to as ORG), capture
     \label{fig:modobs_xdaily}
 \end{figure}
 
-The differences in the performance of different P-model setups are similar across all scales. Additional explanatory power is introduced by accounting for the temperature effects on quantum yield efficiency and by simulated soil moisture stress. The FULL setup of the P-model generally achieves the highest \rsq\ values and the lowest RMSE and outperforms the NULL and NULLpft models. Below, we highlight a limited set of particularly notable findings.
+\subsubsection{Seasonal variations}
+Among the components of variability investigated here, seasonal variations are in general most reliably simulated (\rsq : 0.67-0.70 for P-model setups, and \rsq : 0.69 for the NULL model, Fig. \ref{fig:season} and \ref{fig:season2}). The NULL model captures most of the seasonal variability, especially in climate zones Dfb and Dfc (Fully humid, snow in winter), Cfb, and Cfa (Warm temperate, fully humid). This indicates that in respective climates, most of the  seasonal GPP variations are driven by seasonal changes in insolation (PPFD) and vegetetation greenness (fAPAR). Accounting for temperature effects on the quantum yield efficiency resolves part of the overestimation in the early season. Particularly in climate zone Dfb (fully humid, warm summer, snow in winter), a substantial overestimation of GPP in the early season remains in all setups. While vegetation greenness suggests activity, observed GPP starts to increase only with a substantial delay (up to 2 months at some sites, e.g., US-Los). The high bias simulated early-season GPP persists also when using MODIS EVI as model forcing (Fig. \ref{fig:season_greenness}). Within climate zone Dfb, this pattern is clearly visible at almost all sites. Interestingly, an early season high bias is largely absent for sites in climate zone Cfb, where in both observations and the model, GPP starts to increase early on and observations are accurately matched by simulations. Notable exceptions are CZ-wet, DE-Hai, and FR-Fon, where the start of the season is simulated too early, similarly as for sites in Dfb (figures by sites are given in the supplementary material XXX).
+
+In climate zones with a marked dry season (Aw, BSk, Csa, and Csb), GPP is strongly overestimated during the dry season in model setups that do not account for soil moisture stress. The NULL model generally yields the largest bias. High VPD during dry periods reduces LUE in the P-model and leads to lower GPP values and a smaller bias in P-model versions. The empirical soil moisture stress function fully eliminates the dryness-related bias in zones Aw, Csa, and Csb and substantially reduces it for sites in zone BSk. Observations suggest that GPP declines to values around zero during dry periods at sites in zone BSk (mostly savannah vegetation and grasslands, see Table \ref{tab:sites}). A remaining bias in the model setup FULL, which includes the soil moisture stress function, is due to the fact that prescribed fAPAR remains relatively high and that the stress function does not decline to zero.
+
+Across-site average peak-season maximum GPP is accurately captured by the model setup FULL in all zones shown in Figs. \ref{fig:season} and \ref{fig:season2}, except for a tendency to underestimate values in zones Aw and Cfb, and overestimate values in zone Csa. Site-level evaluations (see Supplementary Information XXX) suggests no clear pattern of the peak-season underestimation in zone Cfb with vegetation type. The overestimation of peak-season GPP in zone Csa is due to a high bias at sites with evergreen broadleaved vegetation (FR-Pue, IT-Cp2, IT-Cpz), whereas sites with other vegetation types show no consistent peak season bias.
+
+Model setups that do not account for soil moisture stress tend to underestimate peak season GPP more strongly compared to the model setup FULL. This is a direct consequence of the calibration which balances errors across all data points.
+
+
+ \begin{figure}[!ht]
+    \centering
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Aw_south_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_BSk_north_.pdf}\\
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Csa_north_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Csb_north_.pdf}\\
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfa_north_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfb_north_.pdf}\\
+    \caption{Mean seasonal cycle. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent different model setups. The red band represents 33/66 \% quantiles for the model setup `FULL'. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}), and $N$ given in the top right corner gives the number of sites within the respective climate zone for which data was used. Only climate zones are shown here for which data from at least five sites was available.}
+    \label{fig:season}
+\end{figure}
+
+ \begin{figure}[!ht]
+    \centering
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfb_south_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfb_north_.pdf}\\
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfc_north_.pdf}
+%\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_ET_north_.pdf}
+    \caption{Continued from Fig. \ref{fig:season}}
+    \label{fig:season2}
+\end{figure}
 
 The correlation between simulated and observed annual total GPP is slightly lower (\rsq : 0.57-0.67) than for values aggregated to 5-day periods (\rsq : 0.65-0.70). This is related to the fact that additional variability within a year (seasonal) is reliably simulated by all P-model versions (\rsq : 0.67-0.70). Surprisingly, the NULLpft model achieves the highest correlation for seasonal variations (\rsq : 0.72).
 
@@ -330,24 +362,25 @@ Spatial variations are quantified as the variation in mean annual GPP across sit
 
 
  % Version 2.
+ % This table is created by eval_pmodel.Rmd, section 'Metrics table'
 \begin{table}
 \centering
 \begin{tabular}{lllllll}
   \toprule
   Setup & 5-daily & Spatial & Annual & Seasonal & var(daily) & var(annual) \\ 
   \midrule
-  ORG & 0.65 & 0.58 & 0.57 & 0.67 & 0.23 & 0.05 \\ 
-  BRC & 0.68 & 0.63 & 0.60 & 0.71 & 0.23 & 0.05 \\ 
-  FULL & 0.70 & 0.65 & 0.67 & 0.70 & 0.25 & 0.06 \\ 
-  NULL & 0.65 & 0.59 & 0.55 & 0.69 & 0.22 & 0.04 \\ 
-  NULLpft & 0.68 & 0.61 & 0.51 & 0.72 & 0.28 & 0.13 \\ 
+  ORG & 0.67 & 0.62 & 0.57 & 0.69 & 0.25 & 0.06 \\ 
+  BRC & 0.70 & 0.66 & 0.62 & 0.73 & 0.26 & 0.06 \\ 
+  FULL & 0.73 & 0.70 & 0.70 & 0.74 & 0.28 & 0.09 \\ 
+  NULL & 0.68 & 0.64 & 0.58 & 0.71 & 0.25 & 0.04 \\ 
+  NULLpft & 0.69 & 0.66 & 0.61 & 0.73 & 0.25 & 0.03 \\ 
   \midrule
-  FULL\_FPARitp & 0.67 & 0.63 & 0.66 & 0.69 & 0.22 & 0.06 \\ 
-  FULL\_EVI & 0.68 & 0.54 & 0.45 & 0.71 & 0.30 & 0.15 \\ 
+  FULL\_FPARitp & 0.71 & 0.70 & 0.70 & 0.74 & 0.25 & 0.09 \\ 
+  FULL\_EVI & 0.69 & 0.56 & 0.47 & 0.72 & 0.29 & 0.14 \\ 
   \midrule
-  FULL\_DT & 0.68 & 0.63 & 0.66 & 0.67 & 0.23 & 0.07 \\ 
-  FULL\_NTsub & 0.69 & 0.63 & 0.65 & 0.69 & 0.24 & 0.06 \\ 
-  FULL\_Ty & 0.69 &  &  & 0.68 & 0.37 &  \\ 
+  FULL\_DT & 0.74 & 0.69 & 0.70 & 0.72 & 0.28 & 0.08 \\ 
+  FULL\_NTsub & 0.75 & 0.70 & 0.70 & 0.73 & 0.28 & 0.09 \\ 
+  FULL\_Ty & 0.73 &  &  & 0.71 & 0.44 &  \\ 
   \bottomrule
   \end{tabular}
 \caption{$R^2$ of different model setups and for different components of variability.} 
@@ -374,24 +407,25 @@ Spatial variations are quantified as the variation in mean annual GPP across sit
 
 
  % Version 2. SOMETHING WENT REALLY WRONG. MUCH HIGHER THAN BEFORE.
+ % This table is created by eval_pmodel.Rmd, section 'Metrics table'
 \begin{table}
 \centering
 \begin{tabular}{lllllll}
   \toprule
   Setup & 5-daily & Spatial & Annual & Seasonal & var(daily) & var(annual) \\ 
   \midrule
-  ORG & 2.29 & 482.56 & 460.58 & 2.00 & 1.69 & 162.80 \\ 
-  BRC & 2.17 & 456.72 & 442.28 & 1.85 & 1.69 & 163.21 \\ 
-  FULL & 2.12 & 439.90 & 405.63 & 1.88 & 1.70 & 164.03 \\ 
-  NULL & 2.28 & 475.79 & 478.20 & 1.94 & 1.66 & 165.14 \\ 
-  NULLpft & 2.19 & 460.45 & 488.53 & 1.83 & 1.60 & 155.00 \\ 
+  ORG & 2.20 & 485.62 & 474.46 & 1.92 & 1.60 & 152.91 \\ 
+  BRC & 2.09 & 455.58 & 444.06 & 1.80 & 1.61 & 151.65 \\ 
+  FULL & 1.99 & 421.49 & 396.48 & 1.74 & 1.61 & 149.90 \\ 
+  NULL & 2.18 & 467.83 & 478.06 & 1.85 & 1.56 & 153.16 \\ 
+  NULLpft & 2.11 & 452.12 & 461.23 & 1.79 & 1.58 & 154.35 \\ 
   \midrule
-  FULL\_FPARitp & 2.22 & 450.65 & 415.68 & 1.93 & 1.79 & 162.17 \\ 
-  FULL\_EVI & 2.21 & 506.61 & 523.15 & 1.89 & 1.62 & 152.73 \\ 
+  FULL\_FPARitp & 2.08 & 427.46 & 402.94 & 1.77 & 1.71 & 148.96 \\ 
+  FULL\_EVI & 2.18 & 523.04 & 535.66 & 1.85 & 1.56 & 143.11 \\ 
   \midrule
-  FULL\_DT & 3.46 & 854.05 & 857.84 & 3.12 & 2.29 & 180.94 \\ 
-  FULL\_NTsub & 3.30 & 838.23 & 841.17 & 2.99 & 2.26 & 180.34 \\ 
-  FULL\_Ty & 2.89 &  &  & 2.75 & 1.94 &  \\ 
+  FULL\_DT & 1.88 & 390.45 & 363.55 & 1.78 & 1.58 & 155.03 \\ 
+  FULL\_NTsub & 1.87 & 418.65 & 392.20 & 1.75 & 1.59 & 150.76 \\ 
+  FULL\_Ty & 1.76 &  &  & 1.71 & 1.28 &  \\ 
   \bottomrule
   \end{tabular}
 \caption{Root mean square error (RMSE) of different model setups and for different components of variability.} 
@@ -418,36 +452,6 @@ Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE
 
 \clearpage
 
-\subsection{Seasonality}
- 
- We show only figures for climate zones, where more than four sites' data was available.
- 
- by climate zone, FULL/ORG/BRC, NULL
- 
-
- \begin{figure}[!ht]
-    \centering
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Aw_south_FULL.pdf}
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_BSk_north_FULL.pdf}\\
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Cfa_north_FULL.pdf}
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Cfb_north_FULL.pdf}\\
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Cfb_south_FULL.pdf}
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Csa_north_FULL.pdf}
-    \caption{Mean seasonal cycle. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent different model setups. The red band represents 33/66 \% quantiles for the model setup `FULL'. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}), and $N$ given in the top right corner gives the number of sites within the respective climate zone for which data was used. Only climate zones are shown here for which data from at least five sites was available.}
-    \label{fig:season}
-\end{figure}
-
- \begin{figure}[!ht]
-    \centering
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Csb_north_FULL.pdf}
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfb_north_FULL.pdf}\\
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfc_north_FULL.pdf}
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_ET_north_FULL.pdf}
-    \caption{Continued from Fig. \ref{fig:season}}
-    \label{fig:season2}
-\end{figure}
-
-\clearpage
 
 \subsection{Daily anomalies}
 
@@ -474,10 +478,10 @@ Model predictions are highly sensitive to the greenness data used as model forci
 
  \begin{figure}[!ht]
     \centering
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfb_north_greenness.pdf}
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Dfc_north_greenness.pdf}\\
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Cfb_north_greenness.pdf}
-\includegraphics[width=0.4\textwidth]{fig/meandoy_byzone_Aw_south_greenness.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfb_north_greenness.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfc_north_greenness.pdf}\\
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfb_north_greenness.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Aw_south_greenness.pdf}
     \caption{Mean seasonal cycle for model setus with different greenness forcing data. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent model setups, forced with different greenness data. The red band represents 33/66 \% quantiles for the model setup `FULL'. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}), and $N$ given in the top right corner gives the number of sites within the respective climate zone for which data was used. Climate zones shown here are illustrative examples.}
     \label{fig:season_greenness}
 \end{figure}
@@ -587,11 +591,12 @@ Are certain aspects of model-data disagreement related to uncertainty in the GPP
 
 \section{Appendix}
 
+% This table is created by 
 \begin{longtable}{lllllllll}
   \toprule
 Site & Lon. & Lat. & Period & Veg. & Clim. & N & Calib. & Reference \\ 
   \midrule
-AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\ 
+  AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\ 
   AR-Vir & -56.19 & -28.24 & 2009-2012 & ENF & Csb & 749 & Y & \cite{AR-Vir} \\ 
   AT-Neu & 11.32 & 47.12 & 2002-2012 & GRA & Dfc & 3243 &  & \cite{AT-Neu} \\ 
   AU-Ade & 131.12 & -13.08 & 2007-2009 & WSA & Aw & 532 & Y & \cite{AU-Ade} \\ 
@@ -617,7 +622,6 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   AU-Wom & 144.09 & -37.42 & 2010-2012 & EBF & Cfb & 934 & Y & \cite{AU-Wom} \\ 
   AU-Ync & 146.29 & -34.99 & 2012-2014 & GRA & BSk & 392 &  & \cite{AU-Ync} \\ 
   BE-Bra & 4.52 & 51.31 & 1996-2014 & MF & Cfb & 4208 & Y & \cite{BE-Bra} \\ 
-  BE-Lon & 4.75 & 50.55 & 2004-2014 & CRO & Cfb & 3113 &  & \cite{BE-Lon} \\ 
   BE-Vie & 6.00 & 50.31 & 1996-2014 & MF & Cfb & 4733 & Y & \cite{BE-Vie} \\ 
   BR-Sa3 & -54.97 & -3.02 & 2000-2004 & EBF & Am & 1206 &  & \cite{BR-Sa3} \\ 
   CA-Man & -98.48 & 55.88 & 1994-2008 & ENF & Dfc & 1411 &  & \cite{CA-Man} \\ 
@@ -637,7 +641,6 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   CH-Fru & 8.54 & 47.12 & 2005-2014 & GRA & Cfb & 2566 & Y & \cite{CH-Fru} \\ 
   CH-Lae & 8.37 & 47.48 & 2004-2014 & MF & Cfb & 3204 & Y & \cite{CH-Lae} \\ 
   CH-Oe1 & 7.73 & 47.29 & 2002-2008 & GRA & Cfb & 2104 & Y & \cite{CH-Oe1} \\ 
-  CH-Oe2 & 7.73 & 47.29 & 2004-2014 & CRO & Cfb & 3292 &  & \cite{CH-Oe2} \\ 
   CN-Cha & 128.10 & 42.40 & 2003-2005 & MF & Dwb & 982 &  & \cite{CN-Cha} \\ 
   CN-Cng & 123.51 & 44.59 & 2007-2010 & GRA & Bsh & 1113 & Y & \cite{CN-Cng} \\ 
   CN-Dan & 91.07 & 30.50 & 2004-2005 & GRA & ET & 647 &  & \cite{CN-Dan} \\ 
@@ -650,19 +653,14 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   CZ-BK1 & 18.54 & 49.50 & 2004-2008 & ENF & Dfb & 1100 &  & \cite{CZ-BK1} \\ 
   CZ-BK2 & 18.54 & 49.49 & 2004-2006 & GRA & Dfb & 161 &  & \cite{CZ-BK2} \\ 
   CZ-wet & 14.77 & 49.02 & 2006-2014 & WET & Cfb & 2605 & Y & \cite{CZ-wet} \\ 
-  DE-Akm & 13.68 & 53.87 & 2009-2014 & WET & Cfb & 1210 & Y & \cite{DE-Akm} \\ 
-  DE-Geb & 10.91 & 51.10 & 2001-2014 & CRO & Cfb & 3807 & Y & \cite{DE-Geb} \\ 
   DE-Gri & 13.51 & 50.95 & 2004-2014 & GRA & Cfb & 3387 & Y & \cite{DE-Gri} \\ 
   DE-Hai & 10.45 & 51.08 & 2000-2012 & DBF & Cfb & 3435 & Y & \cite{DE-Hai} \\ 
   DE-Lkb & 13.30 & 49.10 & 2009-2013 & ENF & Cfb & 1001 &  & \cite{DE-Lkb} \\ 
   DE-Obe & 13.72 & 50.78 & 2008-2014 & ENF & Cfb & 2043 & Y & \cite{DE-Obe} \\ 
   DE-RuR & 6.30 & 50.62 & 2011-2014 & GRA & Cfb & 1195 & Y & \cite{DE-RuR} \\ 
-  DE-RuS & 6.45 & 50.87 & 2011-2014 & CRO & Cfb & 910 &  & \cite{DE-RuS} \\ 
-  DE-Seh & 6.45 & 50.87 & 2007-2010 & CRO & Cfb & 1042 &  & \cite{DE-Seh} \\ 
   DE-SfN & 11.33 & 47.81 & 2012-2014 & WET & Cfb & 750 &  & \cite{DE-SfN} \\ 
   DE-Spw & 14.03 & 51.89 & 2010-2014 & WET & Cfb & 1339 & Y & \cite{DE-Spw} \\ 
   DE-Tha & 13.57 & 50.96 & 1996-2014 & ENF & Cfb & 4887 & Y & \cite{DE-Tha} \\ 
-  DK-Fou & 9.59 & 56.48 & 2005-2005 & CRO & Cfb & 226 &  & \cite{DK-Fou} \\ 
   DK-NuF & -51.39 & 64.13 & 2008-2014 & WET & ET & 882 & Y & \cite{DK-NuF} \\ 
   DK-Sor & 11.64 & 55.49 & 1996-2014 & DBF & Cfb & 4483 & Y & \cite{DK-Sor} \\ 
   DK-ZaF & -20.55 & 74.48 & 2008-2011 & WET & ET & 381 &  & \cite{DK-ZaF} \\ 
@@ -670,7 +668,6 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   ES-LgS & -2.97 & 37.10 & 2007-2009 & OSH & Csa & 794 &  & \cite{ES-LgS} \\ 
   ES-Ln2 & -3.48 & 36.97 & 2009-2009 & OSH & Csa &  69 &  & \cite{ES-Ln2} \\ 
   FI-Hyy & 24.30 & 61.85 & 1996-2014 & ENF & Dfc & 4222 & Y & \cite{FI-Hyy} \\ 
-  FI-Jok & 23.51 & 60.90 & 2000-2003 & CRO & Dfc & 669 &  & \cite{FI-Jok} \\ 
   FI-Lom & 24.21 & 68.00 & 2007-2009 & WET & Dfc & 575 &  & \cite{FI-Lom} \\ 
   FI-Sod & 26.64 & 67.36 & 2001-2014 & ENF & Dfc & 2816 & Y & \cite{FI-Sod} \\ 
   FR-Fon & 2.78 & 48.48 & 2005-2014 & DBF & Cfb & 2827 & Y & \cite{FR-Fon} \\ 
@@ -678,19 +675,16 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   FR-Pue & 3.60 & 43.74 & 2000-2014 & EBF & Csa & 4723 & Y & \cite{FR-Pue} \\ 
   GF-Guy & -52.92 & 5.28 & 2004-2014 & EBF & Af & 3719 &  & \cite{GF-Guy} \\ 
   IT-CA1 & 12.03 & 42.38 & 2011-2014 & DBF & Csa & 1036 &  & \cite{IT-CA1} \\ 
-  IT-CA2 & 12.03 & 42.38 & 2011-2014 & CRO & Csa & 1009 &  & \cite{IT-CA2} \\ 
   IT-CA3 & 12.02 & 42.38 & 2011-2014 & DBF & Csa & 913 &  & \cite{IT-CA3} \\ 
   IT-Col & 13.59 & 41.85 & 1996-2014 & DBF & Cfa & 2822 & Y & \cite{IT-Col} \\ 
   IT-Cp2 & 12.36 & 41.70 & 2012-2014 & EBF & Csa & 764 & Y & \cite{IT-Cp2} \\ 
   IT-Cpz & 12.38 & 41.71 & 1997-2009 & EBF & Csa & 2601 & Y & \cite{IT-Cpz} \\ 
   IT-Isp & 8.63 & 45.81 & 2013-2014 & DBF & Cfb & 588 & Y & \cite{IT-Isp} \\ 
-  IT-La2 & 11.29 & 45.95 & 2000-2002 & ENF & Cfb & 481 &  & \cite{IT-La2} \\ 
   IT-Lav & 11.28 & 45.96 & 2003-2014 & ENF & Cfb & 3919 & Y & \cite{IT-Lav} \\ 
   IT-MBo & 11.05 & 46.01 & 2003-2013 & GRA & Dfb & 3236 & Y & \cite{IT-MBo} \\ 
   IT-Noe & 8.15 & 40.61 & 2004-2014 & CSH & Cwb & 3083 & Y & \cite{IT-Noe} \\ 
   IT-PT1 & 9.06 & 45.20 & 2002-2004 & DBF & Cfa & 828 & Y & \cite{IT-PT1} \\ 
   IT-Ren & 11.43 & 46.59 & 1998-2013 & ENF & Dfc & 3043 & Y & \cite{IT-Ren} \\ 
-  IT-Ro1 & 11.93 & 42.41 & 2000-2008 & DBF & Csa & 2536 & Y & \cite{IT-Ro1} \\ 
   IT-Ro2 & 11.92 & 42.39 & 2002-2012 & DBF & Csa & 2671 &  & \cite{IT-Ro2} \\ 
   IT-SR2 & 10.29 & 43.73 & 2013-2014 & ENF & Csa & 668 & Y & \cite{IT-SR2} \\ 
   IT-SRo & 10.28 & 43.73 & 1999-2012 & ENF & Csa & 3791 & Y & \cite{IT-SRo} \\ 
@@ -711,7 +705,6 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   US-AR2 & -99.60 & 36.64 & 2009-2012 & GRA & Cfa & 882 &  & \cite{US-AR2} \\ 
   US-ARb & -98.04 & 35.55 & 2005-2006 & GRA & Cfa & 414 &  & \cite{US-ARb} \\ 
   US-ARc & -98.04 & 35.55 & 2005-2006 & GRA & Cfa & 488 &  & \cite{US-ARc} \\ 
-  US-ARM & -97.49 & 36.61 & 2003-2012 & CRO & Cfa & 2513 &  & \cite{US-ARM} \\ 
   US-Blo & -120.63 & 38.90 & 1997-2007 & ENF & Csb & 1827 &  & \cite{US-Blo} \\ 
   US-Cop & -109.39 & 38.09 & 2001-2007 & GRA & BSk & 1067 &  & \cite{US-Cop} \\ 
   US-GBT & -106.24 & 41.37 & 1999-2006 & ENF & Dfc & 541 &  & \cite{US-GBT} \\ 
@@ -725,7 +718,6 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   US-MMS & -86.41 & 39.32 & 1999-2014 & DBF & Cfa & 3524 & Y & \cite{US-MMS} \\ 
   US-Myb & -121.77 & 38.05 & 2010-2014 & WET & Csb & 1153 &  & \cite{US-Myb} \\ 
   US-NR1 & -105.55 & 40.03 & 1998-2014 & ENF & Dfc & 4084 &  & \cite{US-NR1} \\ 
-  US-ORv & -83.02 & 40.02 & 2011-2011 & WET & Dfa & 286 &  & \cite{US-ORv} \\ 
   US-PFa & -90.27 & 45.95 & 1995-2014 & MF & Dfb & 3679 &  & \cite{US-PFa} \\ 
   US-Prr & -147.49 & 65.12 & 2010-2013 & ENF & Dfc & 546 &  & \cite{US-Prr} \\ 
   US-SRG & -110.83 & 31.79 & 2008-2014 & GRA & BSk & 2146 & Y & \cite{US-SRG} \\ 
@@ -733,10 +725,7 @@ AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \cite{AR-SLu} \\
   US-Syv & -89.35 & 46.24 & 2001-2014 & MF & Dfb & 2045 & Y & \cite{US-Syv} \\ 
   US-Ton & -120.97 & 38.43 & 2001-2014 & WSA & Csa & 4321 & Y & \cite{US-Ton} \\ 
   US-Tw1 & -121.65 & 38.11 & 2012-2014 & WET & Csa & 688 &  & \cite{US-Tw1} \\ 
-  US-Tw2 & -121.64 & 38.10 & 2012-2013 & CRO & Csa & 290 &  & \cite{US-Tw2} \\ 
-  US-Tw3 & -121.65 & 38.12 & 2013-2014 & CRO & Csa & 498 &  & \cite{US-Tw3} \\ 
   US-Tw4 & -121.64 & 38.10 & 2013-2014 & WET & Csa & 325 &  & \cite{US-Tw4} \\ 
-  US-Twt & -121.65 & 38.11 & 2009-2014 & CRO & Csa & 1507 &  & \cite{US-Twt} \\ 
   US-UMB & -84.71 & 45.56 & 2000-2014 & DBF & Dfb & 4015 & Y & \cite{US-UMB} \\ 
   US-UMd & -84.70 & 45.56 & 2007-2014 & DBF & Dfb & 2050 & Y & \cite{US-UMd} \\ 
   US-Var & -120.95 & 38.41 & 2000-2014 & GRA & Csa & 2981 & Y & \cite{US-Var} \\ 
