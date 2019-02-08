@@ -290,58 +290,6 @@ We first evaluate the model performance with respect to pooled data from all 153
 
 The differences in the performance of different model setups are similar across all scales. Additional explanatory power is introduced by accounting for the temperature effects on quantum yield efficiency and by simulated soil moisture stress. The FULL setup of the P-model generally achieves the highest \rsq\ values and the lowest RMSE and outperforms the NULL and NULLpft models.
 
-\subsubsection{5-day totals}
-The P-model, as used in \cite{wang17natpl} (version referred to as ORG), captures 65\% of the variance in observed GPP with data aggregated to 5-day totals (60’450 data points). Model performance both with respect to explained variance ($R^2$) and the RMSE is improved when additionally accounting for effects of temperature on the quantum yield efficiency (BRC, $R^2 = 68$\%), and when additionally factoring in an empirical soil moisture stress function (FULL, $R^2 = 70$\%, Fig. \ref{fig:modobs_xdaily}). The NULL model with temporally constant and spatially uniform LUE, fitted to the data, performed equally well as ORG, but is outperformed by model versions BRC and FULL. All performance statistics are given in Tables \ref{tab:rsq} and \ref{tab:rmse}. A NULL model where LUE is constant but distinguished between vegetation types (NULLpft) performs as well as BRC. 
-
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_FULL.pdf}
-    \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_NULL.pdf}
-    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 5-day periods, for the model versions FULL (left) and NULL (right).}
-    \label{fig:modobs_xdaily}
-\end{figure}
-
-\subsubsection{Seasonal variations}
-Among the components of variability investigated here, seasonal variations are in general most reliably simulated (\rsq : 0.67-0.70 for P-model setups, and \rsq : 0.69 for the NULL model, Fig. \ref{fig:season} and \ref{fig:season2}). The NULL model captures most of the seasonal variability, especially in climate zones Dfb and Dfc (Fully humid, snow in winter), Cfb, and Cfa (Warm temperate, fully humid). This indicates that in respective climates, most of the  seasonal GPP variations are driven by seasonal changes in insolation (PPFD) and vegetetation greenness (fAPAR). Accounting for temperature effects on the quantum yield efficiency resolves part of the overestimation in the early season. Particularly in climate zone Dfb (fully humid, warm summer, snow in winter), a substantial overestimation of GPP in the early season remains in all setups. While vegetation greenness suggests activity, observed GPP starts to increase only with a substantial delay (up to 2 months at some sites, e.g., US-Los). The high bias simulated early-season GPP persists also when using MODIS EVI as model forcing (Fig. \ref{fig:season_greenness}). Within climate zone Dfb, this pattern is clearly visible at almost all sites. Interestingly, an early season high bias is largely absent for sites in climate zone Cfb, where in both observations and the model, GPP starts to increase early on and observations are accurately matched by simulations. Notable exceptions are CZ-wet, DE-Hai, and FR-Fon, where the start of the season is simulated too early, similarly as for sites in Dfb (figures by sites are given in the supplementary material XXX).
-
-In climate zones with a marked dry season (Aw, BSk, Csa, and Csb), GPP is strongly overestimated during the dry season in model setups that do not account for soil moisture stress. The NULL model generally yields the largest bias. High VPD during dry periods reduces LUE in the P-model and leads to lower GPP values and a smaller bias in P-model versions. The empirical soil moisture stress function fully eliminates the dryness-related bias in zones Aw, Csa, and Csb and substantially reduces it for sites in zone BSk. Observations suggest that GPP declines to values around zero during dry periods at sites in zone BSk (mostly savannah vegetation and grasslands, see Table \ref{tab:sites}). A remaining bias in the model setup FULL, which includes the soil moisture stress function, is due to the fact that prescribed fAPAR remains relatively high and that the stress function does not decline to zero.
-
-Across-site average peak-season maximum GPP is accurately captured by the model setup FULL in all zones shown in Figs. \ref{fig:season} and \ref{fig:season2}, except for a tendency to underestimate values in zones Aw and Cfb, and overestimate values in zone Csa. Site-level evaluations (see Supplementary Information XXX) suggests no clear pattern of the peak-season underestimation in zone Cfb with vegetation type. The overestimation of peak-season GPP in zone Csa is due to a high bias at sites with evergreen broadleaved vegetation (FR-Pue, IT-Cp2, IT-Cpz), whereas sites with other vegetation types show no consistent peak season bias.
-
-Model setups that do not account for soil moisture stress tend to underestimate peak season GPP more strongly compared to the model setup FULL. This is a direct consequence of the calibration which balances errors across all data points.
-
-
- \begin{figure}[!ht]
-    \centering
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Aw_south_.pdf}
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_BSk_north_.pdf}\\
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Csa_north_.pdf}
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Csb_north_.pdf}\\
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfa_north_.pdf}
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfb_north_.pdf}\\
-    \caption{Mean seasonal cycle. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent different model setups. The red band represents 33/66 \% quantiles for the model setup `FULL'. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}), and $N$ given in the top right corner gives the number of sites within the respective climate zone for which data was used. Only climate zones are shown here for which data from at least five sites was available.}
-    \label{fig:season}
-\end{figure}
-
- \begin{figure}[!ht]
-    \centering
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfb_south_.pdf}
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfb_north_.pdf}\\
-\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfc_north_.pdf}
-%\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_ET_north_.pdf}
-    \caption{Continued from Fig. \ref{fig:season}}
-    \label{fig:season2}
-\end{figure}
-
-The correlation between simulated and observed annual total GPP is slightly lower (\rsq : 0.57-0.67) than for values aggregated to 5-day periods (\rsq : 0.65-0.70). This is related to the fact that additional variability within a year (seasonal) is reliably simulated by all P-model versions (\rsq : 0.67-0.70). Surprisingly, the NULLpft model achieves the highest correlation for seasonal variations (\rsq : 0.72).
-
-Most of this variance is related to spatial variability, i.e. to differences in the means between sites. None of the P-model versions captures more than 6\% of the variance in the interannual variability  of GPP (``var(annual)'' in Tabs. \ref{tab:rsq} and \ref{tab:rmse}, quantified as the anomalies in annual totals, relative to the respective sites' multi-year mean).  
-Pooled data from all sites and all years
-
-
-Spatial variations are quantified as the variation in mean annual GPP across sites. Also 
-
-58\% of its variation is explained by 
 
 % Version 1.
 % \begin{table}
@@ -433,24 +381,65 @@ Spatial variations are quantified as the variation in mean annual GPP across sit
 \end{table}
 
 
-\clearpage
-
-
-\clearpage
-
-\subsection{Spatial/annual}
-
-Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE$=458$) and the soil moisture stress function (simulation FULL, $R^2=0.63$, RMSE$=445$) improve the spatial correlation compared to the original (ORG, $R^2=0.58$, RMSE$=483$). Models BRC and FULL outperform the NULL model ($R^2=0.59$, RMSE$=476$). The spatial (means by site) explains most of the variability in annual values (black lines in Fig. \ref{fig:modobs_spatialannual}), while inter-annual variability is poorly captured by all models (see Tabs. \ref{tab:rsq} and \ref{tab:rmse}).
+\subsubsection{5-day totals}
+The P-model, as used in \cite{wang17natpl} (version referred to as ORG), captures 65\% of the variance in observed GPP with data aggregated to 5-day totals (60’450 data points). Model performance both with respect to explained variance ($R^2$) and the RMSE is improved when additionally accounting for effects of temperature on the quantum yield efficiency (BRC, $R^2 = 68$\%), and when additionally factoring in an empirical soil moisture stress function (FULL, $R^2 = 70$\%, Fig. \ref{fig:modobs_xdaily}). The NULL model with temporally constant and spatially uniform LUE, fitted to the data, performed equally well as ORG, but is outperformed by model versions BRC and FULL. All performance statistics are given in Tables \ref{tab:rsq} and \ref{tab:rmse}. A NULL model where LUE is constant but distinguished between vegetation types (NULLpft) performs as well as BRC. 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.7\textwidth]{fig/modobs_spatial_annual_FULL.pdf}
-    \includegraphics[width=0.7\textwidth]{fig/modobs_spatial_annual_NULL.pdf}
+    \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_FULL.pdf}
+    \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_NULL.pdf}
+    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 5-day periods, for the model versions FULL (left) and NULL (right).}
+    \label{fig:modobs_xdaily}
+\end{figure}
+
+\subsubsection{Seasonal variations}
+Among the components of variability investigated here, seasonal variations are in general most reliably simulated (\rsq : 0.67-0.70 for P-model setups, and \rsq : 0.69 for the NULL model, Fig. \ref{fig:season} and \ref{fig:season2}). The NULL model captures most of the seasonal variability, especially in climate zones Dfb and Dfc (Fully humid, snow in winter), Cfb, and Cfa (Warm temperate, fully humid). This indicates that in respective climates, most of the  seasonal GPP variations are driven by seasonal changes in insolation (PPFD) and vegetetation greenness (fAPAR). Accounting for temperature effects on the quantum yield efficiency resolves part of the overestimation in the early season. Particularly in climate zone Dfb (fully humid, warm summer, snow in winter), a substantial overestimation of GPP in the early season remains in all setups. While vegetation greenness suggests activity, observed GPP starts to increase only with a substantial delay (up to 2 months at some sites, e.g., US-Los). The high bias simulated early-season GPP persists also when using MODIS EVI as model forcing (Fig. \ref{fig:season_greenness}). Within climate zone Dfb, this pattern is clearly visible at almost all sites. Interestingly, an early season high bias is largely absent for sites in climate zone Cfb, where in both observations and the model, GPP starts to increase early on and observations are accurately matched by simulations. Notable exceptions are CZ-wet, DE-Hai, and FR-Fon, where the start of the season is simulated too early, similarly as for sites in Dfb (figures by sites are given in the supplementary material XXX).
+
+In climate zones with a marked dry season (Aw, BSk, Csa, and Csb), GPP is strongly overestimated during the dry season in model setups that do not account for soil moisture stress. The NULL model generally yields the largest bias. High VPD during dry periods reduces LUE in the P-model and leads to lower GPP values and a smaller bias in P-model versions. The empirical soil moisture stress function fully eliminates the dryness-related bias in zones Aw, Csa, and Csb and substantially reduces it for sites in zone BSk. Observations suggest that GPP declines to values around zero during dry periods at sites in zone BSk (mostly savannah vegetation and grasslands, see Table \ref{tab:sites}). A remaining bias in the model setup FULL, which includes the soil moisture stress function, is due to the fact that prescribed fAPAR remains relatively high and that the stress function does not decline to zero.
+
+Model setups that do not account for soil moisture stress tend to underestimate peak season GPP more strongly compared to the model setup FULL. This is a direct consequence of the calibration which balances errors across all data points.
+
+Across-site average peak-season maximum GPP is accurately captured by the model setup FULL in all zones shown in Figs. \ref{fig:season} and \ref{fig:season2}, except for a tendency to underestimate values in zones Aw and Cfb, and overestimate values in zone Csa. Site-level evaluations (see Supplementary Information XXX) suggests no clear pattern of the peak-season underestimation in zone Cfb with vegetation type. The overestimation of peak-season GPP in zone Csa is caused by a high bias at sites with evergreen broadleaved vegetation (FR-Pue, IT-Cp2, IT-Cpz), whereas sites with other vegetation types show no consistent peak season bias. Simulations forced with MODIS EVI data suggest lower GPP in evergreen vegetation within all zones, but tends to underestimate GPP in evergreen needle-leaved vegetation. 
+
+
+
+ \begin{figure}[!ht]
+    \centering
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Aw_south_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_BSk_north_.pdf}\\
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Csa_north_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Csb_north_.pdf}\\
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfa_north_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfb_north_.pdf}\\
+    \caption{Mean seasonal cycle. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent different model setups. The red band represents 33/66 \% quantiles for the model setup `FULL'. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}), and $N$ given in the top right corner gives the number of sites within the respective climate zone for which data was used. Only climate zones are shown here for which data from at least five sites was available.}
+    \label{fig:season}
+\end{figure}
+
+ \begin{figure}[!ht]
+    \centering
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Cfb_south_.pdf}
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfb_north_.pdf}\\
+\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Dfc_north_.pdf}
+%\includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_ET_north_.pdf}
+    \caption{Continued from Fig. \ref{fig:season}}
+    \label{fig:season2}
+\end{figure}
+
+\subsubsection{Spatial and annual variations}
+
+Most of the explanatory power of the different models for predicting annual total GPP stems from their power in predicting between-site (``spatial'') variations (Fig. \ref{fig:modobs_spatialannual}). The \rsq\ for annual GPP simulated by the P-model setups ranges from 0.57 (ORG) to 0.7 (FULL). The NULL model achieves an \rsq\ of 0.58. The \rsq\ for spatial variations ranges from 0.62 (ORG) to 0.7 (FULL), and 0.64 for the NULL model. In contrast, inter-annual (between years) variations are poorly simulated (\rsq : 0.06-0.09 for P-model setups, and 0.04 for the NULL model). This is also illustrated by Fig. \ref{fig:modobs_spatialannual}. For a perfect fit between modelled and observed annual GPP values, all black lines (representing the linear regression model of annual values for a single site) would lie on the 1:1 line and have a slope of 1. The fact that for some sites, the linear regression has a slope that deviates much from 1, or is even negative, is illustrative of the poor model performance in capturing interannual variability. Within site variations in annual GPP (interannual variations) are generally much smaller than across site variations, which likely adds to the challenge of capturing interannual variations. Interannual GPP variations are generally better captured at sites where the variability is high and in particular at dry sites (site-level plots in SI XXX). 
+
+Interannual variations are better simulated when using MODIS EVI as a forcing. However, spatial variations are much better captured when using MODIS FPAR. 
+
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.48\textwidth]{fig/modobs_spatial_annual_FULL.pdf}
+    \includegraphics[width=0.48\textwidth]{fig/modobs_spatial_annual_NULL.pdf}
     \caption{Correlation of modelled and observed annual GPP in simulation FULL (top) and the NULL model (bottom). The red line and text are based on means across years by site and represents spatial (across-site) variations. Black lines and text are based on annual values, one line for each site. Lines represent linear regressions. $R^2$ and RMSE statistics for annual values (black text) are based on pooled data from all sites.}
     \label{fig:modobs_spatialannual}
 \end{figure}
 
-\clearpage
 
 
 \subsection{Daily anomalies}
@@ -459,13 +448,12 @@ Both the temperature-dependence of $\varphi_0$ (simulation BRC, $R^2=0.61$, RMSE
     \centering
 %\includegraphics[width=0.4\textwidth]{fig/modobs_anomalies_daily_NULL.pdf}
 %\includegraphics[width=0.4\textwidth]{fig/modobs_anomalies_daily_FULL.pdf}\\
-%\includegraphics[width=0.4\textwidth]{fig/hist_anomalies_daily_NULL.pdf}
-%\includegraphics[width=0.4\textwidth]{fig/hist_anomalies_daily_FULL.pdf}
+\includegraphics[width=0.4\textwidth]{fig/hist_anomalies_daily_NULL.pdf}
+\includegraphics[width=0.4\textwidth]{fig/hist_anomalies_daily_FULL.pdf}
     \caption{Daily anomalies from the mean seasonal cycle. Top row: The cloud of points illustrates daily anomalies from the mean seasonal cycle, blue lines are linear regressions for each site, and the red line is the linear regression of all data pooled. Bottom row: Histogram of daily anomalies from the mean seasonal cycle in the respective model and observations.}
     \label{fig:modobs_anomalies}
 \end{figure}
 
-\clearpage
 
 \subsection{Greenness data}
 
@@ -1150,60 +1138,60 @@ The soil water balance is solved following the SPLASH model and accounting only 
 %     a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}
 % \end{equation}
 
-% \subsubsubsection{Predicting $\chi$}
-% The following section provides a derivation of optimal $\chi$ using Fick's Law \citep{fick1855}, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
-% Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
-% According to the Fick's Law of diffusion:
-% \begin{align}
-% \label{eq:fick}
-%     E &= 1.6 \; g_s \; D \\
-%     A &= g_s \; c_a \; (1-\chi)
-% \end{align}
-% Therefore,
-% \begin{equation}
-%     E/A = \frac{1.6 \; D}{c_a\;(1-\chi)}
-% \end{equation}
-% The derivative term on the left-hand-side of Eq.\label{eq:leastcost} can thus be written as
-% \begin{equation}
-% \label{eq:partial1}
-%     \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
-% \end{equation}
-% Using Equation \ref{eq:rubiscolimited} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:leastcost} can be written as
-% \begin{equation}
-% \label{eq:partial2}
-%     \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}
-% \end{equation}
-% Using equations \ref{eq:partial1} and \ref{eq:partial2}, Eq. \ref{eq:leastcost} can be written as
-% \begin{equation}
-%     a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
-% \end{equation}
-% and solved for $\chi$:
-% \begin{align}
-%     \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
-%     \xi &= \sqrt{\frac{b\;K}{1.6\;a}}
-% \end{align}
-% The exact solution, without the simplification $\Gamma^{\ast}=0$, is 
-% \begin{align}
-% \label{eq:chi_exact}
-%     \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\\
-%     \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
-% \end{align}
-% This can also be written as
-% \begin{equation}
-% \label{eq:ci}
-%     c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \\ 
-% \end{equation}
+\subsubsubsection{Predicting $\chi$}
+The following section provides a derivation of optimal $\chi$ using Fick's Law \citep{fick1855}, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
+Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
+According to the Fick's Law of diffusion:
+\begin{align}
+\label{eq:fick}
+    E &= 1.6 \; g_s \; D \\
+    A &= g_s \; c_a \; (1-\chi)
+\end{align}
+Therefore,
+\begin{equation}
+    E/A = \frac{1.6 \; D}{c_a\;(1-\chi)}
+\end{equation}
+The derivative term on the left-hand-side of Eq.\label{eq:leastcost} can thus be written as
+\begin{equation}
+\label{eq:partial1}
+    \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
+\end{equation}
+Using Equation \ref{eq:rubiscolimited} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:leastcost} can be written as
+\begin{equation}
+\label{eq:partial2}
+    \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}
+\end{equation}
+Using equations \ref{eq:partial1} and \ref{eq:partial2}, Eq. \ref{eq:leastcost} can be written as
+\begin{equation}
+    a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
+\end{equation}
+and solved for $\chi$:
+\begin{align}
+    \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
+    \xi &= \sqrt{\frac{b\;K}{1.6\;a}}
+\end{align}
+The exact solution, without the simplification $\Gamma^{\ast}=0$, is 
+\begin{align}
+\label{eq:chi_exact}
+    \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\\
+    \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
+\end{align}
+This can also be written as
+\begin{equation}
+\label{eq:ci}
+    c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \\ 
+\end{equation}
 
-% With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
-% \begin{equation}
-% \label{eq:lue}
-%         A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
-% \end{equation}
-% Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
-% \begin{equation}
-%     m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
-% \end{equation}
-% This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure. Note that the unit cost $b$ is assumed to be constant, and $a$ only to vary with the temperature-dependent viscosity of water $\eta(T)$, calculated here following \cite{huber09}. The factor $\eta^\ast = \eta(T) / \eta(25^{\circ}\text{C})$ is thus introduced by taking the unit cost of water as $a \eta^\ast$.
+With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
+\begin{equation}
+\label{eq:lue}
+        A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
+\end{equation}
+Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
+\begin{equation}
+    m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
+\end{equation}
+This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure. Note that the unit cost $b$ is assumed to be constant, and $a$ only to vary with the temperature-dependent viscosity of water $\eta(T)$, calculated here following \cite{huber09}. The factor $\eta^\ast = \eta(T) / \eta(25^{\circ}\text{C})$ is thus introduced by taking the unit cost of water as $a \eta^\ast$.
 
 % \subsubsection{Introducing $J_{\mathrm{max}}$ limitation}
 % Equation \ref{eq:lue} is correct only if the response of GPP ($A$) to increasing PPFD remains linear up to the co-limitation point. 
