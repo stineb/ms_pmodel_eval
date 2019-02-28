@@ -28,6 +28,10 @@
 \tableofcontents
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Abstract}
+
+TBC
+
 \section{Introduction}
 
 Realistic, reliable and robust estimates of photosynthesis are crucial to understand variations in the carbon cycle, monitor forest and cropland productivity, and predict impacts of global environmental change on ecosystem functioning. Understanding how photosynthetic rates depend on temperature, humidity, solar radiation, CO$_2$ and soil moisture is at the core of this challenge and quantitative predictions of photosynthetic CO$_2$ assimilation over a wide range of conditions and spatial scales are the target of a range of photosynthesis models. Most widely used mechanistic photosynthesis models are funded in the Farquhar-von Caemmerer-Berry (FvCB) Model for C3 plants \citep{farquhar80, voncaemmerer81}. This formulation is used as an integral part of practically all Dynamic Vegetation Models (DVMs) and Earth System Models (ESMs) in use today (xxx cite some review?) and, in combination with stomatal conductance ($g_s$) models \citep{ball87, leuning95pce, medlyn11gcb}, couples water and carbon fluxes in and out of stomates at the leaf surface. In its essence, the FvCB model describes the saturating relationship between leaf-internal CO$_2$ concentrations ($c_i$) and assimilation ($A$), and how this relationship depends on absorbed photosynthetically active radiation (APAR). It simulates $A$ as the minimum of a light-limited and a Rubisco-limited assimilation rate. 
@@ -49,7 +53,7 @@ The theory underlying the P-model has been described before by \cite{prentice14e
 
 Here, we evaluate three P-model versions. The version `ORG' is the P-model in its ``original'' form, as used in \cite{wang17natpl} and \cite{keenan17natcomm}. Note however, that their implementation of the basic equations may differ slightly from the implementation presented here. A temperature-dependence of the quantum yield efficiency, held constant for previous publications using the P-model, was introduced in model version `BRC', based on the formulation given by \cite{bernacchi03pce}. Furthermore, Stocker et al. (2019) (xxx addref) identified a general bias of simulated GPP in the P-model (as well as in other remote sensing-based GPP models) that is closely related to the timing and magnitude of soil moisture effects on LUE. Therefore, we tested an additional P-model version (`FULL') that additionally uses an empirical soil moisture stress function. All versions are benchmarked against a null model (`NULL') where LUE is assumed to be constant in time and uniform across space. %An additional null model (`NULLpft') is tested where a constant LUE is assumed for each plant functional types - an approach often employed by remote sensing-based GPP models (xxx ref).
 
-Benchmarking of data-driven models is challenging due to errors introduced by uncertain model forcing data \citep{ryu19rse} (climate and fAPAR data differences between sources) and by uncertainties in observational data used for evaluation. We address these two points here with an additional focus on uncertainties in the fAPAR data, which is used as model forcing (Sec. XXX), and assess the robustness of model evaluation subject to uncertainties in the GPP data, derived from different flux decomposition methods (Sec. XXX). 
+Benchmarking of data-driven models is challenging due to errors introduced by uncertain model forcing data \citep{ryu19rse} (climate and fAPAR data differences between sources) and by uncertainties in observational data used for evaluation. We address these two points here with an additional focus on uncertainties in the fAPAR data, which is used as model forcing (Sec. \ref{sec:results_greenness}), and assess the robustness of model evaluation subject to uncertainties in the GPP data, derived from different flux decomposition methods (Sec. \ref{sec:results_gppdata}). 
 
 Accurately simulating sensitivities of processes to environmental conditions is key for reliable model predictions. However, relying just on continuous, not experimentally disturbed measurements, as done here with FLUXNET data, it's challenging to assess modelled GPP for extreme environmental conditions. Therefore, in addition to evaluating model-observation agreement statistics for GPP variability at different scales (Sec. \ref{sec:evalmethod_variability}), we evaluate the bias of simulated GPP during the course of apparent soil moisture drought events (\textit{fLUE droughts}), as identified by \cite{stocker18newphyt} (Sec. \ref{sec:droughtresponse}).
 
@@ -172,7 +176,7 @@ Second, the sensitivity of $\beta(\theta)$ to extreme soil dryness ($\theta \rig
 \end{equation}
 $\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$ are treated as calibratable parameters. 
 
-Soil moisture ($\theta$), AET, and PET are simulated using the SPLASH model \cite{davis17}, which treats soil water storage as a single bucket and calculates potential evapotranspiration based on Priestly-Taylor. Here, we account for a variable water holding capacity calculated based soil porosity and depth data from SoilGrids (xxx ref, see Appendix XXX).
+Soil moisture ($\theta$), AET, and PET are simulated using the SPLASH model \cite{davis17}, which treats soil water storage as a single bucket and calculates potential evapotranspiration based on Priestly-Taylor. Here, we account for a variable water holding capacity calculated based soil porosity and depth data from SoilGrids (xxx ref, see Appendix \ref{sec:whc}).
 
 \subsection{Simulation protocol}
 \label{sec:protocol}
@@ -229,7 +233,7 @@ All meteorological forcing data is taken from the FLUXNET Tier 1 dataset, which 
 \subsection{Calibration and evaluation data}
 
 \subsubsection{Site selection}
-We use data from 68 sites for model calibration and 153 sites for evaluation (Fig. \ref{fig:map_sites}). The number of valid daily GPP data points for the calibration set is 160,061 and 260,284 for the evaluation set. The selection of sites used for calibration is based on the reliability of relationships between \coo\ fluxes, co-located greenness data, and meteorological variables. Specifically, we use data from sites used in \cite{stocker18newphyt} to train machine learning models for explaining relationships between LUE and environmental drivers. This led to excluding data from sites where the total number of data points was too low ($<$500 daily data points per site); where flux data appeared to be unreliable, leading to unreliably trained models; and where noise in the greenness data was particularly high. For the evaluation, we used data from all sites, excluding croplands and data seven additional sites where C4 vegetation is known to be present, based on information provided by the FLUXNET meta information. These sites are: AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3.
+We use data from 70 sites for model calibration and 131 sites for evaluation (Fig. \ref{fig:map_sites}). The number of valid daily GPP data points for the calibration set is 160,061 and 260,284 for the evaluation set. The selection of sites used for calibration is based on the reliability of relationships between \coo\ fluxes, co-located greenness data, and meteorological variables. Specifically, we use data from sites used in \cite{stocker18newphyt} to train machine learning models for explaining relationships between LUE and environmental drivers. This led to excluding data from sites where the total number of data points was too low ($<$500 daily data points per site); where flux data appeared to be unreliable, leading to unreliably trained models; and where noise in the greenness data was particularly high. For the evaluation, we used data from all sites, excluding croplands and data seven additional sites where C4 vegetation is known to be present, based on information provided by the FLUXNET meta information. These sites are: AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3.
 
 \begin{figure}[!ht]
     \centering
@@ -277,7 +281,7 @@ Different components of variability are analyzed separately. We separate spatial
 
 \subsubsection{Drought response}
 \label{sec:droughtresponse}
-The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{stocker18newphyt} for 32 (xxx check this number, include in table 5) sites (20 days before and 80 days after drought onset are taken). Drought events ("fLUE droughts") are periods of consecutive days where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold. The data specifying the timing and duration of drought events was downloaded from \textit{Zenodo} \citep{flue}. We then re-arranged the data to align all drought events at all sites, normalised data to its median value during the ten days before the onset of droughts (normalisation by subtracting median), and computed quantiles per day, where 'day' is defined with respect to the onset of each drought event.
+The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{stocker18newphyt} for 50 sites (20 days before and 80 days after drought onset are taken). Drought events ("fLUE droughts") are periods of consecutive days where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold. The data specifying the timing and duration of drought events was downloaded from \textit{Zenodo} \citep{flue}. We then re-arranged the data to align all drought events at all sites, normalised data to its median value during the ten days before the onset of droughts (normalisation by subtracting median), and computed quantiles per day, where 'day' is defined with respect to the onset of each drought event.
 
 \section{Evaluation results}
 \label{sec:results}
@@ -435,6 +439,7 @@ The \rsq\ for annual GPP simulated by the P-model setups ranges from 0.57 (ORG) 
 
 
 \subsection{Greenness data}
+\label{sec:results_greenness}
 
 Model predictions are highly sensitive to the greenness data used as model forcing. We investigated to what degree model performance is subject to using alternative greenness forcing data. As alternatives to the standard dataset that we used for all other simulations (MODIS FPAR, splined to daily values), we used MODIS EVI and a linearly interpolated version of MODIS FPAR, and focused on a limited set of aspects of model performance which have been discussed above.
 
@@ -453,6 +458,7 @@ Furthermore, the early season high bias in simulated GPP in zone Dfb appears bot
 \clearpage
 
 \subsection{GPP target data}
+\label{sec:results_gppdata}
 
 Model-data agreement is generally best when the model is compared to GPP data based on the flux decomposition method 'Ty' \citep{wang17natpl}. For GPP aggregated to 8-day means, the model achieves an \rsq\ of 0.70 when compared to GPP 'Ty', as opposed to 0.65 and 0.67 compared to the DT and NT methods, respectively (Tab. \ref{tab:rsq}, Fig. \ref{fig:modobs_10d_gppdata}). Variations in daily anomalies are much better captured by the model when evaluating to GPP 'Ty' (\rsq : 0.49), as compared to evaluations against DT or NT (\rsq : 0.30). Spatial and annual correlations are not evaluated for GPP Ty due to missing data. Correlations at the 8-day, seasonal and daily time scales rely on dates for which neither the NT, DT, nor Ty method has missing values and thus contain an equal number of data points. Therefore NT evaluations, repeated here, are not identical to the ones above and are referred to as 'NTsub' in Tables \ref{tab:rsq} and \ref{tab:rmse}. 
 
@@ -470,7 +476,7 @@ The different flux decomposition methods make fundamentally different assumption
 \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_NT.pdf}
 \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_DT.pdf}\\
 \includegraphics[width=0.48\textwidth]{fig/modobs_xdaily_Ty.pdf}
-    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 8-day periods, determined from comparing respectively calibrated models to different observational GPP data (based on different flux decomposition methods, `DT' for the daytime method, `NT' for the nighttime method and `Ty' for the method by Davis et al. (xxx unpublished?))}
+    \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 8-day periods, determined from comparing respectively calibrated models to different observational GPP data (based on different flux decomposition methods, `DT' for the daytime method, `NT' for the nighttime method and `Ty' for the method applied for data used in \cite{wang17rs}).}
     \label{fig:modobs_10d_gppdata}
 \end{figure}
 
@@ -544,11 +550,11 @@ The model setup BRC, which does not include the empirical soil moisture stress f
 \section{Discussion}
 \label{sec:discussion}
 
-The present paper serves as a reference for the implementation of the P-model, as implemented in the R package (\textit{rpmodel}). A companion paper (XXX ref) describes an additional R package (\textit{rsofun}) that provides the functionalities for calibrating, running, and benchmarking the P-model for simulations at FLUXNET sites using a computationally efficient implementation of the model in Fortran 90 (SOFUN modelling framework, \cite{sofun_v110}). Based on earlier work \citep{wright03, prentice14ecollett, wang17natpl}, the P-model implements a theory describing leaf-level acclimation to the environment, specifically to temperature, vapour pressure deficit, ambient \coo , atmospheric pressure, and light. It makes a set of testable predictions for how the ratio of leaf-internal to ambient \coo\ ($\chi$) \citep{wang17natpl}, \vcmax\ \citep{smith19ecollett}, or metabolic leaf N \citep{dong16bg} change along environmental gradients. These predictions follow from the same theoretical approach. One further corollary is a prediction of LUE, which can be combined with remotely sensed fAPAR data to generate observation-driven GPP estimates. Here, we have evaluated the P-model's performance for predicting GPP in combination with prescribed fAPAR data (MODIS FPAR and EVI) at a set of N XXX FLUXNET Tier 1 sites (Tab. \ref{tab:sites}).
+The present paper serves as a reference for the P-model, as implemented in the R package \textit{rpmodel}. A companion paper (XXX ref) describes an additional R package (\textit{rsofun}) that provides the functionalities for calibrating, running, and benchmarking the P-model for simulations at FLUXNET sites using a computationally efficient implementation of the model in Fortran 90 (SOFUN modelling framework, \cite{sofun_v110}). Based on earlier work \citep{wright03, prentice14ecollett, wang17natpl}, the P-model implements a theory describing leaf-level acclimation to the environment, specifically to temperature, vapour pressure deficit, ambient \coo , atmospheric pressure, and light. It makes a set of testable predictions for how the ratio of leaf-internal to ambient \coo\ ($\chi$) \citep{wang17natpl}, \vcmax\ \citep{smith19ecollett}, or metabolic leaf N \citep{dong16bg} change along environmental gradients. These predictions follow from the same theoretical approach. One further corollary is a prediction of LUE, which can be combined with remotely sensed fAPAR data to generate observation-driven GPP estimates. Here, we have evaluated the P-model's performance for predicting GPP in combination with prescribed fAPAR data (MODIS FPAR and EVI) at a set of 131 FLUXNET Tier 1 sites (Tab. \ref{tab:sites}).
 
-The P-model as used here can be compared to a class of remote-sensing driven GPP models (RS-models). For example, MODIS GPP \citep{running04} and VPM \citep{Zhang2017-yr} rely on the LUE concept (\cite{monteith72}, Eq. \ref{eq:luemodel}) and empirically derived light use efficiency terms for different vegetation types. In contrast, BESS \citep{jiang16rse} combines remotely sensed fAPAR with photosynthesis mechanistically simulated based on enzyme kinetics following the FvCB model with prescribed \vcmax\ for different vegetation types. The P-model combines the FvCB photosynthesis model and the LUE concept, and predicts \vcmax\ and photosynthetic rates based on an optimality criterion (Eq. \ref{eq:optimality_chi}). This approach reduces the number of prescribed (and temporally fixed) parameters, avoids the distinction of model parametrisation by vegetation types or biomes (apart from distinguishing between the C3 and C4 photosynthetic pathways, and crops), and yields a simple but powerful model that relies on a minimum number of inputs. As we show here, the P-model is applicable to a wide range of conditions and vegetation types. Importantly, the mechanistic resolution of photosynthesis and its controls enables the P-model to simulate how GPP responds to gradually changing \coo\ and climate. Empirical light use efficiency models like MODIS GPP \citep{running04} or VPM \citep{Zhang2017-yr}, as well as machine-learning based upscaling of site-scale measurements \citep{jung11jgr, tramontana16bg} cannot capture this effect, which precludes them from investigations of long-term trends.
+The P-model as used here can be compared to a class of remote-sensing driven GPP models (RS-models). For example, MODIS GPP \citep{running04} and VPM \citep{Zhang2017-yr} rely on the LUE concept (\cite{monteith72}, Eq. \ref{eq:luemodel}) and empirically derived light use efficiency terms for different vegetation types. In contrast, BESS \citep{jiang16rse} combines remotely sensed fAPAR with photosynthesis mechanistically simulated based on enzyme kinetics following the FvCB model with prescribed \vcmax\ for different vegetation types. The P-model combines the FvCB photosynthesis model and the LUE concept, and predicts \vcmax\ and photosynthetic rates based on an optimality criterion (Eq. \ref{eq:optimality_chi}). This approach reduces the number of prescribed (and temporally fixed) parameters, avoids the distinction of model parametrisation by vegetation types or biomes (apart from distinguishing between the C3 and C4 photosynthetic pathways, and crops), and yields a simple but powerful model that relies on a minimum number of inputs. As we show here, the P-model is applicable to a wide range of conditions and vegetation types. Importantly, the mechanistic resolution of photosynthesis and its controls enables the P-model to simulate how GPP responds to gradually changing \coo\ and climate. Empirical light use efficiency models like MODIS GPP \citep{running04} or VPM \citep{Zhang2017-yr}, as well as machine learning-based upscaling of site-scale measurements \citep{jung11jgr, tramontana16bg} cannot capture this effect, which precludes them from investigations of long-term trends and attribution studies.
 
-In its FULL setup (including the temperature effect on quantum yield efficiency, and an empirical soil moisture stress function), GPP simulated by the P-model achieves an \rsq\ of 0.75 and a RMSE of 1.91 g C m$^{-2}$ d$^{-1}$, when evaluated against GPP data (NT method) from N XXX sites' data, aggregated to 8-day means. This can be compared to predictions from the VPM model (\rsq : 0.74, RMSE: 2.08 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \cite{Zhang2017-yr}), or BESS (\rsq : 0.67, RMSE: 2.58 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \cite{jiang16rse}). The performance of the P-model in simulating \textit{annual} GPP across all N XXX sites (\rsq : 0.70) can be compared to results from MODIS GPP (MOD17A2, \rsq = 0.73, 12 sites, \cite{heinsch06}, and for the updated version MOD17A2H: \rsq = 0.62, 18 sites, \cite{wang17rs}). 
+In its FULL setup (including the temperature effect on quantum yield efficiency, and an empirical soil moisture stress function), GPP simulated by the P-model achieves an \rsq\ of 0.75 and a RMSE of 1.91 g C m$^{-2}$ d$^{-1}$, when evaluated against GPP data (NT method) from 131 sites' data, aggregated to 8-day means. This can be compared to predictions from the VPM model (\rsq : 0.74, RMSE: 2.08 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \cite{Zhang2017-yr}), or BESS (\rsq : 0.67, RMSE: 2.58 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \cite{jiang16rse}). The performance of the P-model in simulating \textit{annual} GPP across all 131 sites (\rsq : 0.70) can be compared to results from MODIS GPP (MOD17A2, \rsq = 0.73, 12 sites, \cite{heinsch06}, and for the updated version MOD17A2H: \rsq = 0.62, 18 sites, \cite{wang17rs}). 
 
 We have tested P-model predictions against a benchmark (model setup ``NULL'') where a constant and spatially uniform LUE was fitted to the data. The surprisingly strong performance of the NULL model suggest that the majority of the variation in GPP, both in time and across space, is driven by variations in absorbed light (PPFD $\cdot$ fAPAR), which acts as a linear scalar for simulated GPP both in the NULL model, as well as in the P-model (\ref{eq:lue_identification}). Explanatory power added by the P-model and its simulated acclimation to changing environmental conditions is relatively limited.
 
@@ -563,6 +569,8 @@ Two intriguing aspects of model-data mismatch stand out. First, we have found a 
 A set of simplifications are implicit in the implementation of the P-model described here. We use average daily meteorological conditions, measured above the canopy (at FLUXNET sites) as input for all calculations. Optimality in balancing carbon and water costs for average daily conditions is not necessarily equivalent to optimality in balancing summed water and carbon costs over the course of a day, which may be argued to be a more realistic criterion. Large variations in ambient conditions over a diurnal cycle, combined with a non-linear dependence of costs on these conditions suggest that this simplification is crude. Nevertheless, prior evaluations have shown robust and accurate predictions of optimal $\chi$ across a range conditions \citep{wang17natpl}. Using VPD values measured above the canopy for scaling water losses, instead of VPD at the leaf surface (or evaporation sites), implicitly assumes a perfectly coupled atmospheric boundary layer. Using above-canopy air temperature instead of leaf temperatures introduces a bias when the two become decoupled. Furthermore, the light use efficiency model, using prescribed fAPAR, implies that no distinction is made between light absorptance by the canopy of diffuse and direct radiation. 
 
 A further assumption, inherent in simulating photosynthesis with a light use efficiency model, is that investments into the electron transport capacity (expressed by \jmax ) and investments into the carboxylation capacity (expressed by \vcmax ) are coordinated so that for conditions with which the model is forced (here, monthly means of daily averages), photosynthesis operates at the co-limitation point (intersection) of the light and Rubisco-limited assimilation rates and an effective linear relationship between absorbed light and mean assimilation emerges. This assumption follows from the \textit{coordination hypothesis} \citep{chen93, haxeltine96}, which itself can be understood as an optimality principle \citep{chen93}, and is supported by empirical findings \citep{maire12po}. However, such a coordination is contingent on the time scale at which photosynthetic acclimation occurs and this is not precisely known (xxx ref?). The model was forced here with monthly mean meteorological variables, implying that we assume a monthly time scale of acclimation. This is probably a conservative estimate (xxx ref?). Considering the concave relationship of assimilation rates and absorbed light that follows from the FvCB model for a given \jmax , it can be expected that linearly scaling a given monthly LUE term with daily varying absorbed light levels should lead to an overestimation of assimilation rates at high light levels. It may further be expected that this overestimation disappears with increasing the time scale over which light levels are averaged. As shown in Fig. \ref{fig:modobs_anomalies}, our results do not confirm these expectations. In other words, the LUE model did not exhibit a systematic error in simulating GPP variations when applied at the daily time scale. This may be due to the fact that day-to-day variability in light levels are relatively small compared to the within-day variability. We did not evaluate variability in sub-daily anomalies.
+
+*Missing: some conclusive words.*
 
 \begin{figure}[!ht]
     \centering
@@ -996,49 +1004,47 @@ By combining Equations \ref{eq:vcmaxsens}, \ref{eq:rd25}, and \ref{eq:rdsens}, $
 
 
 \subsubsection{Soil water holding capacity}
-
+\label{sec:whc}
 The soil water balance is solved following the SPLASH model and accounting only for liquid water. WATCH-WFDEI $P_{\text{rain}}$ and $P_{\text{snow}}$ are summed and converted from kg m$^{-2}$ s$^{-1}$ to mm d$^{-1}$ by multiplication with $(60 \cdot 60 \cdot 24)$ s d$^{-1}$. 
 
 
 % I'm a bit confused. In the SPLASH documentation, we used the term 'soil holding capacity' to refer to what one may rather call the field capacity and expressed it in units of mm. What you termed 'water holding capacity, WHC' may be refered to as 'porosity' instead. We may rename terms in Eq. 77 of the SPLASH documentation (field capacity instead of soil moisture capacity) and write this as follows:
 
-% To obtain the total soil water holding capacity (WHC, in mm), we use data on soil depth ($d$, in m) and porosity ($\varphi_0$, in $m_{H_{2}O}^{3} \cdot m_{Soil}^{-3}$) and calculate $W_m$ as
-% \begin{equation}
-%     W_m = \varphi_0 \cdot d \cdot 10^{-3}
-% \end{equation}
-% Runoff is generated when ...
+To obtain the total soil water holding capacity (WHC, in mm), we use data on soil depth ($d$, in m) and porosity ($\phi$, in $m_{H_{2}O}^{3} \cdot m_{Soil}^{-3}$) and calculate $W_m$ as
+\begin{equation}
+    W_m = \phi \cdot d \cdot 10^{-3}
+\end{equation}
 
+Where, the water holding capacity, defined as volumetric proportion, was estimated, as the difference between field capacity and wilting point.
+\begin{equation}
+\text{WHC}=W_{\text{FC}}-W_{\text{PWP}}
+\end{equation}
 
-% Where, the water holding capacity, defined as volumetric proportion, was estimated, following Hillel (1982), as the difference between field capacity and wilting point.
-% \begin{equation}
-% \text{WHC}=W_{\text{FC}}-W_{\text{PWP}}
-% \end{equation}
-
-% Field capacity and wilting point, were obtained from texture and organic matter content data, through pedotransfer functions, described in Saxton \& Rawls (2006) as follows:
-% \begin{equation}
-% W_{\text{FC}}= W_{\text{FC}}_{0}+(1.283\cdot W_{\text{FC}}_{0}^{2}-0.374\cdot W_{\text{FC}}_{0}-0.015)
-% \end{equation}
-% Where,
-% \begin{align}
-% W_{\text{FC}}_{0} &=-0.251f_{\text{sand}}+195f_{\text{clay}}+0.011f_{\text{OM}}\\                            &+0.006(f_{\text{sand}}\cdot f_{\text{OM}})\\
-%                   &-0.027(f_{\text{clay}}\cdot f_{\text{OM}})\\
-%                   &+0.452 (f_{\text{sand}}\cdot f_{\text{clay}})\\
-%                   +0.299
-% \end{align}
-% And,
-% \begin{equation}
-% W_{\text{PWP}}=W_{\text{PWP}}_{0}+(0.14\cdot W_{\text{PWP}}_{0}-0.02)
-% \end{equation}
-% Where,
-% \begin{align}
-% W_{\text{PWP}}_{0} &=0.024 f_{\text{sand}} + 0.487 f_{\text{clay}} + 0.006 f_{\text{OM}} \\
-%                   &+0.005 ( f_{\text{sand}}\cdot f_{\text{OM}} )\\
-%                   &-0.013( f_{\text{clay}}\cdot f_{\text{OM}} )\\
-%                   &+0.068( f_{\text{sand}} \cdot f_{\text{clay}} )\\
-%                   &+0.031
-% \end{align}
-% Where, $W_{\text{FC}}_{0}$ and $W_{\text{PWP}}_{0}$ are the field capacity and wilting point first solutions respectively. And, $f_{\text{sand}}$, $f_{\text{clay}}$, $f_{\text{OM}}$ are the sand, clay and organic matter contents.
-% Contents of sand, clay, organic matter and soil depth data were acquired from the ISRIC-SoilGrids web portal (ftp://ftp.soilgrids.org/data/aggregated/10km/), and resampled to 0.5$^{\circ}$ to match the meteorological data resolution.
+Field capacity and wilting point, were obtained from texture and organic matter content data, through pedotransfer functions, described in Saxton \& Rawls (2006) as follows:
+\begin{equation}
+W_{\text{FC}}= W_{\text{FC}}_{0}+(1.283\cdot W_{\text{FC}}_{0}^{2}-0.374\cdot W_{\text{FC}}_{0}-0.015)
+\end{equation}
+Where,
+\begin{align}
+W_{\text{FC}}_{0} &=-0.251f_{\text{sand}}+195f_{\text{clay}}+0.011f_{\text{OM}}\\                            &+0.006(f_{\text{sand}}\cdot f_{\text{OM}})\\
+                  &-0.027(f_{\text{clay}}\cdot f_{\text{OM}})\\
+                  &+0.452 (f_{\text{sand}}\cdot f_{\text{clay}})\\
+                  &+0.299
+\end{align}
+And,
+\begin{equation}
+W_{\text{PWP}}=W_{\text{PWP}}_{0}+(0.14\cdot W_{\text{PWP}}_{0}-0.02)
+\end{equation}
+Where,
+\begin{align}
+W_{\text{PWP}}_{0} &=0.024 f_{\text{sand}} + 0.487 f_{\text{clay}} + 0.006 f_{\text{OM}} \\
+                  &+0.005 ( f_{\text{sand}}\cdot f_{\text{OM}} )\\
+                  &-0.013( f_{\text{clay}}\cdot f_{\text{OM}} )\\
+                  &+0.068( f_{\text{sand}} \cdot f_{\text{clay}} )\\
+                  &+0.031
+\end{align}
+Where, $W_{\text{FC}}_{0}$ and $W_{\text{PWP}}_{0}$ are the field capacity and wilting point first solutions respectively. And, $f_{\text{sand}}$, $f_{\text{clay}}$, $f_{\text{OM}}$ are the sand, clay and organic matter contents.
+Contents of sand, clay, organic matter and soil depth data were acquired from the ISRIC-SoilGrids web portal (ftp://ftp.soilgrids.org/data/aggregated/10km/), and resampled to 0.5$^{\circ}$ to match the meteorological data resolution.
 
 
 
@@ -1144,6 +1150,7 @@ The soil water balance is solved following the SPLASH model and accounting only 
 % \end{equation}
 
 \subsubsubsection{Predicting $\chi$}
+
 The following section provides a derivation of optimal $\chi$ using Fick's Law \citep{fick1855}, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
 Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
 According to the Fick's Law of diffusion:
