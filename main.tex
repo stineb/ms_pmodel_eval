@@ -34,24 +34,40 @@ TBC
 
 \section{Introduction}
 
-Realistic, reliable and robust estimates of photosynthesis are crucial to understand variations in the carbon cycle, monitor forest and cropland productivity, and predict impacts of global environmental change on ecosystem functioning. Understanding how photosynthetic rates depend on temperature, humidity, solar radiation, CO$_2$ and soil moisture is at the core of this challenge and quantitative predictions of photosynthetic CO$_2$ assimilation over a wide range of conditions and spatial scales are the target of a range of photosynthesis models. Most widely used mechanistic photosynthesis models are funded in the Farquhar-von Caemmerer-Berry (FvCB) Model for C3 plants \citep{farquhar80, voncaemmerer81}. This formulation is used as an integral part of practically all Dynamic Vegetation Models (DVMs) and Earth System Models (ESMs) in use today (xxx cite some review?) and, in combination with stomatal conductance ($g_s$) models \citep{ball87, leuning95pce, medlyn11gcb}, couples water and carbon fluxes in and out of stomates at the leaf surface. In its essence, the FvCB model describes the saturating relationship between leaf-internal CO$_2$ concentrations ($c_i$) and assimilation ($A$), and how this relationship depends on absorbed photosynthetically active radiation (APAR). It simulates $A$ as the minimum of a light-limited and a Rubisco-limited assimilation rate. 
+Realistic, reliable and robust estimates of photosynthesis are crucial to understand variations in the carbon cycle, monitor forest and cropland productivity, and predict impacts of global environmental change on ecosystem functioning \citep{prentice15}. Understanding how photosynthetic rates depend on temperature, humidity, solar radiation, CO$_2$ and soil moisture is at the core of this challenge and quantitative predictions of photosynthetic CO$_2$ assimilation over a wide range of conditions and spatial scales are the target of a range of photosynthesis models. Most widely used mechanistic photosynthesis models are based on the Farquhar-von Caemmerer-Berry (FvCB) Model for C3 plants \citep{farquhar80, voncaemmerer81}. This formulation is implemented as an integral part of most Dynamic Vegetation Models (DVMs) and Earth System Models (ESMs) in use today \cite{smithdukes13gcb} and, in combination with stomatal conductance ($g_s$) models \citep{ball87, leuning95pce, medlyn11gcb}, couples water and carbon fluxes in and out of stomata at the leaf surface. In its essence, the FvCB model describes the saturating relationship between leaf-internal CO$_2$ concentrations ($c_i$) and assimilation ($A$), and how this relationship depends on absorbed photosynthetically active radiation (APAR). It simulates $A$ as the minimum of a light-limited and a Rubisco-limited assimilation rate, $A_J$ and $A_C$, respectively:
+\begin{equation}
+    A = \min(A_C, A_J)
+\end{equation}
+with 
 
-Although this can be considered a standard model for leaf-scale photosynthesis, DVM and ESM model results for ecosystem-level fluxes and their response to environmental factors remain divergent \citep{rogers17}. This is, i.a., due to assumptions that have to be made regarding photosynthetic parameters for which the FvCB model itself makes no prediction. This concerns in particular the stomatal conductance ($g_s$), the maximum rate of Rubisco carboxylation (\vcmax\ ), and the maximum rate of electron transport (\jmax\ ) for ribulose-1,5-bisphosphate (RuBP) regeneration, which together determine the relationship between $c_i$ and $A$ in the FvCB model. 
+and 
+\begin{equation}
+\label{eq:aj}
+    A_J = \varphi_0 \; I_{\mathrm{abs}}\;\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \;.
+\end{equation}
 
-Common approaches for determining the values of \vcmax\ and \jmax\ in DVMs are to prescribe fixed values of \vcmax\ and \jmax\  per plant functional type and attempt to simulate their distribution in space (Sitch et al. 2003) (more refs), or to use empirical relationships between leaf N and \vcmax\ and simulate leaf N internally (refs). While the FvCB model describes a non-linear relationship between (instantaneous) assimilation and absorbed light, it has been known for a long time that ecosystem production, integrated over longer time periods (weeks to months), scales linearly with the APAR (Monteith 1972). This observation underlies the light use efficiency (LUE) model which describes ecosystem-level photosynthesis (gross primary productivity, GPP) as the product of APAR and LUE as
+Although the FvCB model can be considered standard for leaf-scale photosynthesis, DVM and ESM model results for ecosystem-level fluxes and their response to environmental factors remain divergent \citep{rogers17}. This is due to assumptions that have to be made regarding photosynthetic parameters for which the FvCB model itself makes no prediction. This concerns in particular the stomatal conductance ($g_s$), the maximum rate of Rubisco carboxylation (\vcmax ), and the maximum rate of electron transport (\jmax ) for ribulose-1,5-bisphosphate (RuBP) regeneration, which together determine the relationship between $c_i$ and $A$ in the FvCB model. 
+
+Common approaches for determining the values of \vcmax\ and \jmax\ in DVMs are to prescribe fixed values of \vcmax\ and \jmax\ per plant functional type (PFT) and attempt to simulate their distribution in space, or to use empirical relationships between leaf N and \vcmax\ and simulate leaf N internally or prescribe it per PFT \citep{smithdukes13gcb, rogers14}. 
+
+While the FvCB model describes a non-linear relationship between instantaneous assimilation and absorbed light, it has been known for a long time that ecosystem production, integrated over longer time periods (weeks to months), scales linearly with the absorbed photosynthetically active radiation (APAR) \citep{monteith72, medlyn98}. This observation underlies the light use efficiency (LUE) model which describes ecosystem-level photosynthesis (gross primary productivity, GPP) as the product of APAR and LUE as
 \begin{equation}
 \label{eq:luemodel}
 \text{GPP} = \text{PAR} \cdot \text{fAPAR} \cdot \text{LUE} \;,
 \end{equation}
-where PAR is the incident photosynthetically active radiation and fAPAR is the fraction of absorbed PAR. The LUE model serves as a simple and robust basis for a number of observation-driven GPP models that use fAPAR and PAR based on remote sensing data and combine this with different approaches for simulating LUE \citep{running04, zhang17scidat, field95rse}, or for forest growth models \citep{landsberg97fem}. Other remote sensing data-based models \citep{jiang16rse} apply the FvCB model in combination with vegetation cover and type data and prescribed \vcmax\ for a set of plant functional types.
+where PAR is the incident photosynthetically active radiation and fAPAR is the fraction of absorbed PAR. The LUE model serves as a simple and robust basis for a number of observation-driven GPP models that use fAPAR and PAR based on remote sensing data and combine this with different approaches for simulating LUE \citep{running04, Zhang2017-yr, field95rse}, or for forest growth models \citep{landsberg97fem}. Other remote sensing data-based models \citep{jiang16rse} apply the FvCB model in combination with vegetation cover and type data and prescribed \vcmax\ for a set of plant functional types.
 
-The model described here unifies the two approaches (FvCB and LUE models) by assuming that the photosynthetic machinery tends to coordinate \vcmax\ and \jmax\  in order to operate close to the intersection of the light-limited and Rubisco-limited assimilation rates (\textit{Coordination Hypothesis}, \cite{maire12po}). Daily-to-monthly average assimilation rates can thus be described as linear functions of absorbed PAR in the form of a LUE model (Eq. \ref{eq:lue}). Our model further assumes an optimality principle that balances the C cost of maintaining the transpiration and carboxylation (\vcmax\ ) capacities and thus arrives at a prediction for how \vcmax\ and $g_s$ acclimate to the environment and determine the ratio of leaf-internal to ambient CO$_2$ ($c_i:c_a = \chi$), given temperature ($T$), water vapour pressure deficit (VPD $= D$), atmospheric pressure ($p$) and ambient CO$_2$ concentrations.
+Here, we describe a model that unifies the two approaches (FvCB and LUE models). The model embodies two main hypotheses. First, it assumes an optimality principle that balances the C cost of maintaining the transpiration and carboxylation (\vcmax ) capacities and thus arrives at a prediction for how \vcmax\ and $g_s$ acclimate to the environment and determine the ratio of leaf-internal to ambient CO$_2$ ($c_i:c_a = \chi$), given temperature ($T$), water vapour pressure deficit (VPD $= D$), atmospheric pressure ($p$) and ambient CO$_2$ concentrations ($c_a$). Second, it assumes that the photosynthetic machinery tends to coordinate \vcmax\ and \jmax\ in order to operate close to the intersection of the light-limited and Rubisco-limited assimilation rates (\textit{Coordination Hypothesis}, \cite{chen93, maire12po}). % \textbf{Or:}
+% Here, we describe a model that unifies the two approaches (FvCB and LUE models). The model simulates assimilation as a linear function of absorbed light by assuming an acclimation of assimilation rates and respiratory costs to prevailing environmental condition, which leads to a linear relationship of net assimilation and absorbed light \citep{field95rse, haxeltine96}.
+By assuming equality in the the marginal cost and benefit of \jmax , daily-to-monthly average assimilation rates can thus be described as linear functions of absorbed PAR in the form of a LUE model (Eq. \ref{eq:luemodel}).  
 
-Taken together, the model presented here (thereafter referred to as the \textit{P-model}), provides a consistent, optimality-based theory for predicting the acclimation of leaf-level photosynthesis to its environment \citep{prentice14ecollett} and for simulating LUE while relying on a minimum of prescribed parameters \citep{wang17natpl}. In combination with prescribed PAR and remotely sensed fAPAR, it can thus be used to estimate GPP across diverse environmental conditions. Therefore, the P-model has the advantage over other widely used data-driven GPP models (e.g., MODIS, FLUXCOM) in that it accounts for effects by changing CO$_2$, and that it uses first principles to mechanistically resolve effects by $T$, $D$ and $p$, and thereby \textit{predicts} key photosynthetic parameters instead of relying on prescribed values. The theoretical approach is described in more detail in Section \ref{sec:theory} and a full derivation of equations is given in Appendix XXX. 
+Taken together, the model presented here (thereafter referred to as the \textit{P-model}), provides an optimality-based theory for predicting the acclimation of leaf-level photosynthesis to its environment \citep{prentice14ecollett} and for simulating LUE while relying on a minimum of prescribed parameters \citep{wang17natpl}. In combination with prescribed PAR and remotely sensed fAPAR, it can thus be used to estimate GPP across diverse environmental conditions. Therefore, the P-model has the advantage over other widely used data-driven GPP models (e.g., MODIS, FLUXCOM) in that it accounts for the influence of changing CO$_2$, and that it uses first principles to mechanistically resolve effects by $T$, $D$ and $p$, and thereby \textit{predicts} key photosynthetic parameters instead of relying on prescribed values. The theoretical approach is described in more detail in Section \ref{sec:theory}.
 
-The theory underlying the P-model has been described before by \cite{prentice14ecollett} and has been used to predict variations of $\chi$ \citep{wang17natpl}, \vcmax\ \citep{smith19ecollett}, and leaf nitrogen \citep{dong16bg} across environmental gradients and to simulate how changes in primary productivity have driven the terrestrial C sink over the past decades \citep{keenan17natcomm}. The purpose of the present paper is two-fold. First, it provides a recapitulation of the P-model's underlying theory, and provides a complete description and reference for its implementation, along with open access model code, available as an R package (\textit{rpmodel}, xxx add ref). A companion paper describes an R package (\textit{rsofun}, xxx add ref) to conduct the routine steps for applying the model for a set of site-scale simulations or applications on a spatial grid, including parameter optimization, and model benchmarking. Together, this serves to facilitate the model's application in a wide variety of contexts and research communities. Second, the present paper provides a comprehensive evaluation of the P-model as a LUE model for simulating GPP, using data from flux measurements (FLUXNET Tier 1 dataset). The evaluation focuses on different components of variability (spatial, annual, seasonal, daily anomalies), and the GPP response to soil moisture drought.
+The theory underlying the P-model regarding the water-carbon tradeoff has been described before by \cite{prentice14ecollett} and applied by \cite{wanghan14} to quantify constraints on terrestrial photosynthesis, by \cite{keenan17natcomm} to simulate how changes in primary productivity have driven the terrestrial C sink over the past decades, and by \cite{smith19ecollett} to explain variations in observed \vcmax .  \cite{wang17natpl} complemented the theory by including effects of limited electron transport capacity (\jmax ) and predicted variations in observed $\chi$ across environmental gradients. The P-model includes the effect by \jmax\ limitation.
 
-Here, we evaluate three P-model versions. The version `ORG' is the P-model in its ``original'' form, as used in \cite{wang17natpl} and \cite{keenan17natcomm}. Note however, that their implementation of the basic equations may differ slightly from the implementation presented here. A temperature-dependence of the quantum yield efficiency, held constant for previous publications using the P-model, was introduced in model version `BRC', based on the formulation given by \cite{bernacchi03pce}. Furthermore, Stocker et al. (2019) (xxx addref) identified a general bias of simulated GPP in the P-model (as well as in other remote sensing-based GPP models) that is closely related to the timing and magnitude of soil moisture effects on LUE. Therefore, we tested an additional P-model version (`FULL') that additionally uses an empirical soil moisture stress function. All versions are benchmarked against a null model (`NULL') where LUE is assumed to be constant in time and uniform across space. %An additional null model (`NULLpft') is tested where a constant LUE is assumed for each plant functional types - an approach often employed by remote sensing-based GPP models (xxx ref).
+The purpose of the present paper is two-fold. First, it provides a recapitulation of the P-model's underlying theory, and provides a complete description and reference for its implementation, along with open access model code, available as an R package (\textit{rpmodel}, xxx add ref). A companion paper describes an R package (\textit{rsofun}, xxx add ref) to conduct the routine steps for applying the model for a set of site-scale simulations, including parameter optimization, and model benchmarking. Together, this serves to facilitate the model's application in a wide variety of contexts and research communities. Second, the present paper provides a comprehensive evaluation of the P-model as a LUE model for simulating GPP, using data from flux measurements (FLUXNET Tier 1 dataset). The evaluation focuses on different components of variability (spatial, annual, seasonal, daily anomalies), and the GPP response to soil moisture drought.
+
+Here, we evaluate three P-model versions. The version `ORG' is the P-model in its ``original'' form, as described in \cite{wang17natpl} (Their implementation and model forcings differed from the simulations described here). A temperature-dependence of the quantum yield efficiency, held constant for previous publications using the P-model, was introduced in model version `BRC', based on the formulation given by \cite{bernacchi03pce}. Furthermore, \cite{stocker19natgeo} identified a general bias of simulated GPP in the P-model (as well as in other remote sensing-based GPP models) that is closely related to the timing and magnitude of soil moisture effects on LUE. Therefore, we tested an additional P-model version (`FULL') that includes an empirical soil moisture stress function. All versions are benchmarked against a null models (`NULL'), where LUE is assumed to be constant in time and uniform across space. %, and the second, `NULLpft', where a constant LUE is assumed for each plant functional types - an approach often employed by remote sensing-based GPP models (xxx ref).
 
 Benchmarking of data-driven models is challenging due to errors introduced by uncertain model forcing data \citep{ryu19rse} (climate and fAPAR data differences between sources) and by uncertainties in observational data used for evaluation. We address these two points here with an additional focus on uncertainties in the fAPAR data, which is used as model forcing (Sec. \ref{sec:results_greenness}), and assess the robustness of model evaluation subject to uncertainties in the GPP data, derived from different flux decomposition methods (Sec. \ref{sec:results_gppdata}). 
 
@@ -77,38 +93,40 @@ Here, $a$ and $b$ are the respective unit costs. $b$ is assumed to be constant, 
 and 
 \begin{equation}
 \label{eq:ags}
-    A = g_s (1-\chi)   
+    A = g_s (1-\chi) \;,
 \end{equation}
-and use the Rubisco-limitedassimilation rate from the FvCB model:
+and use the Rubisco-limited assimilation rate from the FvCB model:
 \begin{equation}
 \label{eq:ac}
-A = A_C = V_{\mathrm{cmax}} \; \frac{\chi c_a-\Gamma^{\ast}}{\chi c_a + K}\; ,
+    A = A_C = V_{\mathrm{cmax}} \; \frac{\chi c_a - \Gamma^{\ast}}{\chi c_a + K}\;.
 \end{equation}
 $K$ is the Michaelis-Menten coefficient for Rubisco-limited assimilation (see Sec. \ref{sec:kmm}), and $\Gamma^{\ast}$ is the photorespiratory compensation point in absence of dark respiration (see Sec. \ref{sec:gs}). The optimal $\chi$ can thus be derived as
 \begin{equation}
 \label{eq:chiopt}
-\chi = \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\;,
+\chi = \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right) \frac{\xi}{\xi + \sqrt{D}}\;,
 \end{equation}
 with 
 \begin{equation}
 \label{eq:xi}
 \xi = \sqrt{\frac{\beta (K+\Gamma^{\ast})}{1.6 \eta^{\ast}}}\;.
 \end{equation}
-See Appendix \ref{app:steps_watercarbon} for intermediate steps. Note that the Coordination Hypothesis has not explicitly been assumed here, but because both terms in Eq. \ref{eq:optimality_chi} are divided by $A$, the solution is independent of whether the Rubisco-limited rate $A_C$ or the light-limited rate $A_J$ (see below) is followed.
-
-With this prediction for $\chi$, the equation for the light-limited assimilation rate from the FvCB model can be used to write
+See Appendix \ref{sec:steps_chi} for intermediate steps. Note that the Coordination Hypothesis has not explicitly been assumed here, but because both terms in Eq. \ref{eq:optimality_chi} are divided by $A$, the solution is independent of whether the Rubisco-limited rate $A_C$ or the light-limited rate $A_J$ (see below) is followed. In summary, we have derived the ratio of leaf internal-to-ambient \coo\ concentration $\chi$ that optimally balances costs of transpiration and carboxylation, ignoring limitations of RuBP regeneration.  
+With this prediction for $\chi$, we can make use of the \textit{Coordination Hypothesis} and use the light-limited assimilation rate from the FvCB model to write
 \begin{equation}
-\label{eq:aj}
-        A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{\chi c_a - \Gamma^{\ast}}{\chi c_a + 2\Gamma^{\ast}}}_{m} \;.
+        A_J = \varphi_0 \; I_{\mathrm{abs}}\;m \;,
 \end{equation}
-This equation has the form of a LUE model (Eq. \ref{eq:luemodel}) in that $A_J$ scales linearly with $I_{\mathrm{abs}}$. Using Eqs. \ref{eq:xi} and \ref{eq:ciopt}, $m$ can be expressed directly as
+with
+\begin{equation}
+    m = \frac{\chi c_a - \Gamma^{\ast}}{\chi c_a + 2\Gamma^{\ast}}\;.
+\end{equation}
+This equation has the form of a LUE model (Eq. \ref{eq:luemodel}) in that $A_J$ scales linearly with $I_{\mathrm{abs}}$. The effect of a saturating response to light, caused by the limited capacity of electron transport for RuBP regeneration is not factored in here, but accounted for by the modification described in Sec. \ref{sec:jmax}. Using Eqs. \ref{eq:xi} and \ref{eq:chiopt}, $m$ can be expressed directly as
 \begin{equation}
 \label{eq:m_lue}
     m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}} \;.
 \end{equation}
-The unit cost ratio $\beta$ has been estimated by \cite{wang17natpl} based on leaf $\delta^{13}$C data and a (constant) value of 146 is used here. Eq. \ref{eq:m_lue} provides the basis for predicting \coo\ assimilation rates in the form of a LUE model (Eq. \ref{eq:luemodel}) from an optimality principle that balances water and carbon costs and that can be expressed as a function of $T$ and $p$ (both affecting $\Gamma^{\ast}$, $K$, and $\eta^\ast$), $D$, and $c_a$. This implicitly assumes that \vcmax\ acclimates so that $A_J=A_C$, or, in other words, to just use the available light under average daytime conditions. Evidence for this coordination was presented by \cite{chen93}, \cite{haxeltine96}, and \cite{maire12po}. 
+The unit cost ratio $\beta$ has been estimated by \cite{wang17natpl} based on leaf $\delta^{13}$C data and a (constant) value of 146.0 (unitless) is used here. Eq. \ref{eq:m_lue} provides the basis for predicting \coo\ assimilation rates in the form of a LUE model (Eq. \ref{eq:luemodel}) from an optimality principle that balances water and carbon costs and that can be expressed as a function of $T$ and $p$ (both affecting $\Gamma^{\ast}$, $K$, and $\eta^\ast$), $D$, and $c_a$. This implicitly assumes that \vcmax\ acclimates so that $A_J=A_C$, or, in other words, to just use the available light under average daytime conditions. Evidence for this coordination was presented by \cite{chen93}, \cite{haxeltine96}, and \cite{maire12po}. 
 
-The prediction of optimal $\chi$ implies a set of corollaries (see Appendix \ref{sec:corollary}). An estimate for stomatal conductance ($g_s$) and the intrinsic water use efficiency (iWUE = $A/g_s$) directly follow from the optimal water-carbon balance (Eq. \ref{eq:optimality_chi}). By assuming $A_J=A_C$, we can further derive \vcmax , as well as dark respiration ($R_d$), which is a function of \vcmax . Note, that \cite{smith19ecollett} used a different approach to introduce effects by \jmax\ limitation, which is not described here.
+The prediction of optimal $\chi$ implies a set of corollaries (see Appendix \ref{sec:corollary}). An estimate for stomatal conductance ($g_s$) and the intrinsic water use efficiency (iWUE = $A/g_s$) directly follow from the optimal water-carbon balance (Eq. \ref{eq:optimality_chi}). By assuming $A_J=A_C$, we can further derive \vcmax , as well as dark respiration ($R_d$), which is a function of \vcmax\ (see Secs. \ref{sec:vcmax} and \ref{sec:rd}). Note that \cite{smith19ecollett} used a different approach to introduce effects by \jmax\ limitation, which is not described here.
 
 \subsection{Introducing \jmax\ limitation}
 \label{sec:jmax}
@@ -117,23 +135,24 @@ Eq. \ref{eq:aj} assumes that the light response of $A$ is linear up to the coord
 \label{eq:ajlim}
     A_J = \varphi_0 \; I_{\mathrm{abs}} \; m \; \underbrace{ \frac{1}{\sqrt{1+ \left( \frac{4\;\varphi_0\;I_{\mathrm{abs}}}{J_{\mathrm{max}}} \right)^{2}}} }_{L}
 \end{equation}
-Following this equation, $A_J$ is no longer linear with respect to $I_{\mathrm{abs}}$ and thus does not have the form of a LUE model. However, \jmax\ can be assumed to acclimate on longer time scales to $I_{\mathrm{abs}}$, so that the marginal gain in assimilation $A$ per unit change in \jmax\ is equal to the unit cost of maintaining \jmax .
+Following this equation, $A_J$ is no longer linear with respect to $I_{\mathrm{abs}}$ and thus does not have the form of a LUE model. However, \jmax\ can be assumed to acclimate on longer time scales to $I_{\mathrm{abs}}$, so that the marginal gain in assimilation $A$ per unit change in \jmax\ is equal to the unit cost of maintaining \jmax\ ($c$).
 \begin{equation}
 \label{eq:jmaxpartial}
     \frac{\partial A}{\partial J_{\mathrm{max}}} = c 
 \end{equation}
-The unit cost $c$ is assumed to include the maintenance of light-harvesting complexes and various proteins involved in the electron transport chain. The cost of maintaining a given \jmax\ is thus assumed to scale linearly with \jmax\ and that this proportionality is constant ($c$ is constant). By taking the derivative of Eq. \ref{eq:ajlim} with respect to \jmax\ and re-arranging terms (see Appendix XXX \ref{app:steps_jmaxlim} for intermediate steps), the \jmax\ limitation factor $L$ can be expressed as
+The unit cost $c$ is assumed to include the maintenance of light-harvesting complexes and various proteins involved in the electron transport chain. The cost of maintaining a given \jmax\ is thus assumed to scale linearly with \jmax\ and that this proportionality is constant ($c$ is constant). By taking the derivative of Eq. \ref{eq:ajlim} with respect to \jmax\ and re-arranging terms (see Appendix \ref{sec:steps_jmaxlim} for intermediate steps), the \jmax\ limitation factor $L$ can be expressed as
 \begin{equation}
+\label{eq:factor_jmaxlim}
     L = \sqrt{ 1 - \left( \frac{c^\ast}{m} \right)^{2/3} }
 \end{equation}
-with $c^\ast = 4c$. Hence, $A_J$ is again expressed as a linear function of absorbed light. $c^\ast$ can be estimated from typical values of \jmax $:$\vcmax $=$ 1.88 \citep{kattge07} and $\chi =$ 0.8 \citep{lloyd94} to $c^\ast = 0.41$ \citep{wang17natpl}. The revised LUE model thus becomes
+with $c^\ast = 4c$. Note that $L$ is independent of $I_\text{abs}$. Hence, $A_J$ is again expressed as a linear function of absorbed light. $c^\ast$ can be estimated from typical values of \jmax $:$\vcmax $=$ 1.88 \citep{kattge07} and $\chi =$ 0.8 \citep{lloyd94} to $c^\ast = 0.41$ \citep{wang17natpl}. The revised LUE model thus becomes
 \begin{equation}
 \label{eq:ajlim4}
     A = \varphi_0 \; I_{\mathrm{abs}} \; m'
 \end{equation}
 with
 \begin{equation}
-    m' = m \; \sqrt{1 - \left( \frac{c}{m} \right)^{2/3} }
+    m' = m \; \sqrt{1 - \left( \frac{c^\ast}{m} \right)^{2/3} }
 \end{equation}
 
 \section{Methods}
@@ -144,23 +163,27 @@ with
 $A$ is commonly expressed in units mol m$^{-2}$ s$^{-1}$. For the further model description and evaluation, we refer to ecosystem-scale quantities and in mass units of assimilated C and model GPP (g C m$^{-2}$ d$^{-1}$) following Eq. \ref{eq:luemodel}
 with 
 \begin{align}
+    \label{eq:iabs_identification}
     \text{fAPAR} \cdot \text{PPFD} &\mathrel{\widehat{=}} I_{\text{abs}} \\
     \label{eq:lue_identification}
     \text{LUE} &\mathrel{\widehat{=}} \varphi_0(T) \; \beta(\theta) \; m' \; M_C
 \end{align}
-Here, $M_C$ is the molar mass of carbon (12.0107 g mol$^{-1}$) to convert from molar units to mass units, and PPFD is the photosynthetic photon flux density integrated over a day (mol d$^{-1}$). fAPAR is unitless and integrates across the canopy, i.e., from fluxes per unit leaf area to fluxes per unit ground area. Note that the quantum yield parameter $\varphi_0$ is modelled here to be temperature-dependent, and an additional soil moisture stress factor ($\beta (\theta)$) is included for modelling LUE (see below).
+Here, $M_C$ is the molar mass of carbon (12.0107 g mol$^{-1}$) to convert from molar units to mass units, and PPFD is the photosynthetic photon flux density integrated over a day (mol d$^{-1}$). fAPAR is unitless and integrates across the canopy, i.e., from fluxes per unit leaf area to fluxes per unit ground area. The quantum yield parameter $\varphi_0$ is modelled here to be temperature-dependent, and an additional soil moisture stress factor ($\beta (\theta)$) is included for modelling LUE (see below).
 
 \subsubsection{Temperature dependence}
 \label{sec:tempstress}
-The temperature dependence of quantum yield efficiency ($\varphi_0(T)$, unitless) is modelled following the temperature dependence of the maximum quantum yield of photosystem II in light-adapted tobacco leaves, determined by \cite{bernacchi03pce} as 
+The temperature dependence of quantum yield efficiency ($\varphi_0(T)$, mol mol$^{-1}$) is modelled following the temperature dependence of the maximum quantum yield of photosystem II in light-adapted tobacco leaves, determined by \cite{bernacchi03pce} as 
 \begin{equation}
+\label{eq:bernacchi03}
 \varphi_0(T) = a_L \; b_L \; ( 0.352 + 0.022\;T - 0.00034\;T^2 )
 \end{equation}
-where $a_L$ is the leaf absorptance, and $b_L$ is the fraction of absorbed light that reaches photosystem II. Here, $(a_L b_L)$ is treated as a single calibratable parameter (see Section \ref{sec:calib}) and is further referred to as $\widehat{c_L}\equiv a_L\; b_L$. (All calibratable parameters are thereafter indicated by a hat over the symbol.) Note that the temperature dependence of quantum yield efficiency was not accounted for in earlier publications with the P-model \citep{keenan17natcomm, wang17natpl} and $\varphi_0$ was treated as a constant. To test the effect of this temperature dependence on simulated GPP, we conducted alternative simulations, where a constant $\widehat{\varphi_0}$ was calibrated instead (see Sec. \ref{sec:protocol}). Note, that $\varphi_0$  includes the factor $a_L$ for incomplete leaf absorbtance, which is commonly quantified in separation of the quantum yield efficiency and is assumed a value of 0.72-0.88 in models \citep{rogers17}. Calibrated values $\widehat{\varphi_0}$ are accordingly lower than values for the intrinsic quantum yield reported from experimental studies \citep{long93, singsaas01} and should be regarded as an \textit{effective} quantum yield efficiency. Note that an additional temperature dependence is in $m'$ in Eq. \ref{eq:lue_identification}.
+where $a_L$ is the leaf absorptance, and $b_L$ is the fraction of absorbed light that reaches photosystem II. Here, $(a_L b_L)$ is treated as a single calibratable parameter (see Section \ref{sec:calib}) and is henceforth referred to as $\widehat{c_L}\equiv a_L\; b_L$. (All calibratable parameters are thereafter indicated by a hat over the symbol.) Note that the temperature dependence of quantum yield efficiency was not accounted for in earlier publications with the P-model \citep{keenan17natcomm, wang17natpl} and $\varphi_0$ was treated as a constant and the respective value they used differed to the value calibrated here. To test the effect of this temperature dependence on simulated GPP, we conducted alternative simulations, where a constant $\widehat{\varphi_0}$ was calibrated instead (see Sec. \ref{sec:protocol}). Note, that $\varphi_0$ includes the factor $a_L$ for incomplete leaf absorbtance, which is commonly quantified in separation of the quantum yield efficiency and is ascribed a value of 0.72-0.88 in vegetation models \citep{rogers17}. Values of $\varphi_0$ used here are accordingly lower than values for the intrinsic quantum yield reported from experimental studies \citep{long93, singsaas01}. Furthermore, absorptance measured at the level of a leaf is not identical to light absorptance of the canopy  due to reflectance and reabsorptance within the canopy and depends on factors that are not known across the scales at which the P-model is applied (leaf angle distribution, distribution of photosynthetic capacity across the canopy, etc.) and it is unclear to which degree incomplete absorptance is factored into the fAPAR data used to force the P-model. For these reasons, $\varphi_0$ should be regarded as canopy-scale \textit{effective} quantum yield efficiency and is treated here as a calibratable parameter subjet to the selection of fAPAR forcing data. 
+
+Note that an additional temperature dependence is in $m'$ in Eq. \ref{eq:lue_identification}.
 
 \subsubsection{Soil moisture stress}
 \label{sec:soilmstress}
-$\beta(\theta)$ is a soil moisture stress function. We use results by \cite{stocker18newphyt} to fit a soil moisture stress functions ($\beta(\theta)\simeq\text{fLUE}$) based on two general patterns. First, the functional form of $\beta(\theta)$ can be approximated by a quadratic function that approaches 1 for soil moisture above a certain threshold $\theta^{\ast}$ and held constant at 1 for soil moisture values above that. Here $\theta$ is the plant-available soil water, expressed as a fraction of field capacity. The general form is:
+$\beta(\theta)$ is a soil moisture stress function. We use results by \cite{stocker18newphyt} to fit a soil moisture stress function ($\beta(\theta)\simeq\text{fLUE}$) based on two general patterns. First, the functional form of $\beta(\theta)$ can be approximated by a quadratic function that approaches 1 for soil moisture above a certain threshold $\theta^{\ast}$ and held constant at 1 for soil moisture values above that. Here $\theta$ is the plant-available soil water, expressed as a fraction of field capacity. The general form is:
 \begin{equation}
 \label{eq:soilmstress}
     \beta =
@@ -176,38 +199,39 @@ Second, the sensitivity of $\beta(\theta)$ to extreme soil dryness ($\theta \rig
 \end{equation}
 $\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$ are treated as calibratable parameters. 
 
-Soil moisture ($\theta$), AET, and PET are simulated using the SPLASH model \cite{davis17}, which treats soil water storage as a single bucket and calculates potential evapotranspiration based on Priestly-Taylor. Here, we account for a variable water holding capacity calculated based soil porosity and depth data from SoilGrids (xxx ref, see Appendix \ref{sec:whc}).
+Soil moisture ($\theta$), AET, and PET are simulated using the SPLASH model \cite{davis17}, which treats soil water storage as a single bucket and calculates potential evapotranspiration based on \cite{priestleytaylor72}. Here, we account for a variable water holding capacity calculated based on soil porosity and depth data from SoilGrids \citep{Hengl2014-jm} (Appendix \ref{sec:whc}).
 
 \subsection{Simulation protocol}
 \label{sec:protocol}
 To investigate model performance in dependence of alternative choices for model forcing data (defining fAPAR), alternative model setups (variable/fixed soil moisture and temperature effects), and alternative observational target data for calibration (GPP based on different flux decompositions), we conducted multiple simulation sets. Parameters ($\widehat{c_L}$, $\widehat{a_{\theta}}$, and $\widehat{b_{\theta}}$) are calibrated and evaluated against respective observational data for each simulation set separately.
 
-The simulation set ORG corresponds to the model as used in \cite{wang17natpl}. That is, the quantum efficiency of photosynthesis is fixed ($\widehat{\varphi_0}$ is calibrated, instead of $\widehat{c_L}$), and without accounting for soil moisture stress ($\beta (\theta)=1$). The model is forced with fAPAR data based on MODIS FPAR (MCD15A3H), splines of 4-daily values to daily values (see Section \ref{sec:greennessdata}, and is calibrated against GPP data from FLUXNET 2015 based on the nighttime decomposition method ('NT') (see Section \ref{sec:datafiltering}). All simulation setups are described in Tab. \ref{tab:setups}. The simulation set BRC is identical to ORG, except that  $\widehat{\varphi_0}$ is allowed to vary with temperature and $\widehat{c_L}$ is calibrated. In the simulation set FULL, soil moisture stress is additionally accounted for, and $\widehat{c_L}$, $\widehat{a_{\theta}}$, and $\widehat{b_{\theta}}$ are simultaneously calibrated.
+The simulation set ORG (`original') corresponds to the model as used in \cite{wang17natpl}. That is, the quantum efficiency of photosynthesis is fixed ($\widehat{\varphi_0}$ is calibrated, instead of $\widehat{c_L}$), and without accounting for soil moisture stress ($\beta (\theta)=1$). The model is forced with fAPAR data based on MODIS FPAR (MCD15A3H), splines of 4-daily values to daily values (see Section \ref{sec:greennessdata}), and is calibrated against GPP data from FLUXNET 2015 based on the nighttime partitioning method (`NT') (see Section \ref{sec:datafiltering}). All simulation setups are described in Tab. \ref{tab:setups}. The simulation set BRC (`Bernacchi') is identical to ORG, except that  $\widehat{\varphi_0}$ is allowed to vary with temperature following \cite{bernacchi03pce} and Eq. \ref{eq:bernacchi03}, and $\widehat{c_L}$ is calibrated. In the simulation set FULL (`full model'), soil moisture stress is additionally accounted for, and $\widehat{c_L}$, $\widehat{a_{\theta}}$, and $\widehat{b_{\theta}}$ are simultaneously calibrated.
 
 All additional simulations account for both temperature and soil moisture effects. The simulation set FULL\textunderscore FPARitp also uses MODIS FPAR data for fAPAR, but applies a linear interpolation to get daily values instead of splines. This is used to investigate whether the smoothed values of the splined data are responsible for the general underestimation of maximum GPP values during the height of the growing season. The simulation set FULL\textunderscore EVI uses MODIS EVI (MOD13Q1), splined to daily from 8-daily data, to assess to which degree model performance depends on fAPAR forcing data. See Section \ref{sec:greennessdata} for more information.
 
-All of the above-mentioned simulates are calibrated against GPP data based on the nighttime flux decomposition method \citep{Reichstein2005-mp}. Additional simulation sets FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are used to investigate the dependence of (apparent) model performance on the observational data source to which it is calibrated. We use GPP data based on the nighttime decomposition method \citep{Reichstein2005-mp} for FULL\textunderscore NTsub, the daytime decomposition method \citep{lasslop10} for FULL\textunderscore DT, and an alternative decomposition method used for model-data comparison in \cite{wang17natpl} for FULL\textunderscore Ty. The latter method determines a \textit{constant} background respiration rate as the (fitted) asymptote of CO$_2$ exchange fluxes when PPFD tends to zero. Calibration and evaluation of FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are done only for sites and dates where observational data is given from all three datasets (DT, NT, and Ty), hence the distiction between FULL\textunderscore NTsub and FULL. 
+All of the above-mentioned simulations are calibrated against GPP data, which is calculated using the nighttime flux decomposition method \citep{Reichstein2005-mp}. Additional simulation sets FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are used to investigate the dependence of (apparent) model performance on the observational data source to which it is calibrated. We use GPP data based on the nighttime decomposition method \citep{Reichstein2005-mp} for FULL\textunderscore NTsub, the daytime decomposition method \citep{lasslop10} for FULL\textunderscore DT, and an alternative decomposition method used for model-data comparison in \cite{wang17natpl} for FULL\textunderscore Ty. The latter method determines a \textit{constant} background respiration rate as the (fitted) asymptote of CO$_2$ exchange fluxes when PPFD tends to zero. Calibration and evaluation of FULL\textunderscore DT, FULL\textunderscore NTsub, and FULL\textunderscore Ty are done only for sites and dates where observational data is given from all three datasets (DT, NT, and Ty), hence the distiction between FULL\textunderscore NTsub and FULL. 
 
 
 \begin{table}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lllllllll}
+\begin{tabular}{llllllllll}
 	\toprule
-    Setup name                 &  fAPAR data              &  GPP      &  Calibration set  &  SM limit.  &  \widehat{\varphi_0} &  \widehat{c_L}    &  $\widehat{a_{\theta}}$  &  $\widehat{b_{\theta}}$   \\
+    Setup name                 &  fAPAR data              &  GPP      &  Calibration set  &  $\varphi_0(T)$  &  $\beta(\theta )$  &  \widehat{\varphi_0} &  \widehat{c_L}    &  $\widehat{a_{\theta}}$  &  $\widehat{b_{\theta}}$   \\
 	\midrule
-    ORG                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  0.0492 &  --     &  -- & --   \\
-    BRC                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  --     &  0.0817 &  -- & --   \\
-    FULL                       &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  --     &  0.0870 &  0  & 0.685 \\
+    ORG                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  no         &  0.0492 &  --     &  -- & --   \\
+    BRC                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  no         &  --     &  0.0817 &  -- & --   \\
+    FULL                       &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  yes        &  --     &  0.0870 &  0  & 0.685 \\
 	\midrule
-    FULL\textunderscore FPARitp &  FPAR MCD15A3H, itpl.   &  NT       &  valid NT data    &  yes        &  --     &  0.0846 &  0  & 0.700 \\
-    FULL\textunderscore EVI     &  EVI MOD13Q1, spl.      &  NT       &  valid NT data    &  yes        &  --     &  0.1293 &  0  & 0.766 \\
+    FULL\textunderscore FPARitp &  FPAR MCD15A3H, itpl.   &  NT       &  valid NT data    &  yes        &  yes        &  --     &  0.0846 &  0  & 0.700 \\
+    FULL\textunderscore EVI     &  EVI MOD13Q1, spl.      &  NT       &  valid NT data    &  yes        &  yes        &  --     &  0.1293 &  0  & 0.766 \\
 	\midrule
-    FULL\textunderscore DT      &  FPAR MCD15A3H, spl.    &  DT       &  valid NT, DT, Ty &  yes        &  --     &  0.0891 & 0   & 0.690 \\
-    FULL\textunderscore Ty      &  FPAR MCD15A3H, spl.    &  Ty       &  valid NT, DT, Ty &  yes        &  --     &  0.0868 & 0   & 0.721 \\
-    FULL\textunderscore NTsub   &  FPAR MCD15A3H, spl.    &  NT       &  valid NT, DT, Ty &  yes        &  --     &  0.0899 & 0   & 0.690 \\
+    FULL\textunderscore DT      &  FPAR MCD15A3H, spl.    &  DT       &  valid NT, DT, Ty &  yes        &  yes        &  --     &  0.0891 & 0   & 0.690 \\
+    FULL\textunderscore Ty      &  FPAR MCD15A3H, spl.    &  Ty       &  valid NT, DT, Ty &  yes        &  yes        &  --     &  0.0868 & 0   & 0.721 \\
+    FULL\textunderscore NTsub   &  FPAR MCD15A3H, spl.    &  NT       &  valid NT, DT, Ty &  yes        &  yes        &  --     &  0.0899 & 0   & 0.690 \\
 	\bottomrule
-\end{tabular}}
-\caption{Model setups. The standard greenness data, used to define the model forcing for fAPAR is MODIS FPAR MCD15A3H, where the original data, given at 4-day intervals, is splined to daily values (see Section \ref{sec:greennessdata}). Alternative greenness forcing data is based on MODIS EVI MOD13Q1, splined (`spl.') from 8-day intervals to daily, and MODIS FPAR MCD15A3H, linearly interpolated (`itpl.') from 4-day intervals to daily. Standard observational GPP data, used for model calibration and evaluation is from FLUXNET 2015 data, based on the nighttime flux decomposition method (`NT' in the table, variable \texttt{GPP\textunderscore NT\textunderscore VUT\textunderscore REF} in FLUXNET 2015 data). Alternative GPP data used based on the daytime flux decomposition method (`DT' in the table, variable \texttt{GPP\textunderscore DT\textunderscore VUT\textunderscore REF}), and based on an alternative method \citep{wang17natpl} (`Ty' in the table). For setups ORG, BRC, FULL, FULL\textunderscore FPARitp, and FULL\textunderscore EVI, data used for the model calibration is from all dates where (cleaned, see Section \ref{sec:datafiltering}) `NT' data is available. For setups FULL\textunderscore DT, FULL\textunderscore Ty, and FULL\textunderscore NTsub, data used for calibration is from all dates where data is available for all methods `DT', `NT', and `Ty'. `SM limit.' refers to whether or not soil moisture limitation (see Section \ref{sec:soilmstress} is accounted for. `QYE(T)' refers to whether the temperature dependence of quantum yield efficiency after \cite{bernacchi03pce} is accounted for. Column `QUE' specifies the calibrated value for quantum yield efficiency ($\varphi$), columns `a' and `b' specify the calibrated values for variables $a_\theta$ and $b_\theta$ in Eq. \ref{eq:soilmsensitivity}.}
+\end{tabular}
+}
+\caption{Model setups. The standard greenness data, used to define the model forcing for fAPAR is MODIS FPAR MCD15A3H, where the original data, given at 4-day intervals, is splined to daily values (see Section \ref{sec:greennessdata}). Alternative greenness forcing data is based on MODIS EVI MOD13Q1, splined (`spl.') from 8-day intervals to daily, and MODIS FPAR MCD15A3H, linearly interpolated (`itpl.') from 4-day intervals to daily. Standard observational GPP data, used for model calibration and evaluation is from FLUXNET 2015 data, based on the nighttime flux decomposition method (`NT' in the table, variable \texttt{GPP\textunderscore NT\textunderscore VUT\textunderscore REF} in FLUXNET 2015 data). Alternative GPP data used based on the daytime flux decomposition method (`DT' in the table, variable \texttt{GPP\textunderscore DT\textunderscore VUT\textunderscore REF}), and based on an alternative method \citep{wang17natpl} (`Ty' in the table). For setups ORG, BRC, FULL, FULL\textunderscore FPARitp, and FULL\textunderscore EVI, data used for the model calibration is from all dates where (cleaned, see Section \ref{sec:datafiltering}) `NT' data is available. For setups FULL\textunderscore DT, FULL\textunderscore Ty, and FULL\textunderscore NTsub, data used for calibration is from all dates where data is available for all methods `DT', `NT', and `Ty'. Column $\varphi_0(T)$ specifies whether the temperature dependence of quantum yield efficiency after \cite{bernacchi03pce} is accounted for. Column $\beta(\theta )$ specifies whether soil moisture limitation (see Section \ref{sec:soilmstress}) is accounted for. Columns \widehat{\varphi_0}, \widehat{c_L}, $\widehat{a_{\theta}}$ and  $\widehat{b_{\theta}}$ provide the calibrated parameter values in each simulation set.}
 \label{tab:setups}
 \end{table}
 
@@ -215,25 +239,32 @@ All of the above-mentioned simulates are calibrated against GPP data based on th
 
 \subsection{Model calibration}
 \label{sec:calib}
-The model calibration is restricted to the parameters determining the quantum efficiency of photosynthesis ($\widehat{\varphi_0}$ or $\widehat{c_L}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity, quantified by AET/PET (parameters $\widehat{a_{\theta}}$ and $\widehat{a_{\theta}}$). We used  Generalised Simulated Annealing from the \textit{GenSA} R package \citep{gensa} to search model parameters that minimise the root mean square error (RMSE) between observed and simulated daily GPP values. This algorithm is particularly suited to find global minima of non-linear objective functions and a large number of local minima.
+The model calibration is restricted to the parameters determining the quantum efficiency of photosynthesis ($\widehat{\varphi_0}$ or $\widehat{c_L}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity, quantified by AET/PET (parameters $\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$). Simulated GPP is calibrated to minimise the root mean square error (RMSE) compared to observed daily GPP (see Sec. \ref{sec:calibdata}). We used  Generalised Simulated Annealing from the \textit{GenSA} R package \citep{gensa} to optimise model parameters. This algorithm is particularly suited to find global minima of non-linear objective functions and a large number of local minima.
 
 %The model calibration is implemented within the rsofun R package (function \texttt{calib\textunderscore sofun()}, see accompanying paper Stocker et al., XXX).
 
 \subsection{Forcing data}
+\label{sec:forcingdata}
+
+Unstressed light use efficiency, that is $m'$ in Eq. \ref{eq:lue_identification}, is simulated using monthly mean values for $T$ and $D$; temporally constant site-specific elevation (used to calculate atmospheric pressure, scaled from sea-level standard pressure of 101325 Pa); and annually varying observed atmospheric \coo\ \citep{MacFarlingMeure2006}, identical across sites. The choice of aggregating to monthly mean values is consistent with previous modelling studies \cite{maire12po} and observations \citep{suzuki01} and is motivated by the time scale of Rubisco turnover which limits the rate at which photosynthetic parameter acclimate to changing environmental conditions.
+
+Predicted monthly LUE ($m'$) is then multiplied by daily varying $I_\text{abs}$, and response functions $\varphi_0(T)$ and $\beta(\theta)$, driven by daily varying temperature and soil moisture. This choice is motivated by the known rapid response in stomatal conductance to drying soils (represented by $\beta(\theta)$), and the instantaneous temperature response of the quantum yield efficiency ($\varphi_0(T)$). Simulating GPP as the product of LUE and daily varying PPFD is not per se consistent with the non-linear instantaneous response of $A$ to light (Eq. \ref{eq:aj}) and the slow acclimation time scale of photosynthesis (order of months \citep{suzuki01, maire12po}). Therefore, we evaluate simulated GPP, averaged over 8-day periods. The choice of appropriate model prediction and evaluation time scales is further discussed in Sec. \ref{sec:discussion}.  
 
 \subsubsection{fAPAR}
 \label{sec:greennessdata}
 
-Different datasets were used to define fAPAR (Eq. \ref{eq:luemodel}). The standard dataset is MODIS FPAR MCD15A3H, from Collection 6 \citep{modis_fpar_6}, which is given at a resolution of 500 m and 4 days. The data was filtered to remove data points where significant clouds were present, suspicious values equal to 1.00, and outliers (outside three times the inter-quartile range). Filtered values were replaced by the mean value for the respective day-of-year. Daily values were derived using a cubic smoothing spline (function \texttt{smooth.spline()} with parameter \texttt{spar=0.01} in R \citep{Rcoreteam}). MODIS EVI MOD13Q1 data, collection 6 \citep{modis_evi_6}, given at a resolution of 250 m and 8 days, was filtered based on the summary quality control flag, removing ``cloudy'' pixels. Gaps were filled and data splined to daily values as for FPAR MOD13Q1. All fAPAR data were downloaded from Google Earth Engine using the \textit{google\textunderscore earth\textunderscore engine\textunderscore subsets} library \citep{gee_subset}. 
+Different datasets were used to define fAPAR (Eq. \ref{eq:luemodel}). The standard dataset is MODIS FPAR MCD15A3H, from Collection 6 \citep{modis_fpar_6}, which is given at a resolution of 500 m and 4 days. The data was filtered to remove data points where significant clouds were present, suspicious values equal to 1.00, and outliers (outside three times the inter-quartile range). Filtered values were replaced by the mean value for the respective day-of-year. To obtain daily varying $I_\text{abs}$ (Eq. \ref{eq:iabs_identification}, daily fAPAR values were derived using a cubic smoothing spline (function \texttt{smooth.spline()} with parameter \texttt{spar=0.01} in R \citep{Rcoreteam}). MODIS EVI MOD13Q1 data, collection 6 \citep{modis_evi_6}, given at a resolution of 250 m and 8 days, was filtered based on the summary quality control flag, removing ``cloudy'' pixels. Gaps were filled and data splined to daily values as for FPAR MOD13Q1. All fAPAR data were downloaded from Google Earth Engine using the \textit{google\textunderscore earth\textunderscore engine\textunderscore subsets} library \citep{gee_subset}. 
 
 \subsubsection{Meteorological data}
 \label{sec:ppfd}
-All meteorological forcing data is taken from the FLUXNET Tier 1 dataset, which provides data from measurements taken and processed along with the \coo\ flux measurements. The photosynthetic photon flux density PPFD is calculated from shortwave downwelling radiation as $\text{PPFD} = 2.04 \cdot R_{\text{SW}}$, where $R_{\text{SW}}$ is incoming shortwave radiation from daily FLUXNET 2015 data (variable \texttt{SW\textunderscore IN\textunderscore F}). Vapour pressure deficit (VPD, or $D$ in Sec. \ref{sec:theory}) is taken from daily FLUXNET 2015 data (variable \texttt{VPD\textunderscore F}) and represents means over half-hourly data. We use daily air temperature from the FLUXNET 2015 dataset (variable \texttt{T\textunderscore F}), defined as the mean over half-hourly data. Note that this is a simplification, as we are not using leaf temperature and are not using VPD at the leaf surface, which are more directly relevant for photosynthesis but their estimation imply further assumptions. We use precipitation data (variable \texttt{P\textunderscore F}) is used to force the soil moisture model.
+All meteorological forcing data is taken from the FLUXNET Tier 1 dataset (daily means), which provides data from measurements taken and processed along with the \coo\ flux measurements. The photosynthetic photon flux density PPFD is calculated from shortwave downwelling radiation as $\text{PPFD} = 2.04 R_{\text{SW}}$ \citep{meek84}, where $R_{\text{SW}}$ is incoming shortwave radiation from daily FLUXNET 2015 data (variable \texttt{SW\textunderscore IN\textunderscore F}). Vapour pressure deficit (VPD, or $D$ in Sec. \ref{sec:theory}) is taken from daily FLUXNET 2015 data (variable \texttt{VPD\textunderscore F}) and represents means over half-hourly data. We use daily air temperature from the FLUXNET 2015 dataset (variable \texttt{T\textunderscore F}), defined as the mean over half-hourly data. Note that this is a simplification, as we are not using leaf temperature and are not using VPD at the leaf surface, which are more directly relevant for photosynthesis but their estimation imply further assumptions. Precipitation data (variable \texttt{P\textunderscore F}) is used to force the soil moisture model.
 
 \subsection{Calibration and evaluation data}
 
+\label{sec:calibdata}
+
 \subsubsection{Site selection}
-We use data from 70 sites for model calibration and 131 sites for evaluation (Fig. \ref{fig:map_sites}). The number of valid daily GPP data points for the calibration set is 160,061 and 260,284 for the evaluation set. The selection of sites used for calibration is based on the reliability of relationships between \coo\ fluxes, co-located greenness data, and meteorological variables. Specifically, we use data from sites used in \cite{stocker18newphyt} to train machine learning models for explaining relationships between LUE and environmental drivers. This led to excluding data from sites where the total number of data points was too low ($<$500 daily data points per site); where flux data appeared to be unreliable, leading to unreliably trained models; and where noise in the greenness data was particularly high. For the evaluation, we used data from all sites, excluding croplands and data seven additional sites where C4 vegetation is known to be present, based on information provided by the FLUXNET meta information. These sites are: AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3.
+We used data from 70 sites for model calibration and 131 sites for evaluation (Fig. \ref{fig:map_sites}). The number of valid daily GPP data points for the calibration set is 160,061 and 260,284 for the evaluation set. The selection of sites used for calibration was based on the reliability of relationships between \coo\ fluxes, co-located greenness data, and meteorological variables. Specifically, we used data from sites where a previous analysis \citep{stocker18newphyt} identified reliable relationships between LUE and environmental drivers. This led to excluding data from sites where the total number of data points was too low ($<$500 daily data points per site); where flux data appeared to be unreliable, leading to unreliably trained models; and where noise in the greenness data was particularly high. For the evaluation, we used data from all sites, excluding croplands and data from seven additional sites where C4 vegetation is known to be present, based on ancillary information provided by FLUXNET 2015. These sites are: AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3.
 
 \begin{figure}[!ht]
     \centering
@@ -246,13 +277,16 @@ We use data from 70 sites for model calibration and 131 sites for evaluation (Fi
 
 \subsubsection{Data filtering}
 \label{sec:datafiltering}
-GPP predictions by the RS models are compared to daily GPP estimates from the FLUXNET 2015 Tier 1 data set (downloaded on 13 November, 2016). We used GPP based on the nighttime partitioning method \citep{Reichstein2005-mp} (GPP\textunderscore NT\textunderscore VUT\textunderscore REF) and filtered negative daily GPP values, data for which more than 50\% of the half-hourly data are gap-filled and for which the daytime and nighttime partitioning methods (GPP\textunderscore DT\textunderscore VUT\textunderscore REF and GPP\textunderscore NT\textunderscore VUT\textunderscore REF, respectively) are inconsistent, i.e., the upper and lower 2.5\% quantiles of the difference between GPP values quantified by each method. For additional simulation sets, model calibration and evaluation was done using GPP data based on the daytime partitioning method (GPP\textunderscore DT\textunderscore VUT\textunderscore REF) \citep{lasslop10} with analogous filtering steps, and GPP data based on an alternative method that fits a constant ecosystem respiration rate as the net ecosystem exchange under conditions where PPFD tends to zero (FULL\textunderscore Ty, \cite{wang17natpl}). For all calibration and evaluation, we removed data points before the ``MODIS era'', which started on the 18th of February, 2000.
+GPP predictions by the P-model are compared to GPP estimates from the FLUXNET 2015 Tier 1 data set (downloaded on 13 November, 2016). We used GPP based on the nighttime partitioning method \citep{Reichstein2005-mp} (GPP\textunderscore NT\textunderscore VUT\textunderscore REF) and filtered negative daily GPP values, data for which more than 50\% of the half-hourly data are gap-filled and for which the daytime and nighttime partitioning methods (GPP\textunderscore DT\textunderscore VUT\textunderscore REF and GPP\textunderscore NT\textunderscore VUT\textunderscore REF, respectively) are inconsistent, i.e., the upper and lower 2.5\% quantiles of the difference between GPP values quantified by each method. For additional simulation sets, model calibration and evaluation was done using GPP data based on the daytime partitioning method (GPP\textunderscore DT\textunderscore VUT\textunderscore REF) \citep{lasslop10} with analogous filtering steps, and GPP data based on an alternative method that fits a constant ecosystem respiration rate as the net ecosystem exchange under conditions where PPFD tends to zero (FULL\textunderscore Ty, \cite{wang17natpl}). For all calibration and evaluation, we removed data points before the ``MODIS era'', which started on the 18th of February, 2000.
 
 \subsection{Evaluation methods}
+\label{sec:methods_eval}
+
+We evaluated both simulated LUE and GPP. The P-model, in its essence (Sec. \ref{sec:theory}), predicts variations in LUE across sites (space) and months (monthly LUE $= m'$), while simulated GPP is subject also to PPFD and fAPAR data used as model forcing (Eq. \ref{eq:lue_identification} and Sec. \ref{sec:forcingdata}). Vice versa, ``observed'' LUE is calculated as $\text{LUE}_\text{obs} = \text{GPP}_\text{obs} / (\text{fAPAR} \cdot \text{PPFD})$ and the evaluation is thus, in a similar way, subject to PPFD and fAPAR data. Evaluating LUE potentially reveals added explanatory power of the P-model compared to other models that rely on fixed prescribed LUE values, while evaluating GPP facilitates the comparison of the model performance to similar models of terrestrial GPP.
 
 \subsubsection{Components of variability}
 \label{sec:evalmethod_variability}
-Different components of variability are analyzed separately. We separate spatial (mean annual values by site), annual, seasonal (mean by day-of-year), 5-daily, daily, and the variability in daily anomalies from the mean seasonal cycle. The seasonal variability is determined for different climatic zones (following Koeppen-Geiger classification, see Tab. \ref{tab:kgclimate}). Information about the association of sites with climatic zones is extracted from \cite{falge17}. Evaluations per climatic zone are done here only for zones that had at least five different site's data. For each component of variability, we calculate the adjusted coefficient of determination ($R^2_{\text{adj}}$, thereafter referred to as $R^2}$), and the root mean square error (RMSE). Figures of correlations between simulated and observed values additionally present the mean bias, the slope of the linear regression model, and the number of data points ($N$).
+For LUE, we separately analyzed spatial (mean annual values by site) and monthly means for just the FULL setup. For GPP, we analyzed spatial, annual, seasonal (mean by day-of-year), 8-daily, and the variability in daily anomalies from the mean seasonal cycle. The seasonal variability was determined for different climatic zones (following Koeppen-Geiger classification, see Tab. \ref{tab:kgclimate}). Information about the association of sites with climatic zones was extracted from \cite{falge17}. Evaluations per climatic zone were done here only for zones that had data from at least five different sites. For each component of variability, we calculated the adjusted coefficient of determination ($R^2_\text{adj}$, thereafter referred to as $R^2$), and the root mean square error (RMSE). Figures of correlations between simulated and observed values additionally present the mean bias, the slope of the linear regression model, and the number of data points ($N$).
 
 \begin{table}
 \caption{Description of Koeppen-Geiger climate zones (based on \cite{falge17}) and number of sites for which data is available per climate zone and hemisphere. Only zones with data from more than three sites are shown.} 
@@ -281,16 +315,39 @@ Different components of variability are analyzed separately. We separate spatial
 
 \subsubsection{Drought response}
 \label{sec:droughtresponse}
-The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{stocker18newphyt} for 50 sites (20 days before and 80 days after drought onset are taken). Drought events ("fLUE droughts") are periods of consecutive days where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold. The data specifying the timing and duration of drought events was downloaded from \textit{Zenodo} \citep{flue}. We then re-arranged the data to align all drought events at all sites, normalised data to its median value during the ten days before the onset of droughts (normalisation by subtracting median), and computed quantiles per day, where 'day' is defined with respect to the onset of each drought event.
+The bias in GPP (modelled minus observed) is calculated for each date belonging to drought events identified by \cite{stocker18newphyt} for 50 sites (20 days before and 80 days after drought onset are taken). Drought events (``fLUE droughts'') are periods of consecutive days where soil moisture, separated from other drivers using neural networks, reduces LUE below a given threshold. The data specifying the timing and duration of drought events was downloaded from \textit{Zenodo} \citep{flue}. We then re-arranged the data to align all drought events at all sites, normalised data to its median value during the ten days before the onset of droughts (normalisation by subtracting median), and computed quantiles per day, where `day' is defined with respect to the onset of each drought event.
 
 \section{Evaluation results}
 \label{sec:results}
 
-\subsection{Variability across scales}
+\subsection{LUE}
 
-We first evaluate the model performance with respect to pooled data from all 153 sites, forced with splined MODIS FPAR data for fAPAR in Eq. \ref{eq:luemodel}, and evaluated against GPP data based on the NT flux decomposition. Evaluations with respect to alternative choices for fAPAR data and GPP data are presented in Sections \ref{sec:results_greennessdata} and \ref{sec:results_gppdata}. \rsq\ and RMSE values for all model setups are presented in Tables \ref{tab:rsq} and \ref{tab:rmse}.
+The P-model captures 37\% of the variability in mean annual LUE across all sites (spatial variability) without any clear bias across the full range of observed mean annual LUE values and vegetation types (Fig. \ref{fig:lue_spatial}), except for closed shrublands. Most of the variations in observed LUE within vegetation types are captured by the model by relationships with climate. No vegetation type-specific distinction in parameters was applied in the model. 
 
-The differences in the performance of different model setups are similar across all scales. Additional explanatory power is introduced by accounting for the temperature effects on quantum yield efficiency and by simulated soil moisture stress. The FULL setup of the P-model generally achieves the highest \rsq\ values and the lowest RMSE and outperforms the NULL model.
+33\% of the variability in monthly mean LUE are captured by the model, with data from all sites and years pooled (Fig. \ref{fig:lue_monthly}). The model tends to overestimate lowest and underestimate highest monthly LUE values. The overestimation is reflected by overestimated GPP during soil moisture droughts (see Sec. \ref{sec:results_droughtresponse}) and in the early vegetation period at winter-cold sites (see Sec. \ref{sec:results_seasonal}). The underestimation of highest monthly values does not appear to be clearly linked with any particular vegetation type.
+
+ \begin{figure}[!ht]
+\includegraphics[width=0.45\textwidth]{fig/modobs_lue_bysite_classid.pdf}
+\includegraphics[width=0.45\textwidth]{fig/boxplot_lue_bysite_classid.pdf}
+%\includegraphics[width=0.45\textwidth]{fig/modobs_lue_monthly.pdf}
+    \caption{Modelled (simulations FULL) and observed LUE across sites (mean annual LUE), distinguished by vegetation type: closed shrubland (CSH); deciduous broadleaf forest (DBF); evergreen broadleaf forest (EBF); evergreen needleleaf forest (ENF); grassland (GRA); mixed deciduous and evergreen needleleaf forest (MF); open shrubland (OSH); savanna ecosystem (SAV); woody savanna (WSA). }
+    \label{fig:lue_spatial}
+\end{figure}
+
+ \begin{figure}[!ht]
+\includegraphics[width=0.45\textwidth]{fig/modobs_lue_monthly.pdf}
+    \caption{Modelled (simulations FULL) and observed monthly mean LUE.}
+    \label{fig:lue_monthly}
+\end{figure}
+
+\subsection{GPP variability across scales}
+
+We first evaluated the model performance with respect to pooled data from all 153 sites, forced with splined MODIS FPAR data for fAPAR in Eq. \ref{eq:luemodel}, and evaluated against GPP data based on the NT flux decomposition. Evaluations with respect to alternative choices for fAPAR data and GPP data are presented in Sections \ref{sec:results_greenness} and \ref{sec:results_gppdata}. \rsq\ and RMSE values for all model setups are presented in Tables \ref{tab:rsq} and \ref{tab:rmse}.
+
+In general,
+
+
+differences in the performance of different model setups are similar across all scales. Additional explanatory power is introduced by accounting for the temperature effects on quantum yield efficiency and by simulated soil moisture stress. The FULL setup of the P-model generally achieves the highest \rsq\ values and the lowest RMSE and outperforms the NULL model.
 
 
 % Version 1.
@@ -333,7 +390,7 @@ The differences in the performance of different model setups are similar across 
   FULL\_Ty & 0.69 &  &  & 0.69 & 0.49 & \\ 
   \bottomrule
   \end{tabular}
-\caption{$R^2$ of different model setups and for different components of variability.} 
+\caption{$R^2$ of simulated and observed GPP based on different model setups and for different components of variability.} 
 \label{tab:rsq}
 \end{table}
 
@@ -362,7 +419,7 @@ The differences in the performance of different model setups are similar across 
 \centering
 \begin{tabular}{lllllll}
   \toprule
-  Setup & 5-daily & Spatial & Annual & Seasonal & var(daily) & var(annual) \\ 
+  Setup & 8-daily & Spatial & Annual & Seasonal & var(daily) & var(annual) \\ 
   \midrule
   FULL & 1.91 & 421.49 & 396.48 & 1.74 & 1.61 & 149.90 \\ 
   BRC & 2.01 & 455.58 & 444.06 & 1.80 & 1.61 & 151.65 \\ 
@@ -378,7 +435,7 @@ The differences in the performance of different model setups are similar across 
   FULL\_Ty & 1.86 &  &  & 1.75 & 1.37 & \\ 
   \bottomrule
   \end{tabular}
-\caption{Root mean square error (RMSE) of different model setups and for different components of variability.} 
+\caption{Root mean square error (RMSE) of simulated and observed GPP based on different model setups and for different components of variability.} 
 \label{tab:rmse}
 \end{table}
 
@@ -394,14 +451,14 @@ The P-model, as used in \cite{wang17natpl} (version referred to as ORG), capture
 \end{figure}
 
 \subsubsection{Seasonal variations}
-
-Among the components of variability investigated here, seasonal variations are in general most reliably simulated (\rsq : 0.69-0.74 for P-model setups, and \rsq : 0.71 for the NULL model, Fig. \ref{fig:season} and \ref{fig:season2}). The NULL model captures most of the seasonal variability, especially in climate zones Dfb and Dfc (Fully humid, snow in winter), Cfb, and Cfa (Warm temperate, fully humid). This indicates that in respective climates, most of the  seasonal GPP variations are driven by seasonal changes in insolation (PPFD) and vegetetation greenness (fAPAR). Accounting for temperature effects on the quantum yield efficiency resolves part of the overestimation in the early season. Particularly in climate zone Dfb (fully humid, warm summer, snow in winter), a substantial overestimation of GPP in the early season remains in all setups. While vegetation greenness suggests activity, observed GPP starts to increase only with a substantial delay (up to 2 months at some sites, e.g., US-Los). Within climate zone Dfb, this pattern is clearly visible at almost all sites. Interestingly, an early season high bias is largely absent for sites in climate zone Cfb, where in both observations and the model, GPP starts to increase early on and observations are accurately matched by simulations. Notable exceptions are Cfb sites CZ-wet, DE-Hai, and FR-Fon, where the start of the season is simulated too early, similarly as for sites in Dfb (figures by sites are given in the supplementary material XXX).
+\label{sec:results_seasonal}
+Among the components of variability investigated here, seasonal variations are in general most reliably simulated (\rsq : 0.69-0.74 for P-model setups, and \rsq : 0.71 for the NULL model, Fig. \ref{fig:season} and \ref{fig:season2}). The NULL model captures most of the seasonal variability, especially in climate zones Dfb and Dfc (Fully humid, snow in winter), Cfb, and Cfa (Warm temperate, fully humid). This indicates that in respective climates, most of the  seasonal GPP variations are driven by seasonal changes in insolation (PPFD) and vegetetation greenness (fAPAR). Accounting for temperature effects on the quantum yield efficiency resolves part of the overestimation in the early season. Particularly in climate zone Dfb (fully humid, warm summer, snow in winter), a substantial overestimation of GPP in the early season remains in all setups. While vegetation greenness suggests activity, observed GPP starts to increase only with a substantial delay (up to 2 months at some sites, e.g., US-Los). Within climate zone Dfb, this pattern is clearly visible at almost all sites. Interestingly, an early season high bias is largely absent for sites in climate zone Cfb, where in both observations and the model, GPP starts to increase early on and observations are accurately matched by simulations. Notable exceptions are Cfb sites CZ-wet, DE-Hai, and FR-Fon, where the start of the season is simulated too early, similarly as for sites in Dfb.
 
 In climate zones with a marked dry season (Aw, BSk, Csa, and Csb), GPP is strongly overestimated during the dry season in model setups that do not account for soil moisture stress. The NULL model generally yields the largest bias. High VPD during dry periods reduces LUE in the P-model and leads to lower GPP values and a smaller bias in P-model versions. The empirical soil moisture stress function fully eliminates the dryness-related bias in zones Aw, Csa, and Csb and substantially reduces it for sites in zone BSk. Observations suggest that GPP declines to values around zero during dry periods at sites in zone BSk (mostly savannah vegetation and grasslands, see Table \ref{tab:sites}). A remaining bias in the model setup FULL, which includes the soil moisture stress function, is due to the fact that prescribed fAPAR remains relatively high and that the stress function does not decline to zero.
 
 Model setups that do not account for soil moisture stress tend to underestimate peak season GPP more strongly compared to the model setup FULL. This is a direct consequence of the calibration which balances errors across all data points.
 
-Across-site average peak-season maximum GPP is accurately captured by the model setup FULL in all zones shown in Figs. \ref{fig:season} and \ref{fig:season2}, except for a tendency to underestimate values in zones Aw and Cfb, and overestimate values in zone Csa. Site-level evaluations (see Supplementary Information XXX) suggests no clear pattern of the peak-season underestimation in zone Cfb with vegetation type. The overestimation of peak-season GPP in zone Csa is caused by a high bias at sites with evergreen broadleaved vegetation (FR-Pue, IT-Cp2, IT-Cpz), whereas sites with other vegetation types show no consistent peak season bias. 
+Across-site average peak-season maximum GPP is accurately captured by the model setup FULL in all zones shown in Figs. \ref{fig:season} and \ref{fig:season2}, except for a tendency to underestimate values in zones Aw and Cfb, and overestimate values in zone Csa. Site-level evaluations suggests no clear pattern of the peak-season underestimation in zone Cfb with vegetation type. The overestimation of peak-season GPP in zone Csa is caused by a high bias at sites with evergreen broadleaved vegetation (FR-Pue, IT-Cp2, IT-Cpz), whereas sites with other vegetation types show no consistent peak season bias. 
 
  \begin{figure}[!ht]
 \includegraphics[width=0.45\textwidth]{fig/meandoy_byzone_Aw_south_.pdf}
@@ -460,7 +517,7 @@ Furthermore, the early season high bias in simulated GPP in zone Dfb appears bot
 \subsection{GPP target data}
 \label{sec:results_gppdata}
 
-Model-data agreement is generally best when the model is compared to GPP data based on the flux decomposition method 'Ty' \citep{wang17natpl}. For GPP aggregated to 8-day means, the model achieves an \rsq\ of 0.70 when compared to GPP 'Ty', as opposed to 0.65 and 0.67 compared to the DT and NT methods, respectively (Tab. \ref{tab:rsq}, Fig. \ref{fig:modobs_10d_gppdata}). Variations in daily anomalies are much better captured by the model when evaluating to GPP 'Ty' (\rsq : 0.49), as compared to evaluations against DT or NT (\rsq : 0.30). Spatial and annual correlations are not evaluated for GPP Ty due to missing data. Correlations at the 8-day, seasonal and daily time scales rely on dates for which neither the NT, DT, nor Ty method has missing values and thus contain an equal number of data points. Therefore NT evaluations, repeated here, are not identical to the ones above and are referred to as 'NTsub' in Tables \ref{tab:rsq} and \ref{tab:rmse}. 
+Model-data agreement is generally best when the model is compared to GPP data based on the flux decomposition method `Ty' \citep{wang17natpl}. For GPP aggregated to 8-day means, the model achieves an \rsq\ of 0.70 when compared to GPP 'Ty', as opposed to 0.65 and 0.67 compared to the DT and NT methods, respectively (Tab. \ref{tab:rsq}, Fig. \ref{fig:modobs_10d_gppdata}). Variations in daily anomalies are much better captured by the model when evaluating to GPP `Ty' (\rsq : 0.49), as compared to evaluations against DT or NT (\rsq : 0.30). Spatial and annual correlations are not evaluated for GPP Ty due to missing data. Correlations at the 8-day, seasonal and daily time scales rely on dates for which neither the NT, DT, nor Ty method has missing values and thus contain an equal number of data points. Therefore NT evaluations, repeated here, are not identical to the ones above and are referred to as `NTsub' in Tables \ref{tab:rsq} and \ref{tab:rmse}. 
 
 The different flux decomposition methods make fundamentally different assumptions regarding the sensitivity of ecosystem respiration to diurnal changes in temperature. This should lead to systematic differences in derived observational GPP values and should affect model-data disagreement. As described above, we found a systematic low bias of simulated GPP in the peak-season in the climatic zone Cfb (warm temperate, fully humid, warm summer). We expected that the magnitude of this bias is contingent on the type of GPP data that is used for evaluation. However, as shown in Fig. \ref{fig:season3}, this bias does not seem to be affected by the choice of GPP evaluation data.
 
@@ -495,8 +552,8 @@ The different flux decomposition methods make fundamentally different assumption
 
 
 \subsection{Drought response}
-
-The model setup BRC, which does not include the empirical soil moisture stress function (Eq. \ref{eq:soilmstress}), systematically overestimates GPP during droughts. This bias has a clear pattern. It increases sharply at the onset of drought events and continues to increase throughout the course of droughts. The bias is strongly reduced by applying the empricial soil moisture stress function in the FULL model setup. Here, 'droughts' are periods where soil moisture is known to reduce the light use efficiency of vegetation, based on the analysis by \cite{stocker18newphyt}.  
+\label{sec:results_droughtresponse}
+The model setup BRC, which does not include the empirical soil moisture stress function (Eq. \ref{eq:soilmstress}), systematically overestimates GPP during droughts. This bias has a clear pattern. It increases sharply at the onset of drought events and continues to increase throughout the course of droughts. The bias is strongly reduced by applying the empricial soil moisture stress function in the FULL model setup. Here, `droughts' are periods where soil moisture is known to reduce the light use efficiency of vegetation, based on the analysis by \cite{stocker18newphyt}.  
 
 \begin{figure}[!ht]
     \centering
@@ -552,23 +609,26 @@ The model setup BRC, which does not include the empirical soil moisture stress f
 
 The present paper serves as a reference for the P-model, as implemented in the R package \textit{rpmodel}. A companion paper (XXX ref) describes an additional R package (\textit{rsofun}) that provides the functionalities for calibrating, running, and benchmarking the P-model for simulations at FLUXNET sites using a computationally efficient implementation of the model in Fortran 90 (SOFUN modelling framework, \cite{sofun_v110}). Based on earlier work \citep{wright03, prentice14ecollett, wang17natpl}, the P-model implements a theory describing leaf-level acclimation to the environment, specifically to temperature, vapour pressure deficit, ambient \coo , atmospheric pressure, and light. It makes a set of testable predictions for how the ratio of leaf-internal to ambient \coo\ ($\chi$) \citep{wang17natpl}, \vcmax\ \citep{smith19ecollett}, or metabolic leaf N \citep{dong16bg} change along environmental gradients. These predictions follow from the same theoretical approach. One further corollary is a prediction of LUE, which can be combined with remotely sensed fAPAR data to generate observation-driven GPP estimates. Here, we have evaluated the P-model's performance for predicting GPP in combination with prescribed fAPAR data (MODIS FPAR and EVI) at a set of 131 FLUXNET Tier 1 sites (Tab. \ref{tab:sites}).
 
-The P-model as used here can be compared to a class of remote-sensing driven GPP models (RS-models). For example, MODIS GPP \citep{running04} and VPM \citep{Zhang2017-yr} rely on the LUE concept (\cite{monteith72}, Eq. \ref{eq:luemodel}) and empirically derived light use efficiency terms for different vegetation types. In contrast, BESS \citep{jiang16rse} combines remotely sensed fAPAR with photosynthesis mechanistically simulated based on enzyme kinetics following the FvCB model with prescribed \vcmax\ for different vegetation types. The P-model combines the FvCB photosynthesis model and the LUE concept, and predicts \vcmax\ and photosynthetic rates based on an optimality criterion (Eq. \ref{eq:optimality_chi}). This approach reduces the number of prescribed (and temporally fixed) parameters, avoids the distinction of model parametrisation by vegetation types or biomes (apart from distinguishing between the C3 and C4 photosynthetic pathways, and crops), and yields a simple but powerful model that relies on a minimum number of inputs. As we show here, the P-model is applicable to a wide range of conditions and vegetation types. Importantly, the mechanistic resolution of photosynthesis and its controls enables the P-model to simulate how GPP responds to gradually changing \coo\ and climate. Empirical light use efficiency models like MODIS GPP \citep{running04} or VPM \citep{Zhang2017-yr}, as well as machine learning-based upscaling of site-scale measurements \citep{jung11jgr, tramontana16bg} cannot capture this effect, which precludes them from investigations of long-term trends and attribution studies.
+The P-model as used here can be compared to a class of remote-sensing driven GPP models (RS-models). For example, MODIS GPP \citep{running04} and VPM \citep{Zhang2017-yr} rely on the LUE concept (\cite{monteith72}, Eq. \ref{eq:luemodel}) and empirically derived light use efficiency terms for different vegetation types. In contrast, BESS \citep{jiang16rse} combines remotely sensed fAPAR with photosynthesis mechanistically simulated based on enzyme kinetics following the FvCB model with prescribed \vcmax\ for different vegetation types. The P-model combines the FvCB photosynthesis model and the LUE concept, and predicts \vcmax\ and photosynthetic rates based on an optimality criterion (Eq. \ref{eq:optimality_chi}). This approach reduces the number of prescribed (and temporally fixed) parameters, avoids the distinction of model parameterisation by vegetation types or biomes (apart from distinguishing between the C3 and C4 photosynthetic pathways, and crops), and yields a simple but powerful model that relies on a minimum number of inputs. As we show here, the P-model is applicable to a wide range of conditions and vegetation types. Importantly, the mechanistic resolution of photosynthesis and its controls enables the P-model to simulate how GPP responds to gradually changing \coo\ and climate. Empirical light use efficiency models like MODIS GPP \citep{running04} or VPM \citep{Zhang2017-yr}, as well as machine learning-based upscaling of site-scale measurements \citep{jung11jgr, tramontana16bg} cannot capture this effect, which precludes them from investigations of long-term trends and attribution studies.
 
 In its FULL setup (including the temperature effect on quantum yield efficiency, and an empirical soil moisture stress function), GPP simulated by the P-model achieves an \rsq\ of 0.75 and a RMSE of 1.91 g C m$^{-2}$ d$^{-1}$, when evaluated against GPP data (NT method) from 131 sites' data, aggregated to 8-day means. This can be compared to predictions from the VPM model (\rsq : 0.74, RMSE: 2.08 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \cite{Zhang2017-yr}), or BESS (\rsq : 0.67, RMSE: 2.58 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \cite{jiang16rse}). The performance of the P-model in simulating \textit{annual} GPP across all 131 sites (\rsq : 0.70) can be compared to results from MODIS GPP (MOD17A2, \rsq = 0.73, 12 sites, \cite{heinsch06}, and for the updated version MOD17A2H: \rsq = 0.62, 18 sites, \cite{wang17rs}). 
 
-We have tested P-model predictions against a benchmark (model setup ``NULL'') where a constant and spatially uniform LUE was fitted to the data. The surprisingly strong performance of the NULL model suggest that the majority of the variation in GPP, both in time and across space, is driven by variations in absorbed light (PPFD $\cdot$ fAPAR), which acts as a linear scalar for simulated GPP both in the NULL model, as well as in the P-model (\ref{eq:lue_identification}). Explanatory power added by the P-model and its simulated acclimation to changing environmental conditions is relatively limited.
+We have tested P-model predictions against a benchmark (model setup NULL) where a constant and spatially uniform LUE was fitted to the data. The surprisingly strong performance of the NULL model suggest that the majority of the variation in GPP, both in time and across space, is driven by variations in absorbed light (PPFD $\cdot$ fAPAR), which acts as a linear scalar for simulated GPP both in the NULL model, as well as in the P-model (\ref{eq:lue_identification}). Explanatory power added by the P-model and its simulated acclimation to changing environmental conditions is relatively limited.
 
 However, we have found that accounting for the temperature-dependence of the quantum yield efficiency ($\varphi_0$) following \cite{bernacchi03pce} clearly improves model predictions. The fact that this parameter is often treated as a constant in global vegetation models \citep{rogers17}, suggests substantial potential for improving common photosynthesis routines. $\varphi_0$ appears as a linear scalar in the LUE model (Eq. \ref{eq:lue_identification}). We have used MODIS FPAR and MODIS EVI data to define fAPAR in different model setups. Both datasets are used on other remote sensing-based terrestrial photosynthesis models \citep{Zhang2017-yr, jiang16rse}. While the two are well correlated, absolute values differ. Hence, we have calibrated an \textit{apparent} quantum yield efficiency ($\widehat{\varphi_0}$) to GPP data separately for different fAPAR data sets, thereby implicitly distinguishing what components of light absorption factors are contained in the fAPAR data. Indeed, the leaf absorbtance $a_L$, which is typically taken to be around 0.8 in global vegetation models \citep{rogers17} is similar to the ratio of fitted $\widehat{\varphi_0}$ values for simulation FULL and FULL\textunderscore EVI, here calculated as 0.67 (Tab. \ref{tab:setups}).
 
 A substantial additional improvement of model performance in simulating GPP is obtained by accounting for soil moisture stress using an empirical stress function. This reflects findings by \cite{stocker19natgeo}, where a structurally identical function (Eq. \ref{eq:soilmstress}) was fitted to a different dataset. Hence, respective parameter values derived here (Table \ref{tab:params}) are different from the ones used in \cite{stocker19natgeo}. The use of an empirical stress function masks underlying processes and how measurable soil properties and plant traits determine water and \coo\ exchange fluxes. Moreover, such an empirical accounting for soil moisture effects does not integrate with the basic optimality principle for the water-carbon trade-off (Eq. \ref{eq:optimality_chi}), which underlies the P-model. The clear bias reduction achieved by applying an empirical soil moisture stress function (Fig. \ref{fig:modobs_droughtresponse}) suggests a shortcoming in the theoretical approach which rests on an assumed constancy of the unit costs of transpiration ($a$ in Eq. \ref{eq:optimality_chi}). \cite{prentice14ecollett} provide a definition of $a$ that is explicit in terms of plant hydraulic traits and physical properties that determine water transport along the plant-soil-atmosphere continuum. In particular, $a \sim 1 / \Delta \Psi k_s$. However, the typical daytime water potential difference between the soil and the leaf ($\Delta \Psi = \Psi_s - \Psi_l$) may not be constant as soil water content in the rooting zone decreases with soil progressively drying down during droughts (xxx ref?). The sapwood area-specific conductivity ($k_s$) may be reduced by cavitation under strongly negative xylem water potentials \citep{sperry15}, and is therefore typically described as a function of leaf water potential, a so-called xylem vulnerability curve ($k_s(\Psi_l)$), in other models \citep{mencuccini19newphyt}. Taken together, this suggests potential for refining the P-model's theoretical approach by accounting for a variable unit cost of transpiration, and by coupling stomatal conductance (a corollary of the P-model's theory) with the soil water balance. However, such a development must resolve the challenge of finding optimality in view of different acclimation time scales of stomatal and biochemical (\vcmax\ and \jmax ) traits.
 
-Both the parameter calibration and the model evaluation are subject to the observational target data. To investigate implications of this, we compared separately calibrated model setups against three alternative GPP datasets that are derived from different approaches to decompose net \coo\ exchange fluxes from eddy covariance measurements into ecosystem respiration and GPP terms. The `NT' method \citep{Reichstein2005-mp} uses nighttime flux measurements to estimate ecosystem respiration, which is then scaled to the daytime using an assumed temperature-dependency. The `DT' method \citep{lasslop10} uses daytime data to fit a light-response curve to estimate a reference respiration rate which is scaled by an assumed temperature response. The method used to produce GPP estimates in \cite{wang17rs} (here, referred to as `Ty') follows a similar approach as the `DT' method, but assumes no temperature dependence of ecosystem respiration. \cite{keenan19natee} found a systematic bias in GPP estimates based on the nighttime partitioning method due to an inhibition of leaf respiration in the light \citep{kok49, wehr16}, which affects fluxes unevenly throughout the season and across vegetation types. We found no clear difference in model-data agreement between the different comparisons.
+Both the parameter calibration and the model evaluation are subject to the observational target data. To investigate implications of this, we compared separately calibrated model setups against three alternative GPP datasets that are derived from different approaches to decompose net \coo\ exchange fluxes from eddy covariance measurements into ecosystem respiration and GPP terms. The `NT' method \citep{Reichstein2005-mp} uses nighttime flux measurements to estimate ecosystem respiration, which is then scaled to the daytime using an assumed temperature-dependency. The `DT' method \citep{lasslop10} uses daytime data to fit a light-response curve to estimate a reference respiration rate which is scaled by a temperature response that is estimated form the night-time data. The method used to produce GPP estimates in \cite{wang17rs} (here, referred to as `Ty') follows a similar approach as the `DT' method, but assumes no temperature dependence of ecosystem respiration. \cite{keenan19natee} found a systematic bias in GPP estimates based on the nighttime partitioning method due to an inhibition of leaf respiration in the light \citep{kok49, wehr16}, which affects fluxes unevenly throughout the season and across vegetation types. We found no clear difference, neither in model-data agreement, nor in fitted parameters between the different comparisons.
 
-Two intriguing aspects of model-data mismatch stand out. First, we have found a consistent early-season high-bias in simulated GPP for numerous sites but not for all. This bias is not related to whether the model is forced by MODIS FPAR or EVI (Fig. \ref{fig:season_greenness}), and affects mostly sites with deciduous broadleaved vegetation in temperate and cold climates, e.g., IT-Col (Cfa, DBF), US-MMS (Cfa, DBF), DE-Hai (Cfb, DBF), IT-Ro2 (Csa, DBF), US-UMB (Dfb, DBF); but also some needle-leaved stands CA-Qfo (Dfc, ENF), FI-Hyy (Dfc, ENF). We have tested whether the bias is related to soil temperatures or the difference between soil and air temperatures in the early season, but found no relationship (not shown). It remains to be tested whether this bias is related to canopy structural aspects that affect common fAPAR estimates in the early season or additional physiological controls on LUE that limit assimilation in the early stages of leaf formation. Second, a substantial positive bias in simulated GPP during the dry season remains at sites where vegetation exhibits a clear drought phenology, e.g., US-Var (Csa, GRA), US-Whs (BSk, OSH), US-Cop (BSk, GRA). Flux measurements suggest a reduction of GPP to values close to zero during the dry period, while the model simulates higher values, even when including the soil moisture stress function. This indicates that this high bias is related to the combination of prescribed fAPAR data, which suggests substantial absorption by green vegetation even during the dry season, and simulated LUE which is not sufficiently sensitive to drying soils at these sites. At other sites that are affected by seasonally recurring water stress, the model accurately simulates GPP levels also during the dry season (see climate zones Aw and and Csb in Fig. \ref{fig:season}). The sensitivity to dry soils is determined in the model by the soil moisture stress function (Eq. \ref{eq:soilmstress}), depends on mean aridity of the site (Eq. \ref{eq:soilmsensitivity}), and is calibrated to the data. Accurately simulated GPP in response to drying soils at some sites, and overestimated GPP during dry periods at others suggests that additional factors are important for simulating sensitivity to drought. We considered soil water storage in the top 2 m or less, depending on depth-to-bedrock information \citep{Hengl2014-jm}, and calculated the respective column-integrated water-holding capacity (see Appendix XXX) to determine a spatially varying ``depth'' of the soil water bucket model. However, subject to plant adaptations to seasonality in water availability, relevant total water holding capacity in the rooting zone may extend beyond the fixed cap of 2 m considered here \citep{yang16wrr} and may strongly be determined by local topographical factors and access to groundwater \citep{fan13sci, fan17pnas} - factors that are not accounted for here. Different phenological strategies 
+Two aspects of model-data mismatch stand out. First, we have found a consistent early-season high-bias in simulated GPP for numerous sites but not for all. This bias is not related to whether the model is forced by MODIS FPAR or EVI (Fig. \ref{fig:season_greenness}), and affects mostly sites with deciduous broadleaved vegetation in temperate and cold climates, e.g., IT-Col (Cfa, DBF), US-MMS (Cfa, DBF), DE-Hai (Cfb, DBF), IT-Ro2 (Csa, DBF), US-UMB (Dfb, DBF); but also needle-leaved stands CA-Qfo (Dfc, ENF), FI-Hyy (Dfc, ENF). We have tested whether the bias is related to soil temperatures or the difference between soil and air temperatures in the early season, but found no relationship (not shown). The recovery of photosynthetic capacity exhibits a delayed response to rising spring temperatures on the order of several weeks in evergreen conifers growing in seasonally cold climates
+\citep{pelkonen80, bergh98, makela04}. Photoinhibition under low temperatures in evergreens \citep{huner93} and a delayed deacclimation to cold temperatures (dehardening \citep{vitasse14}) and development of the carboxylation capacity after budburst in deciduous species may be responsible mechanisms for reduced photosynthesis in the early season, after a cold-limited dormant period. We use instantaneous (daily) air temperature to simulate variations in the quantum yield efficiency. This may explain the model bias found here and the results by \cite{makela04} offer scope for model improvement by using delayed ambient conditions for determining variations in the quantum yield efficiency and photosynthetic acclimation in general.
 
-A set of simplifications are implicit in the implementation of the P-model described here. We use average daily meteorological conditions, measured above the canopy (at FLUXNET sites) as input for all calculations. Optimality in balancing carbon and water costs for average daily conditions is not necessarily equivalent to optimality in balancing summed water and carbon costs over the course of a day, which may be argued to be a more realistic criterion. Large variations in ambient conditions over a diurnal cycle, combined with a non-linear dependence of costs on these conditions suggest that this simplification is crude. Nevertheless, prior evaluations have shown robust and accurate predictions of optimal $\chi$ across a range conditions \citep{wang17natpl}. Using VPD values measured above the canopy for scaling water losses, instead of VPD at the leaf surface (or evaporation sites), implicitly assumes a perfectly coupled atmospheric boundary layer. Using above-canopy air temperature instead of leaf temperatures introduces a bias when the two become decoupled. Furthermore, the light use efficiency model, using prescribed fAPAR, implies that no distinction is made between light absorptance by the canopy of diffuse and direct radiation. 
+Second, a substantial positive bias in simulated GPP during the dry season remains at sites where vegetation exhibits a clear drought phenology, e.g., US-Var (Csa, GRA), US-Whs (BSk, OSH), US-Cop (BSk, GRA). Flux measurements suggest a reduction of GPP to values close to zero during the dry period, while the model simulates higher values, even when including the soil moisture stress function. This indicates that this high bias is related to the combination of prescribed fAPAR data, which suggests substantial absorption by green vegetation even during the dry season, and simulated LUE which is not sufficiently sensitive to drying soils at these sites. At other sites that are affected by seasonally recurring water stress, the model accurately simulates GPP levels also during the dry season (see climate zones Aw and and Csb in Fig. \ref{fig:season}). The sensitivity to dry soils is determined in the model by the soil moisture stress function (Eq. \ref{eq:soilmstress}), depends on mean aridity of the site (Eq. \ref{eq:soilmsensitivity}), and is calibrated to the data. Accurately simulated GPP in response to drying soils at some sites, and overestimated GPP during dry periods at others suggests that additional factors are important for simulating sensitivity to drought. We considered soil water storage in the top 2 m or less, depending on depth-to-bedrock information \citep{Hengl2014-jm}, and calculated the respective column-integrated water-holding capacity (see Appendix XXX) to determine a spatially varying ``depth'' of the soil water bucket model. However, subject to plant adaptations to seasonality in water availability, relevant total water holding capacity in the rooting zone may extend beyond the fixed cap of 2 m considered here \citep{yang16wrr} and may strongly be determined by local topographical factors and access to groundwater \citep{fan13sci, fan17pnas} - factors that are not accounted for here.
 
-A further assumption, inherent in simulating photosynthesis with a light use efficiency model, is that investments into the electron transport capacity (expressed by \jmax ) and investments into the carboxylation capacity (expressed by \vcmax ) are coordinated so that for conditions with which the model is forced (here, monthly means of daily averages), photosynthesis operates at the co-limitation point (intersection) of the light and Rubisco-limited assimilation rates and an effective linear relationship between absorbed light and mean assimilation emerges. This assumption follows from the \textit{coordination hypothesis} \citep{chen93, haxeltine96}, which itself can be understood as an optimality principle \citep{chen93}, and is supported by empirical findings \citep{maire12po}. However, such a coordination is contingent on the time scale at which photosynthetic acclimation occurs and this is not precisely known (xxx ref?). The model was forced here with monthly mean meteorological variables, implying that we assume a monthly time scale of acclimation. This is probably a conservative estimate (xxx ref?). Considering the concave relationship of assimilation rates and absorbed light that follows from the FvCB model for a given \jmax , it can be expected that linearly scaling a given monthly LUE term with daily varying absorbed light levels should lead to an overestimation of assimilation rates at high light levels. It may further be expected that this overestimation disappears with increasing the time scale over which light levels are averaged. As shown in Fig. \ref{fig:modobs_anomalies}, our results do not confirm these expectations. In other words, the LUE model did not exhibit a systematic error in simulating GPP variations when applied at the daily time scale. This may be due to the fact that day-to-day variability in light levels are relatively small compared to the within-day variability. We did not evaluate variability in sub-daily anomalies.
+A set of simplifications are implicit in the implementation of the P-model described here. We use average daily meteorological conditions, measured above the canopy (at FLUXNET sites) as input for all calculations. Optimality in balancing carbon and water costs for average daily conditions is not necessarily equivalent to optimality in balancing summed water and carbon costs over the course of a day, which may be argued to be a more realistic criterion. Large variations in ambient conditions over a diurnal cycle, combined with a non-linear dependence of costs on these conditions suggest that this simplification is crude. Nevertheless, prior evaluations have shown robust and accurate predictions of optimal $\chi$ across a range conditions \citep{wang17natpl}. Using VPD values measured above the canopy for scaling water losses, instead of VPD at the leaf surface (or evaporation sites), implicitly assumes a perfectly coupled atmospheric boundary layer. Using above-canopy air temperature instead of leaf temperatures introduces a bias when the two become decoupled \citep{michaletz15tee}. Furthermore, the light use efficiency model, using prescribed fAPAR, implies that no distinction is made between light absorptance by the canopy of diffuse and direct radiation. 
+
+A further assumption, inherent in simulating photosynthesis with a light use efficiency model, is that investments into the electron transport capacity (expressed by \jmax ) and investments into the carboxylation capacity (expressed by \vcmax ) are coordinated so that for conditions with which the model is forced (here, monthly means of daily averages), photosynthesis operates at the co-limitation point (intersection) of the light and Rubisco-limited assimilation rates and an effective linear relationship between absorbed light and mean assimilation emerges. This assumption follows from the \textit{coordination hypothesis} \citep{chen93, haxeltine96}, which itself can be understood as an optimality principle \citep{chen93}, and is supported by empirical findings \citep{maire12po}. However, such a coordination is contingent on the time scale at which photosynthetic acclimation occurs and this is not precisely known \citep{smithdukes13gcb, way14}. The model for simulating $\chi$ was forced here with monthly mean meteorological variables, implying that we assume a monthly time scale of acclimation. This is probably a conservative estimate \citep{smithdukes17, veres84}. Considering the concave relationship of assimilation rates and absorbed light that follows from the FvCB model for a given \jmax , it can be expected that linearly scaling a given monthly LUE term with daily varying absorbed light levels should lead to an overestimation of assimilation rates at high light levels. It may further be expected that this overestimation disappears with increasing the time scale over which light levels are averaged. As shown in Fig. \ref{fig:modobs_anomalies}, our results do not confirm these expectations. In other words, the LUE model did not exhibit a systematic error in simulating GPP variations when applied at the daily time scale. This may be due to the fact that day-to-day variability in light levels are relatively small compared to the within-day variability. We did not evaluate variability in sub-daily anomalies.
 
 *Missing: some conclusive words.*
 
@@ -846,7 +906,7 @@ Note that to convert Eq. \ref{eq:gsto} to the form corresponding to the one give
 %% ///////////////////////////////////////////////////////
 \subsection{Michaelis-Menten Coefficient of Photosynthesis}
 \label{sec:kmm}
-The Michaelis-Menten coefficient $K$ of Rubisco-limited photosynthesis (Eq. \ref{eq:ac}) is determined by the Michalis-Menten constants for O$_2$ and CO$_2$ \citep{farquhar80}:
+The lumped Michaelis-Menten coefficient $K$ (Pa) of Rubisco-limited photosynthesis (Eq. \ref{eq:ac}) is determined by the Michaelis-Menten constants for the carboxylation and oxygenation reactions \citep{farquhar80}:
 %% ------------------------------------------------------------------------ %%
 %% eq:michaelis | Michaelis Menten coefficient
 %% ------------------------------------------------------------------------ %%
@@ -854,7 +914,7 @@ The Michaelis-Menten coefficient $K$ of Rubisco-limited photosynthesis (Eq. \ref
 \label{eq:michaelis}
 	K(T_K, p) = K_c(T_K)\: \left( 1 + \frac{pO_2(p)}{K_o(T_K)} \right) \;,
 \end{equation}
-where $K_c$ is the Michaelis-Menten constant for CO$_2$ (Pa), $K_o$ is the Michaelis-Menten constant for O$_2$ (Pa), and $pO_2$ is the partial pressure of oxygen (Pa). $K_c$ and $K_o$ follow a temperature dependence, given by the Arrhenius Equation - analogously to the temperature dependence of $\Gamma^\ast$ (Eq. \ref{eq:gammastar}):
+where $K_c$ is the Michaelis-Menten constant for CO$_2$ (Pa), $K_o$ is the Michaelis-Menten constant for the carboxylation and oxygenation reaction, respectively, and $pO_2$ is the partial pressure of oxygen (Pa). $K_c$ and $K_o$ follow a temperature dependence, given by the Arrhenius Equation - analogously to the temperature dependence of $\Gamma^\ast$ (Eq. \ref{eq:gammastar}):
 %% ------------------------------------------------------------------------ %%
 %% eq:kcko | Michaelis Menten Kc & Ko coefficients
 %% ------------------------------------------------------------------------ %%
@@ -904,7 +964,7 @@ The elevation-dependence of atmospheric pressure is computed by assuming a linea
     	1 - \frac{L z}{T_{K,0}} 
     \right)^{g M_a (R L)^{-1}} \;,
 \end{equation} 
-where: $z$ is the elevation above mean sea level (m), $g$ is the standard gravity (9.80665 m s$^{-2}$), $p_0$ is the standard atmospheric pressure at 0 m a.s.l. (101325 Pa), $L$ is the mean adiabatic lapse rate (0.0065 K m$^{-2}$), $M_a$ is the molecular weight for dry air (0.028963 kg mol$^{-1}$), and $R$ is the universal gas constant (8.3145 J mol$^{-1}$ K$^{-1}$). All parameter values that are held fixed in the model (not calibrated) are summarised in Tab. \ref{tab:params}.
+where $z$ is the elevation above mean sea level (m), $g$ is the gravity constant (9.80665 m s$^{-2}$), $p_0$ is the standard atmospheric pressure at 0 m a.s.l. (101325 Pa), $L$ is the mean adiabatic lapse rate (0.0065 K m$^{-2}$), $M_a$ is the molecular weight for dry air (0.028963 kg mol$^{-1}$), and $R$ is the universal gas constant (8.3145 J mol$^{-1}$ K$^{-1}$). All parameter values that are held fixed in the model (not calibrated) are summarised in Tab. \ref{tab:params}.
 
 \subsection{Corollary of the $\chi$ prediction}
 \label{sec:corollary}
@@ -925,7 +985,7 @@ This has a similar form as the solution for $g_s$ derived from a somewhat differ
 % Note that in the P-model output, $c_i$ is given in ppm.
 
 \subsubsection{Intrinsic water use efficiency}
-The intrinsic water use efficiency (iWUE) has been defined as the ratio of assimilation over stomatal conductance (to water) \cite{beer09gbc} as $\text{iWUE} = A / 1.6 g_s$. The factor 1.6 accounts for the difference in diffusivity between CO$_2$ and H$_2$O. Using Fick's Law (Eq. \ref{eq:ags}), this is simply
+The intrinsic water use efficiency (iWUE) has been defined as the ratio of assimilation over stomatal conductance (to water) \citep{beer09gbc} as $\text{iWUE} = A / (1.6 g_s)$. The factor 1.6 accounts for the difference in diffusivity between CO$_2$ and H$_2$O. Using Fick's Law (Eq. \ref{eq:ags}), this is simply
 \begin{equation}
     \mathrm{iWUE} = c_a (1-\chi)/1.6 \;,
 \end{equation}
@@ -934,7 +994,9 @@ or, using the prediction of optimal $\chi$ given by Eq. \ref{eq:chiopt}, this ca
     \text{iWUE} = \frac{1}{1.6 \left( 1+ \frac{\xi}{\sqrt{D}} \right) }\; (c_a - \Gamma^\ast)
 \end{equation}
 
-\subsubsection{Maximum carboxylation capacity $V_{\mathrm{cmax}}$}
+\subsubsection{Maximum carboxylation capacity
+\label{sec:vcmax}
+$V_{\mathrm{cmax}}$}
 With $A_J=A_C$, \vcmax\ can directly be derived as 
 \begin{equation}
     \label{eq:vcmax}
@@ -958,7 +1020,7 @@ Note that $T$ is in units of $^{\circ}$C in above equation. Note that \ref{eq:vc
 	\toprule
     Symbol     & Value   & Units         & Description           &  Reference   \\
 	\midrule
-    $\beta$      & 146     & 1             & Unit cost ratio, Eq. xxx & \cite{Wang2017-ls} \\
+    $\beta$      & 146.0     & 1             & Unit cost ratio, Eq. \ref{eq:optimality_chi} & \cite{Wang2017-ls} \\
 	$\Gamma^\ast_{25, p_0}$ & 4.332 & Pa & Photorespiratory compensation point, SC & \cite{bernacchi01} \\
 	$K_{c25}$    & 39.97   & Pa            & MM coef. for CO$_2$, SC&  \cite{bernacchi01} \\
 	$K_{o25}$    & 27480   & Pa            & MM coef. for O$_2$, SC&  \cite{bernacchi01} \\
@@ -982,7 +1044,7 @@ Note that $T$ is in units of $^{\circ}$C in above equation. Note that \ref{eq:vc
 \end{table}
 
 \subsubsection{Dark respiration $R_{\mathrm{d}}$}
-
+\label{sec:rd}
 Dark respiration at standard temperature $R_{\mathrm{d25}}$ is calculated as being proportional to $V_{\mathrm{cmax25}}$:
 \begin{equation}
 \label{eq:rd25}
@@ -994,14 +1056,10 @@ where $b_0 = 0.015$ \citep{atkin15}. Dark respiration follows a slightly differe
     R_{\mathrm{d}} &=  R_{\mathrm{d25}}\; f_R  \\
     f_R &= \exp \left(  0.1012(T_{K,0}-T_K) - 0.0005(T_{K,0}^2-T_K^2) \right) 
 \end{align}
-By combining Equations \ref{eq:vcmaxsens}, \ref{eq:rd25}, and \ref{eq:rdsens}, $R_d$ at growth temperature $T$ can directly be calculated from $V_{\mathrm{cmax}}$
+By combining Equations \ref{eq:vcmaxsens}, \ref{eq:rd25}, and \ref{eq:rdsens}, $R_d$ at growth temperature $T$ can directly be calculated from $V_{\mathrm{cmax}}$ as
 \begin{equation}
     R_d = b_0 \frac{f_R}{f_V}\;V_{\mathrm{cmax}}
 \end{equation}
-
-
-
-
 
 \subsubsection{Soil water holding capacity}
 \label{sec:whc}
@@ -1046,6 +1104,80 @@ W_{\text{PWP}}_{0} &=0.024 f_{\text{sand}} + 0.487 f_{\text{clay}} + 0.006 f_{\t
 Where, $W_{\text{FC}}_{0}$ and $W_{\text{PWP}}_{0}$ are the field capacity and wilting point first solutions respectively. And, $f_{\text{sand}}$, $f_{\text{clay}}$, $f_{\text{OM}}$ are the sand, clay and organic matter contents.
 Contents of sand, clay, organic matter and soil depth data were acquired from the ISRIC-SoilGrids web portal (ftp://ftp.soilgrids.org/data/aggregated/10km/), and resampled to 0.5$^{\circ}$ to match the meteorological data resolution.
 
+
+\subsubsection{Deriving $\chi$}
+\label{sec:steps_chi}
+
+Using Eqs. \ref{eq:egs} and \ref{eq:ags}, the term on the left-hand side of Eq. \ref{eq:optimality_chi} can thus be written as
+\begin{equation}
+\label{eq:partial1}
+    \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
+\end{equation}
+Using Equation \ref{eq:ac} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:optimality_chi} can be written as
+\begin{equation}
+\label{eq:partial2}
+    \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}\;.
+\end{equation}
+Eq. \ref{eq:optimality_chi} can thus be written as
+\begin{equation}
+    a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
+\end{equation}
+and solved for $\chi$:
+\begin{align}
+    \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
+    \xi &= \sqrt{\frac{\beta K}{1.6 \eta^\ast}}
+\end{align}
+Where $b/a=\beta/\eta^\ast$. The exact solution, without the simplification $\Gamma^{\ast}=0$, and following analogous steps, is 
+\begin{align}
+\label{eq:chi_exact}
+    \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\frac{\xi}{\xi + \sqrt{D}}\\
+    \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
+\end{align}
+This can also be written as
+\begin{equation}
+\label{eq:ci}
+    c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \;. 
+\end{equation}
+
+\subsubsection{Deriving the \jmax\ limitation factor}
+\label{sec:steps_jmaxlim}
+
+By taking the derivative of $A_J$ with respect to \jmax , Eq. \ref{eq:jmaxpartial} can be expressed as
+\begin{equation}
+    c = \frac{ m (\varphi_0 I_\text{abs})^3}{ 4 \sqrt{ \left[ (\varphi_0 I_\text{abs})^2 + (\frac{J_\text{max}}{4})^2 \right]^3 }}
+\end{equation}
+This can be re-arranged to
+\begin{equation}
+    \left(\frac{4c}{m}\right)^{2/3} = \frac{1}{1 + \left( \frac{J_\text{max}}{4\varphi_0 I_\text{abs}}\right)^2}
+\end{equation}
+For simplification, we can substitute 
+\begin{equation}
+    k = \frac{4 \varphi_0 I_\text{abs}}{J_\text{abs}}
+\end{equation}
+and 
+\begin{equation}
+    u = \left(\frac{4c}{m}\right)^{2/3}
+\end{equation}
+With this, we can write
+\begin{equation}
+    \frac{1}{1+k^{-2}} = u \;.
+\end{equation}
+This can be re-arranged to 
+\begin{equation}
+    (1-u)^{1/2} = \frac{1}{\sqrt{1+k^2}} 
+\end{equation}
+The right-hand term now corresponds to the \jmax\ limitation factor $L$ in Eq. \ref{eq:ajlim}, and we get Eq. \ref{eq:factor_jmaxlim}.
+
+% With this prediction for acclimated $\chi$, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
+% \begin{equation}
+% \label{eq:lue}
+%         A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
+% \end{equation}
+% Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
+% \begin{equation}
+%     m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
+% \end{equation}
+% This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure. Note that the unit cost $b$ is assumed to be constant, and $a$ only to vary with the temperature-dependent viscosity of water $\eta(T)$, calculated here following \cite{huber09}. The factor $\eta^\ast = \eta(T) / \eta(25^{\circ}\text{C})$ is thus introduced by taking the unit cost of water as $a \eta^\ast$.
 
 
 %% BELOW IS ORIGINAL BY DAVID (18.10.2017)
@@ -1149,61 +1281,6 @@ Contents of sand, clay, organic matter and soil depth data were acquired from th
 %     a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}
 % \end{equation}
 
-\subsubsubsection{Predicting $\chi$}
-
-The following section provides a derivation of optimal $\chi$ using Fick's Law \citep{fick1855}, above stated hypotheses and the Farquhar model for C3 photosynthesis. 
-Transpiration $E$ and assimilation $A$ are coupled through stomatal conductance ($g_s$).
-According to the Fick's Law of diffusion:
-\begin{align}
-\label{eq:fick}
-    E &= 1.6 \; g_s \; D \\
-    A &= g_s \; c_a \; (1-\chi)
-\end{align}
-Therefore,
-\begin{equation}
-    E/A = \frac{1.6 \; D}{c_a\;(1-\chi)}
-\end{equation}
-The derivative term on the left-hand-side of Eq.\label{eq:leastcost} can thus be written as
-\begin{equation}
-\label{eq:partial1}
-    \frac{\partial (E/A)}{\partial \chi} = \frac{1.6\;D}{c_a\;(1-\chi)^2}\;.
-\end{equation}
-Using Equation \ref{eq:rubiscolimited} and the simplification $\Gamma^{\ast}=0$, the derivative term on the right-hand-side of Eq.\label{eq:leastcost} can be written as
-\begin{equation}
-\label{eq:partial2}
-    \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi} = - \frac{K}{c_a\;\chi^2}
-\end{equation}
-Using equations \ref{eq:partial1} and \ref{eq:partial2}, Eq. \ref{eq:leastcost} can be written as
-\begin{equation}
-    a\;\frac{1.6\;D}{c_a\;(1-\chi)^2} = b\;\frac{K}{c_a\;\chi^2}
-\end{equation}
-and solved for $\chi$:
-\begin{align}
-    \chi &= \frac{\xi}{\xi + \sqrt{D}} \\ 
-    \xi &= \sqrt{\frac{b\;K}{1.6\;a}}
-\end{align}
-The exact solution, without the simplification $\Gamma^{\ast}=0$, is 
-\begin{align}
-\label{eq:chi_exact}
-    \chi &= \frac{\Gamma^{\ast}}{c_a} + \left(1- \frac{\Gamma^{\ast}}{c_a}\right)\;\frac{\xi}{\xi + \sqrt{D}}\\
-    \xi &= \sqrt{\frac{b(K+\Gamma^{\ast})}{1.6\;a}}
-\end{align}
-This can also be written as
-\begin{equation}
-\label{eq:ci}
-    c_i = \frac{\Gamma^{\ast}\sqrt{D}+ \xi\;c_a}{\xi + \sqrt{D}} \\ 
-\end{equation}
-
-With this prediction for $c_i$, acclimated at a time scale on the order of weeks, the assimilation rate, Eq. \ref{eq:lightlimited} can be used in the sense of a light use efficiency model, whereby the total assimilation is proportional to the total absorbed PPFD over a given time interval:
-\begin{equation}
-\label{eq:lue}
-        A_J = \varphi_0 \; I_{\mathrm{abs}}\;\underbrace{\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}}}_{m}
-\end{equation}
-Using Eq. \ref{eq:ci} and $\beta=b/a$, $m$ can be written as
-\begin{equation}
-    m = \frac{c_a - \Gamma^{\ast}}{c_a + 2 \Gamma^{\ast} + 3 \Gamma^{\ast} \sqrt{\frac{1.6 \eta^{\ast} D }{\beta\;(K+\Gamma^{\ast})}}}
-\end{equation}
-This provides an expression for predicting the assimilation rate from first principles as a function of temperature, moisture (vapour pressure deficit $D$), elevation and atmospheric CO$_2$ partial pressure. Note that the unit cost $b$ is assumed to be constant, and $a$ only to vary with the temperature-dependent viscosity of water $\eta(T)$, calculated here following \cite{huber09}. The factor $\eta^\ast = \eta(T) / \eta(25^{\circ}\text{C})$ is thus introduced by taking the unit cost of water as $a \eta^\ast$.
 
 % \subsubsection{Introducing $J_{\mathrm{max}}$ limitation}
 % Equation \ref{eq:lue} is correct only if the response of GPP ($A$) to increasing PPFD remains linear up to the co-limitation point. 
