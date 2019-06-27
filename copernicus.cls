@@ -1,1 +1,0 @@
-../Dropbox/latex/templates/Copernicus_LaTeX_Package/copernicus.cls
