@@ -152,7 +152,7 @@ The unit cost $c$ is assumed to include the maintenance of light-harvesting comp
 \label{eq:factor_jmaxlim}
     L = \sqrt{ 1 - \left( \frac{c^\ast}{m} \right)^{2/3} }
 \end{equation}
-with $c^\ast = 4c$. Note that $L$ is independent of $I_\text{abs}$. Hence, $A_J$ is again expressed as a linear function of absorbed light. $c^\ast$ can be estimated from published value of \jmax $:$\vcmax $=$ 1.88 \citep{kattge07} and $\chi =$ 0.8 \citep{lloyd94} to $c^\ast = 0.41$ \citep{wang17natpl}. The revised LUE model thus becomes
+with $c^\ast = 4c$. Note that $L$ is independent of $I_\text{abs}$. Hence, $A_J$ is again expressed as a linear function of absorbed light. $c^\ast$ can be estimated from published values of \jmax $:$\vcmax $=$ 1.88 \citep{kattge07} and $\chi =$ 0.8 \citep{lloyd94} to $c^\ast = 0.41$ \citep{wang17natpl}. The revised LUE model thus becomes
 \begin{equation}
 \label{eq:ajlim4}
     A = \varphi_0 \; I_{\mathrm{abs}} \; m'
@@ -1196,13 +1196,10 @@ standard conditions of 25 $^{\circ}$C, 101325 Pa atmospheric pressure, 1000 Pa v
 
 Using the definition of \vcmax\ from Eq. \ref{eq:vcmax}, $m$ can be replaced by $m'$ from Eq. \ref{eq:mprime_smith} to calculate an ``intermediate rate of \vcmax'' \citep{smith19ecollett}, termed $V_\text{cmax}^\ast$, as
 \begin{equation}
-    V_\text{cmax}^\ast = \varphi_0 \; I_{\mathrm{abs}} \; \frac{m'}{m_C}
+    V_\text{cmax} = \varphi_0 \; I_{\mathrm{abs}} \; \frac{m'}{m_C}
 \end{equation}
 
-\cite{smith19ecollett} then assumed that the co-limitation ($A_J = A_C$), and the $V_\text{cmax}^\ast$ derived from this, is achieved at an \textit{optimal} temperature ($T_\text{opt}$). An empirical relationship between the \textit{growth} temperature and \textit{optimal} temperature from \cite{kattge07} and modified Arrhenius kinetics (Eqs. \ref{eq:vcmaxsens} and \ref{eq:entropy}) are used to adjust $V_\text{cmax}^\ast$ to its corresponding value at \textit{growth} temperature ($T_G$) and calculate \vcmax\ as
-\begin{equation}
-    V_\text{cmax} = V_\text{cmax}^\ast \; f_V(T_G, T_\text{opt})
-\end{equation}
+
 
 \subsection{The \texttt{rpmodel()} function of the \textit{rpmodel} R package}
 
