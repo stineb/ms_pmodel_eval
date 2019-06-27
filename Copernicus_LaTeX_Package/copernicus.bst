@@ -1,5 +1,5 @@
 %%
-%% This is file `copernicus.bst',
+%% This is file `copernicus.bst', version 1.2 (September 2017),
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
@@ -54,6 +54,7 @@
  %   \citeyear{key} ==>>             1990
  %---------------------------------------------------------------------
 
+                         
 ENTRY
   { address
     author
@@ -1661,9 +1662,9 @@ FUNCTION {begin.bib}
   write$ newline$
   "\expandafter\ifx\csname urlstyle\endcsname\relax"
   write$ newline$
-  "  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else"
+  "  \providecommand{\doi}[1]{https://doi.org/\discretionary{}{}{}#1}\else"
   write$ newline$
-  "  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup \urlstyle{rm}\Url}\fi"
+  "  \providecommand{\doi}{https://doi.org/\discretionary{}{}{}\begingroup \urlstyle{rm}\Url}\fi"
   write$ newline$
 }
 EXECUTE {begin.bib}
