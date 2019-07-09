@@ -41,13 +41,6 @@ Realistic, reliable and robust estimates of photosynthesis are crucial to unders
 \begin{equation}
     A = \min(A_C, A_J)
 \end{equation}
-% with 
-
-% and 
-% \begin{equation}
-% \label{eq:aj}
-%     A_J = \varphi_0 \; I_{\mathrm{abs}}\;\frac{c_i - \Gamma^{\ast}}{c_i + 2\Gamma^{\ast}} \;.
-% \end{equation}
 
 Although the FvCB model can be considered a standard model for near instantaneous leaf-scale photosynthesis, results from DVM and ESM models, that contain the FvCB photosynthesis model, diverge for ecosystem-level fluxes and their response to environmental factors \citep{rogers17}. This is due to assumptions that have to be made about photosynthetic parameters that are not predicted by the FvCB model, including the stomatal conductance ($g_s$), the maximum rate of Rubisco carboxylation (\vcmax ), and the maximum rate of electron transport (\jmax ) for ribulose-1,5-bisphosphate (RuBP) regeneration, which together determine the relationship between $c_i$ and $A$ in the FvCB model. 
 
@@ -71,6 +64,7 @@ The theory underlying the P-model regarding the water-carbon tradeoff has been d
 The purpose of the present paper is to summarise the theory underlying the P-model and to provide a complete description and reference for its implementation, along with open access model code, available as an R package (\textit{rpmodel}, xxx add ref). THe paper also provides a comprehensive evaluation of the P-model, using data from flux measurements (FLUXNET Tier 1 dataset). %The evaluation focuses on different components of variability (spatial, annual, seasonal, daily anomalies), and the GPP response to soil moisture drought.
 
 Here, we evaluate three P-model setups (Tab \ref{tab:setups}). The setup `ORG' is the P-model in its ``original'' form, as described in \citet{wang17natpl} (Their implementation and model forcings differed from the simulations described here). A temperature-dependence of the quantum yield efficiency, held constant for previous publications using the P-model, was introduced in model setup `BRC', based on the formulation given by \citet{bernacchi03pce}. Furthermore, \citet{stocker19natgeo} identified a general bias of simulated GPP in the P-model (as well as in other remote sensing-based GPP models) that is closely related to the timing and magnitude of soil moisture effects on LUE. Therefore, we tested an additional P-model setup (`FULL') that includes an empirical soil moisture stress function. All setups are benchmarked against a null model (`NULL'), where LUE is assumed to be constant in time and uniform across space. %, and the second, `NULLpft', where a constant LUE is assumed for each plant functional types - an approach often employed by remote sensing-based GPP models (xxx ref).
+
 
 \section{Theory}
 \label{sec:theory}
@@ -225,20 +219,20 @@ All of the above-mentioned simulations are calibrated against GPP data, which is
 \begin{table}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llllllllll}
-	\toprule
+  \toprule
     Setup name                 &  fAPAR data              &  GPP      &  Calibration set  &  $\varphi_0(T)$  &  $\beta(\theta )$  &  $\widehat{\varphi_0}$ &  $\widehat{c_L}$    &  $\widehat{a_{\theta}}$  &  $\widehat{b_{\theta}}$   \\
-	\midrule
+  \midrule
     ORG                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  no         &  no         &  0.0492 &  --     &  -- & --   \\
     BRC                        &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  no         &  --     &  0.0817 &  -- & --   \\
     FULL                       &  FPAR MCD15A3H, spl.     &  NT       &  valid NT data    &  yes        &  yes        &  --     &  0.0870 &  0  & 0.685 \\
-	\midrule
+  \midrule
     FULL\textunderscore FPARitp &  FPAR MCD15A3H, itpl.   &  NT       &  valid NT data    &  yes        &  yes        &  --     &  0.0846 &  0  & 0.700 \\
     FULL\textunderscore EVI     &  EVI MOD13Q1, spl.      &  NT       &  valid NT data    &  yes        &  yes        &  --     &  0.1293 &  0  & 0.766 \\
-	\midrule
+  \midrule
     FULL\textunderscore DT      &  FPAR MCD15A3H, spl.    &  DT       &  valid NT, DT, Ty &  yes        &  yes        &  --     &  0.0891 & 0   & 0.690 \\
     FULL\textunderscore Ty      &  FPAR MCD15A3H, spl.    &  Ty       &  valid NT, DT, Ty &  yes        &  yes        &  --     &  0.0868 & 0   & 0.721 \\
     FULL\textunderscore NTsub   &  FPAR MCD15A3H, spl.    &  NT       &  valid NT, DT, Ty &  yes        &  yes        &  --     &  0.0899 & 0   & 0.690 \\
-	\bottomrule
+  \bottomrule
 \end{tabular}
 }
 \caption{Model setups. The standard greenness data, used to define the model forcing for fAPAR is MODIS FPAR MCD15A3H, where the original data, given at 4-day intervals, is splined to daily values (see Section \ref{sec:greennessdata}). Alternative greenness forcing data is based on MODIS EVI MOD13Q1, splined (`spl.') from 8-day intervals to daily, and MODIS FPAR MCD15A3H, linearly interpolated (`itpl.') from 4-day intervals to daily. Standard observational GPP data, used for model calibration and evaluation is from FLUXNET 2015 data, based on the nighttime flux decomposition method (`NT' in the table, variable \texttt{GPP\textunderscore NT\textunderscore VUT\textunderscore REF} in FLUXNET 2015 data). Alternative GPP data used based on the daytime flux decomposition method (`DT' in the table, variable \texttt{GPP\textunderscore DT\textunderscore VUT\textunderscore REF}), and based on an alternative method \citep{wang17natpl} (`Ty' in the table). For setups ORG, BRC, FULL, FULL\textunderscore FPARitp, and FULL\textunderscore EVI, data used for the model calibration is from all dates where (cleaned, see Section \ref{sec:datafiltering}) `NT' data is available. For setups FULL\textunderscore DT, FULL\textunderscore Ty, and FULL\textunderscore NTsub, data used for calibration is from all dates where data is available for all methods `DT', `NT', and `Ty'. Column $\varphi_0(T)$ specifies whether the temperature dependence of quantum yield efficiency after \citet{bernacchi03pce} is accounted for. Column $\beta(\theta )$ specifies whether soil moisture limitation (see Section \ref{sec:soilmstress}) is accounted for. Columns $\widehat{\varphi_0}$, $\widehat{c_L}$, $\widehat{a_{\theta}}$ and  $\widehat{b_{\theta}}$ provide the calibrated parameter values in each simulation set.}
@@ -323,9 +317,6 @@ For LUE, we separately analyzed spatial (mean annual values by site) and monthly
   \label{tab:kgclimate}
 \end{table}
 
-% \subsubsection{Functional relationships}
-% \label{sec:gam}
-% Functional relationships between light use efficiency and its predictors considered in the P-model are based on pooled data from all sites and are derived using Generalized Additive Models (GAMs). The procedure applied here is as follows. First, a GAM is trained on observational data using the \texttt{gam()} function from the \textit{mgcv} R package with method REML \citep{mgcv}. Using all date's data pooled, we trained four models using LUE as targets for training, where LUE is quantified using Eq. \ref{eq:luemodel}, based on observed GPP from the three different flux decomposition methods (Sect. \ref{sec:datafiltering}) and simulated LUE from the P-model. We use tempearature ($T$), VPD ($D$), and soil moisture ($\theta$) as model predictors. The P-model additionally requires elevation and ambient \coo\ as inputs. However, these variables do not vary at short time scales. The trained models are then applied to an evaluation dataset that is constructed separately as follows. For each predictor $i \in (T, D, \theta)$, three vectors $\mathbf{x}_i, \mathbf{x}_j, \mathbf{x}_k$ are constructed. The first ($\mathbf{x}_i$) is an equally spaced sequence of values of predictor $i$, ranging from its minimum to its maximum in the training dataset. The length of $\mathbf{x}_i$ is $N_i=30$. The second and third vectors $\mathbf{x}_j, \mathbf{x}_k$ are constructed by randomly sampling (with replacement) $N_j=N_k=30$ values of predictors $(j,k)\neq i$, respectively, from the training dataset. Then, a matrix is constructed to contain all combinations $(x_{i,l}, x_{j,m}, x_{k,n})$ of elements of the three vectors with $l \in [1,N_i], m \in [1,N_j], n \in [1,N_k]$. Finally, quantiles are calculated for pooled data across predictors $(j,k)$ and all levels of predictor $i$.
 
 \subsubsection{Drought response}
 \label{sec:droughtresponse}
@@ -355,24 +346,6 @@ The P-model captures 37\% of the variability in mean annual LUE across all sites
 We first evaluated the model performance with respect to pooled data from all 153 sites, forced with splined MODIS FPAR data for fAPAR in Eq. \ref{eq:luemodel}, and evaluated against GPP data based on the NT flux decomposition. Evaluations with respect to alternative choices for fAPAR data and GPP data are presented in Sections \ref{sec:results_greenness} and \ref{sec:results_gppdata}. \rsq\ and RMSE values for all model setups are presented in Tables \ref{tab:rsq} and \ref{tab:rmse}.
 
 In general, differences in model performance between different setups  (ORG, BRC, FULL) are similar across all scales (Tab. \ref{tab:setups}). Additional explanatory power is introduced by accounting for the temperature effects on quantum yield efficiency and by simulated soil moisture stress. The FULL setup of the P-model generally achieves the highest \rsq\ values and the lowest RMSE and outperforms the NULL model.
-
-
-% Version 1.
-% \begin{table}
-% \centering
-% \begin{tabular}{lllllll}
-%   \toprule
-%   Setup & xdaily & spatial & annual & seasonal & daily\_var \\ 
-%   \midrule
-%   ORG & 0.65 & 0.58 & 0.57 & 0.67 & 0.23 \\ 
-%   BRC & 0.68 & 0.61 & 0.60 & 0.71 & 0.23 \\ 
-%   FULL & 0.69 & 0.63 & 0.66 & 0.70 & 0.25 \\ 
-%   NULL & 0.65 & 0.59 & 0.55 & 0.69 & 0.22 \\ 
-%   \bottomrule
-%   \end{tabular}
-% \caption{$R^2$ of different models and for different components of variability. Version 1.} 
-% \label{tab:rsq}
-% \end{table}
 
 
  % Version 2.
@@ -891,7 +864,7 @@ The lumped Michaelis-Menten coefficient $K$ (Pa) of Rubisco-limited photosynthes
 %% ------------------------------------------------------------------------ %%
 \begin{equation}
 \label{eq:michaelis}
-	K(T_K, p) = K_c(T_K)\: \left( 1 + \frac{pO_2(p)}{K_o(T_K)} \right) \;,
+  K(T_K, p) = K_c(T_K)\: \left( 1 + \frac{pO_2(p)}{K_o(T_K)} \right) \;,
 \end{equation}
 where $K_c$ is the Michaelis-Menten constant for CO$_2$ (Pa), $K_o$ is the Michaelis-Menten constant for the carboxylation and oxygenation reaction, respectively, and $pO_2$ is the partial pressure of oxygen (Pa). $K_c$ and $K_o$ follow a temperature dependence, given by the Arrhenius Equation - analogously to the temperature dependence of $\Gamma^\ast$ (Eq. \ref{eq:gammastar}):
 %% ------------------------------------------------------------------------ %%
@@ -900,7 +873,7 @@ where $K_c$ is the Michaelis-Menten constant for CO$_2$ (Pa), $K_o$ is the Micha
 \begin{subequations}
 \label{eq:kcko}
 \begin{align}
-	K_c(T_K)& = K_{c25}\: f_{\text{Arrh}}(T_K, \Delta H_{Kc}) \label{eq:kc} \\
+  K_c(T_K)& = K_{c25}\: f_{\text{Arrh}}(T_K, \Delta H_{Kc}) \label{eq:kc} \\
     K_o(T_K)& = K_{o25}\: f_{\text{Arrh}}(T_K, \Delta H_{Ko}) \label{eq:ko}
 \end{align}
 \end{subequations}
@@ -917,11 +890,11 @@ Values $\Delta H_{Kc} = 79430$ J mol$^{-1}$, $\Delta H_{Ko} = 36380$ J mol$^{-1}
 % \begin{subequations}
 % \label{eq:kcko25}
 % \begin{align}
-% 	K_{c25}&=1\times 10^{-6} \exp \left[ 38.05 - 
-%     	\frac{\Delta H_{a,c}}{298.15\: R}
+%   K_{c25}&=1\times 10^{-6} \exp \left[ 38.05 - 
+%       \frac{\Delta H_{a,c}}{298.15\: R}
 %     \right]\: P_{atm} \label{eq:kc25} \\
 %     K_{o25}&=1\times 10^{-3} \exp \left[ 20.30 - 
-%     	\frac{\Delta H_{a,o}}{298.15\: R}
+%       \frac{\Delta H_{a,o}}{298.15\: R}
 %     \right]\: P_{atm} \label{eq:ko25}
 % \end{align}
 % \end{subequations}
@@ -940,7 +913,7 @@ The elevation-dependence of atmospheric pressure is computed by assuming a linea
 \begin{equation}
 \label{eq:pz}
     p(z) = p_0 \left( 
-    	1 - \frac{L z}{T_{K,0}} 
+      1 - \frac{L z}{T_{K,0}} 
     \right)^{g M_a (R L)^{-1}} \;,
 \end{equation} 
 where $z$ is the elevation above mean sea level (m), $g$ is the gravity constant (9.80665 m s$^{-2}$), $p_0$ is the standard atmospheric pressure at 0 m a.s.l. (101325 Pa), $L$ is the mean adiabatic lapse rate (0.0065 K m$^{-2}$), $M_a$ is the molecular weight for dry air (0.028963 kg mol$^{-1}$), and $R$ is the universal gas constant (8.3145 J mol$^{-1}$ K$^{-1}$). All parameter values that are held fixed in the model (not calibrated) are summarised in Tab. \ref{tab:params}.
@@ -1001,27 +974,27 @@ Note that $T$ is in units of $^{\circ}$C in above equation. Note that \ref{eq:vc
 \begin{table}
 \centering
 \begin{tabular}{lllll}
-	\toprule
+  \toprule
     Symbol     & Value   & Units         & Description           &  Reference   \\
-	\midrule
+  \midrule
     $\beta$      & 146.0     & 1             & Unit cost ratio, Eq. \ref{eq:optimality_chi} & \citet{Wang2017-ls} \\
-	$\Gamma^\ast_{25, p_0}$ & 4.332 & Pa & Photorespiratory compensation point, SC & \citet{bernacchi01} \\
-	$K_{c25}$    & 39.97   & Pa            & MM coef. for CO$_2$, SC&  \citet{bernacchi01} \\
-	$K_{o25}$    & 27480   & Pa            & MM coef. for O$_2$, SC&  \citet{bernacchi01} \\
-	$\Delta H_{\Gamma\ast}$ & 37830 & J mol$^{-1}$ & Activation energy for $\Gamma^\ast$  & \citet{bernacchi01} \\
-	$\Delta H_{Kc}$ & 79430  & J mol$^{-1}$  & Activation energy for $K_c$&  \citet{bernacchi01} \\
-	$\Delta H_{Ko}$ & 36380  & J mol$^{-1}$  & Activation energy for $K_o$&  \citet{bernacchi01} \\
-	$H_V$        & 71513   & J mol$^{-1}$  & Activation energy for \vcmax\ & \citet{kattge07} \\
-	$H_d$        & 200000   & J mol$^{-1}$  & Deactivation energy for \vcmax\ & \citet{kattge07} \\
-	$p_0$        & 101325  & Pa            & Standard atmosphere   & -- \\
-	$g$          & 9.80665 & m s$^{-2}$    & Gravitation constant  & -- \\
-	$L$          & 0.0065  & K m$^{-2}$    & Adiabatic lapse rate  & -- \\
-	$R$          & 8.3145  & J mol$^{-1}$ K$^{-1}$ & Universal gas constant & -- \\
-	$M_a$        & 28.963  & g mol$^{-1}$  & Molecular mass of dry air & -- \\
+  $\Gamma^\ast_{25, p_0}$ & 4.332 & Pa & Photorespiratory compensation point, SC & \citet{bernacchi01} \\
+  $K_{c25}$    & 39.97   & Pa            & MM coef. for CO$_2$, SC&  \citet{bernacchi01} \\
+  $K_{o25}$    & 27480   & Pa            & MM coef. for O$_2$, SC&  \citet{bernacchi01} \\
+  $\Delta H_{\Gamma\ast}$ & 37830 & J mol$^{-1}$ & Activation energy for $\Gamma^\ast$  & \citet{bernacchi01} \\
+  $\Delta H_{Kc}$ & 79430  & J mol$^{-1}$  & Activation energy for $K_c$&  \citet{bernacchi01} \\
+  $\Delta H_{Ko}$ & 36380  & J mol$^{-1}$  & Activation energy for $K_o$&  \citet{bernacchi01} \\
+  $H_V$        & 71513   & J mol$^{-1}$  & Activation energy for \vcmax\ & \citet{kattge07} \\
+  $H_d$        & 200000   & J mol$^{-1}$  & Deactivation energy for \vcmax\ & \citet{kattge07} \\
+  $p_0$        & 101325  & Pa            & Standard atmosphere   & -- \\
+  $g$          & 9.80665 & m s$^{-2}$    & Gravitation constant  & -- \\
+  $L$          & 0.0065  & K m$^{-2}$    & Adiabatic lapse rate  & -- \\
+  $R$          & 8.3145  & J mol$^{-1}$ K$^{-1}$ & Universal gas constant & -- \\
+  $M_a$        & 28.963  & g mol$^{-1}$  & Molecular mass of dry air & -- \\
     $M_C$        & 12.0107 & g mol$^{-1} $ & Molecular mass of carbon & -- \\ 
-	$a_S$        & 668.39  & J mol$^{-1}$ K$^{-1}$ & Intercept for entropy term in Eq. \ref{eq:vcmaxsens} & \citet{kattge07} \\
-	$b_S$        & 1.07  & J mol$^{-1}$ K$^{-2}$ & Slope for entropy term in Eq. \ref{eq:vcmaxsens} & \citet{kattge07} \\
-	\bottomrule
+  $a_S$        & 668.39  & J mol$^{-1}$ K$^{-1}$ & Intercept for entropy term in Eq. \ref{eq:vcmaxsens} & \citet{kattge07} \\
+  $b_S$        & 1.07  & J mol$^{-1}$ K$^{-2}$ & Slope for entropy term in Eq. \ref{eq:vcmaxsens} & \citet{kattge07} \\
+  \bottomrule
 \end{tabular}
 \caption{Fixed parameters. 'SC' stands for 'at standard conditions' (25 $^{\circ}$C, 101325 Pa). 'MM coef.' refers to 'Michaelis Menten coefficient'.}
 \label{tab:params}

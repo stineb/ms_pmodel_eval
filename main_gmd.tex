@@ -234,7 +234,7 @@ The unit cost $c$ is assumed to include the maintenance of light-harvesting comp
 \label{eq:factor_jmaxlim}
     L = \sqrt{ 1 - \left( \frac{c^\ast}{m} \right)^{2/3} }
 \end{equation}
-with $c^\ast = 4c$. Note that $L$ is independent of $I_\text{abs}$. Hence, $A_J$ is again expressed as a linear function of absorbed light. $c^\ast$ can be estimated from published value of \jmax $:$\vcmax $=$ 1.88 \citep{kattge07} and $\chi =$ 0.8 \citep{lloyd94} to $c^\ast = 0.41$ \citep{wang17natpl}. The revised LUE model thus becomes
+with $c^\ast = 4c$. Note that $L$ is independent of $I_\text{abs}$. Hence, $A_J$ is again expressed as a linear function of absorbed light. $c^\ast$ can be estimated from published values of \jmax $:$\vcmax $=$ 1.88 \citep{kattge07} and $\chi =$ 0.8 \citep{lloyd94} to $c^\ast = 0.41$ \citep{wang17natpl}. The revised LUE model thus becomes
 \begin{equation}
 \label{eq:ajlim4}
     A = \varphi_0 \; I_{\mathrm{abs}} \; m'
@@ -245,7 +245,7 @@ with
     m' = m \; \sqrt{1 - \left( \frac{c^\ast}{m} \right)^{2/3} }
 \end{equation}
 
-\citet{smith19ecollett} used a different approach to introduce effects by \jmax\ limitation, while relying on the same theoretical approach for calculating $\chi$ (or $c_i$), as outlined above. Instead of using the formulation of \citet{smith37}, they used a functional form following \citet{farquhar84}. Their method is described in Appendix \ref{sec:jmaxlim_smith} and implemented as an optional method in the R package \textit{rpmodel}.
+\citet{smith19ecollett} used a different approach to introduce effects by \jmax\ limitation, while relying on the same theoretical approach for calculating $\chi$ (or $c_i$), as outlined above. Instead of using the formulation of \citet{smith37}, they used a functional form following \citet{farquhar80}. Their method is described in Appendix \ref{sec:jmaxlim_smith} and implemented as an optional method in the R package \textit{rpmodel}.
 
 \section{Methods}
 \label{sec:methods}
@@ -1105,7 +1105,7 @@ Sect. \ref{sec:jmax} introduced the effect of a finite \jmax\, leading to a satu
 \label{eq:aj_smith}
     A_J = \left(\frac{J}{4} \right) \; m \;.
 \end{equation}
-$m$ is the \coo\ limitation factor (Eq. \ref{eq:m_co2limitation}), and $J$ is a saturating function of absorbed light, approaching \jmax\ for high light levels, following \citet{farquhar84}:
+$m$ is the \coo\ limitation factor (Eq. \ref{eq:m_co2limitation}), and $J$ is a saturating function of absorbed light, approaching \jmax\ for high light levels, following \citet{farquhar80}:
 \begin{equation}
 \label{eq:j_smith}
    \theta  J^2 - 
