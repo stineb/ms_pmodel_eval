@@ -38,24 +38,25 @@
 
 % \Author[affil]{given_name}{surname}
 
-\Author[1,2]{Benjamin D.}{Stocker}
-\Author[3]{Han}{Wang}
-\Author[4]{Nicholas G.}{Smith}
-\Author[5]{Sandy P.}{Harrison}
-\Author[6, 7]{Trevor F.}{Keenan}
-\Author[8]{David}{Sandoval}
-\Author[8,9]{Tyler}{Davis}
-\Author[8]{I. Colin}{Prentice}
+\Author[1,2,3]{Benjamin D.}{Stocker}
+\Author[4]{Han}{Wang}
+\Author[5]{Nicholas G.}{Smith}
+\Author[6]{Sandy P.}{Harrison}
+\Author[7, 8]{Trevor F.}{Keenan}
+\Author[9]{David}{Sandoval}
+\Author[9,10]{Tyler}{Davis}
+\Author[9]{I. Colin}{Prentice}
 
 \affil[1]{CREAF, Campus UAB, 08193 Bellaterra, Catalonia, Spain}
 \affil[2]{Earth System Science, Stanford University, Stanford, 94305-4216, California, USA}
-\affil[3]{Department of Earth System Science, Tsinghua University, Haidian, Beijing, 100084, China}
-\affil[4]{Department of Biological Sciences, Texas Tech University, Box 43131 Lubbock, TX 79409, USA}
-\affil[5]{Geography and Environmental Science, Reading University, Reading, RG6 6 AH, UK}
-\affil[6]{Earth and Environmental Sciences Area, Lawrence Berkeley National Lab, Berkeley, CA 94709, USA}
-\affil[7]{Department of Environmental Science, Policy and Management, UC Berkeley, Berkeley, CA 94720, USA}
-\affil[8]{AXA Chair of Biosphere and Climate Impacts, Department of Life Sciences, Imperial College London, Silwood Park Campus, Ascot, Berkshire, SL5 7PY, UK}
-\affil[9]{Center for Geospatial Analysis, The College of William \& Mary, Williamsburg, VA, 23185, USA.}
+\affil[3]{Institute of Agricultural Sciences, Department of Environmental Systems Science, ETH, Universit{\"a}tsstrasse 2, 8092 Z{\"u}rich, Switzerland}
+\affil[4]{Department of Earth System Science, Tsinghua University, Haidian, Beijing, 100084, China}
+\affil[5]{Department of Biological Sciences, Texas Tech University, Box 43131 Lubbock, TX 79409, USA}
+\affil[6]{Geography and Environmental Science, Reading University, Reading, RG6 6 AH, UK}
+\affil[7]{Earth and Environmental Sciences Area, Lawrence Berkeley National Lab, Berkeley, CA 94709, USA}
+\affil[8]{Department of Environmental Science, Policy and Management, UC Berkeley, Berkeley, CA 94720, USA}
+\affil[9]{AXA Chair of Biosphere and Climate Impacts, Department of Life Sciences, Imperial College London, Silwood Park Campus, Ascot, Berkshire, SL5 7PY, UK}
+\affil[10]{Center for Geospatial Analysis, The College of William \& Mary, Williamsburg, VA, 23185, USA.}
 
 %% The [] brackets identify the author with the corresponding affiliation. 1, 2, 3, etc. should be inserted.
 
@@ -65,7 +66,7 @@
 
 \runningauthor{Stocker et al.}
 
-\correspondence{B. D. Stocker (b.stocker@creaf.uab.cat)}
+\correspondence{B. D. Stocker (bestocke@ethz.ch)}
 
 
 \received{}
@@ -84,7 +85,7 @@
 
 \begin{abstract}
  
-Terrestrial photosynthesis is the basis for vegetation growth and drives the land carbon cycle. Accurately simulating gross primary production (GPP, ecosystem-level apparent photosynthesis) is key for satellite monitoring and Earth System Model predictions under climate change. While robust models exist for describing leaf-level photosynthesis, predictions diverge due to uncertain photosynthetic traits and parameters which vary on multiple spatial and temporal scales. Here, we describe and evaluate a gross primary production (GPP, photosynthesis per unit ground area) model, the P-model, that combines the Farquhar-von Caemmerer-Berry model for C$_3$ photosynthesis with an optimality principle for the carbon assimilation-transpiration trade-off, and predicts a multi-day average light use efficiency (LUE) for any climate and C$_3$ vegetation type. The model builds on the theory developed in \citet{prentice14ecollett} and \citet{wang17natpl} and is extended to include low temperature effects on the intrinsic quantum yield and an empirical soil moisture stress factor. The model is forced with site-level data of the fraction of absorbed photosynthetically active radiation (fAPAR) and meteorological data and is evaluated against GPP estimates from a globally distributed network of ecosystem flux measurements. Although the P-model requires relatively few inputs and prescribed parameters, the \rsq\ for predicted versus observed GPP based on the full model setup is 0.75 (8-day mean, 129 sites) -- similar as comparable satellite data-driven GPP models but without predefined vegetation type-specific parameters. The \rsq\ is reduced to 0.70 when not accounting for the reduction in quantum yield at low temperatures and effects of low soil moisture on LUE. The \rsq\ for the P-model-predicted LUE is 0.32 (means by site) and 0.48 (means by vegetation type). Applying this model for global-scale simulations yields a total global GPP of 105-121 GtC yr$^{-1}$ (mean of 2001-2011), depending on the fAPAR forcing data. The P-model provides a simple but powerful method for predicting -- rather than prescribing -- light use efficiency and simulating terrestrial photosynthesis across a wide range of conditions. The model is available as an R package (\textit{rpmodel}).
+Terrestrial photosynthesis is the basis for vegetation growth and drives the land carbon cycle. Accurately simulating gross primary production (GPP, ecosystem-level apparent photosynthesis) is key for satellite monitoring and Earth System Model predictions under climate change. While robust models exist for describing leaf-level photosynthesis, predictions diverge due to uncertain photosynthetic traits and parameters which vary on multiple spatial and temporal scales. Here, we describe and evaluate a gross primary production (GPP, photosynthesis per unit ground area) model, the P-model, that combines the Farquhar-von Caemmerer-Berry model for C$_3$ photosynthesis with an optimality principle for the carbon assimilation-transpiration trade-off, and predicts a multi-day average light use efficiency (LUE) for any climate and C$_3$ vegetation type. The model builds on the theory developed in \citet{prentice14ecollett} and \citet{wang17natpl} and is extended to include low temperature effects on the intrinsic quantum yield and an empirical soil moisture stress factor. The model is forced with site-level data of the fraction of absorbed photosynthetically active radiation (fAPAR) and meteorological data and is evaluated against GPP estimates from a globally distributed network of ecosystem flux measurements. Although the P-model requires relatively few inputs, the \rsq\ for predicted versus observed GPP based on the full model setup is 0.75 (8-day mean, 126 sites) -- similar as comparable satellite data-driven GPP models but without predefined vegetation type-specific parameters. The \rsq\ is reduced to 0.70 when not accounting for the reduction in quantum yield at low temperatures and effects of low soil moisture on LUE. The \rsq\ for the P-model-predicted LUE is 0.32 (means by site) and 0.48 (means by vegetation type). Applying this model for global-scale simulations yields a total global GPP of 106-122 GtC yr$^{-1}$ (mean of 2001-2011), depending on the fAPAR forcing data. The P-model provides a simple but powerful method for predicting -- rather than prescribing -- light use efficiency and simulating terrestrial photosynthesis across a wide range of conditions. The model is available as an R package (\textit{rpmodel}).
 \end{abstract}
 
 \copyrightstatement{}
@@ -309,7 +310,7 @@ Global simulations were conducted for the setup FULL, using the respectively cal
 
 \subsection{Model calibration}
 \label{sec:calib}
-Calibration was performed only for the model parameters determining the quantum efficiency of photosynthesis ($\widehat{\varphi_0}$ or $\widehat{c_L}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity (parameters $\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$). Simulated GPP was calibrated to minimise the root mean square error (RMSE) compared to observed daily GPP (Sect. \ref{sec:calibdata}). We used  Generalised Simulated Annealing from the \textit{GenSA} R package \citep{gensa} to optimise model parameters. This algorithm is particularly suited to find global minima of non-linear objective functions in situations where there can be a large number of local minima. To test the robustness of the calibration and evaluation metrics, we additionally performed out-of-sample calibrations for the FULL setup where the training set included data from all but one site. The test dataset, used to calculate \rsq\ and RMSE, contained only data from that single left-out site.
+Calibration was performed only for the model parameters determining the quantum efficiency of photosynthesis ($\widehat{\varphi_0}$ or $\widehat{c_L}$, respectively) and the dependence of the sensitivity of the soil moisture stress function on average aridity (parameters $\widehat{a_{\theta}}$ and $\widehat{b_{\theta}}$). Simulated GPP was calibrated to minimise the root mean square error (RMSE) compared to observed daily GPP (Sect. \ref{sec:calibdata}). We used  Generalised Simulated Annealing from the \textit{GenSA} R package \citep{gensa} to calibrate model parameters. This algorithm is particularly suited to find global minima of non-linear objective functions in situations where there can be a large number of local minima. To test the robustness of the calibration and evaluation metrics, we additionally performed out-of-sample calibrations for the FULL setup where the training set included data from all but one site. The test dataset, used to calculate \rsq\ and RMSE, contained only data from that single left-out site.
 
 \subsection{Forcing data}
 \label{sec:forcingdata}
@@ -338,19 +339,19 @@ For global-scale simulations, we use daily, 0.5$^{^\circ}$ meteorological forcin
 
 \subsubsection{Data for site-scale simulations}
 
-We used data from 59 sites for model calibration and 129 sites for evaluation (Fig. \ref{fig:map_sites}, and Tab. \ref{tab:sites}). The number of valid daily GPP data points used for the calibration set was 135,093 and 212,618 for the evaluation set. The calibration sites were selected based on the apparent reliability of relationships between \coo\ fluxes, co-located greenness data, measured soil moisture, and meteorological variables, emerging from a previous analysis \citep{stocker18newphyt}. For the evaluation, we used all sites except those classified as croplands or wetlands, and seven sites where C$_4$ vegetation is mentioned in the site description available through the FLUXNET2015 dataset (AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3).
+We used data from 59 sites for model calibration and 126 sites for evaluation (Fig. \ref{fig:map_sites}, and Tab. \ref{tab:sites}). The number of valid daily GPP data points used for the calibration set was 162,158 and 241,084 for the evaluation set. The calibration sites were selected based on the apparent reliability of relationships between \coo\ fluxes, co-located greenness data, measured soil moisture, and meteorological variables, emerging from a previous analysis \citep{stocker18newphyt}. For the evaluation, we used all sites except those classified as croplands or wetlands, and seven sites where C$_4$ vegetation is mentioned in the site description available through the FLUXNET2015 dataset (AU-How, DE-Kli, FR-Gri, IT-BCi, US-Ne1, US-Ne2, and US-Ne3).
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=12cm]{fig/map_sites.pdf}
-    \caption{Overview of sites selected for model calibration and evaluation (green dots). All sites and additional information are listed in Tab. \ref{tab:sites}. The color key represents aridity, quantified as the ratio of precipitation over potential evapotranspiration from \citet{greve14}.}
+    \caption{Overview of sites selected for model calibration (green dots) and evaluation (black dots). All sites and additional information are listed in Tab. \ref{tab:sites}. The color key of the map represents aridity, quantified as the ratio of precipitation over potential evapotranspiration from \citet{greve14}.}
     \label{fig:map_sites}
 \end{figure*}
 
 \label{sec:sites}
 
 \label{sec:datafiltering}
-GPP predictions by the P-model are compared to GPP estimates from the FLUXNET 2015 Tier 1 data set (downloaded on 13 November, 2016). We used GPP based on the nighttime partitioning method \citep{Reichstein2005-mp} (GPP\textunderscore NT\textunderscore VUT\textunderscore REF) and filtered out negative daily GPP values, data for which more than 50\% of the half-hourly data are gap-filled and for which the daytime and nighttime partitioning methods (GPP\textunderscore DT\textunderscore VUT\textunderscore REF and GPP\textunderscore NT\textunderscore VUT\textunderscore REF, respectively) are inconsistent, i.e., the upper and lower 2.5\% quantiles of the difference between GPP values quantified by each method. For additional simulation sets, model calibration and evaluation was performed using GPP data based on the daytime partitioning method (GPP\textunderscore DT\textunderscore VUT\textunderscore REF) \citep{lasslop10} with analogous filtering steps, and GPP data based on an alternative method that fits a constant ecosystem respiration rate as the net ecosystem exchange under conditions where PPFD tends to zero (FULL\textunderscore Ty, \citet{wang17natpl}). For all calibration and evaluation, we removed data points before the ``MODIS era'' (before 18th of February, 2000).
+GPP predictions by the P-model are compared to GPP estimates from the FLUXNET 2015 Tier 1 data set (downloaded on 13 November, 2016). We used GPP based on the nighttime partitioning method \citep{Reichstein2005-mp} (GPP\textunderscore NT\textunderscore VUT\textunderscore REF) and removed data for which more than 50\% of the half-hourly data are gap-filled and for which the daytime and nighttime partitioning methods (GPP\textunderscore DT\textunderscore VUT\textunderscore REF and GPP\textunderscore NT\textunderscore VUT\textunderscore REF, respectively) are inconsistent, i.e., the upper and lower 2.5\% quantiles of the difference between GPP values quantified by each method. For additional simulation sets, model calibration and evaluation was performed using GPP data based on the daytime partitioning method (GPP\textunderscore DT\textunderscore VUT\textunderscore REF) \citep{lasslop10} with analogous filtering steps, and GPP data based on an alternative method that fits a constant ecosystem respiration rate as the net ecosystem exchange under conditions where PPFD tends to zero (FULL\textunderscore Ty, \citet{wang17natpl}). For all calibration and evaluation, we removed data points before the ``MODIS era'' (before 18th of February, 2000).
 
 
 \subsubsection{Data for global-scale simulations}
@@ -397,21 +398,19 @@ For LUE, we separately analysed spatial (mean annual values by site) and monthly
 
 
 \begin{table*}[t]
-\caption{Description of Koeppen-Geiger climate zones (based on \citet{falge17}) and number of sites for which data is available per climate zone and hemisphere. Only zones with data from more than three sites are shown.}
+\caption{Description of Koeppen-Geiger climate zones and number of sites for which data is available per climate zone and hemisphere. Sites are classified based on \citet{falge17}, and \citet{beck18scidat}. Only zones with data from more than three sites are shown.}
 \begin{tabular}{llll}
 \tophline
   Code & $N$ north & $N$ south & Description \\ 
 \middlehline
-  Aw   & -- & 5 &  Tropical savannah with dry winter \\ 
-  BSk  & 2 & -- & Arid steppe cold \\ 
-  BSh  & 2 & -- & Arid steppe hot \\ 
-  BWh  & 2 & -- & Arid desert hot \\ 
-  Cfa  & 5 & -- & Warm temperate fully humid with hot summer \\ 
-  Cfb  & 17 & 2 & Warm temperate fully humid with warm summer \\ 
-  Csa  & 7 & -- & Warm temperate with dry and hot summer \\ 
-  Dfb  & 9 & -- & Cold fully humid warm summer \\ 
-  Dfc  & 3 & -- & Cold fully humid cold summer \\ 
-%   ET   & 4 & -- & Polar tundra \\ 
+  Aw   & -- & 5  & Tropical savannah \\ 
+  BSk  & 5 & --  & Arid steppe cold \\ 
+  Cfa  & 11 & -- & Warm temperate fully humid with hot summer \\ 
+  Cfb  & 20 & 5  & Warm temperate fully humid with warm summer \\ 
+  Csa  & 12 & -- & Warm temperate with dry and hot summer \\ 
+  Csb  & 4  & -- & Warm temperate with dry and warm summer \\ 
+  Dfb  & 17 & -- & Cold fully humid with warm summer \\ 
+  Dfc  & 21 & -- & Cold fully humid with cold summer \\ 
 \bottomhline
 \end{tabular}
 \belowtable{} % Table Footnotes
@@ -434,7 +433,7 @@ The calibration of model parameters, done with data from all calibration sites s
 
 \begin{figure}[!ht]
     \includegraphics[width=\textwidth]{fig/oob_grid.pdf}
-    \caption{Out-of-sample calibration and evaluation results. (a-c) Distribution of parameter values from calibrations where data from one site was left out for each individual calibration. Parameters $\widehat{a_\theta}$ and $\widehat{b_\theta}$ are unitless. (d, e) Distribution of evaluation metrics calculated on data from the left-out site based on simulations with model parameters calibrated on all other sites' data. Solid red vertical lines represent the parameter values calibrated with data from all calibration pooled. These are the values reported in Tabs. \ref{tab:rsq} and \ref{tab:rmse}. Dashed red lines represent the mean across values from out-of-bag calibrations and evaluations.}
+    \caption{Out-of-sample calibration and evaluation results. (a-c) Distribution of parameter values (setup FULL) from calibrations where data from one site was left out for each individual calibration. Parameters $\widehat{a_\theta}$ and $\widehat{b_\theta}$ are unitless. (d, e) Distribution of evaluation metrics calculated on data from the left-out site based on simulations with model parameters calibrated on all other sites' data. Solid red vertical lines represent the parameter values calibrated with data from all sites pooled. These are the values reported in Tabs. \ref{tab:rsq} and \ref{tab:rmse} for setup FULL. Dashed red lines represent the mean across values from out-of-bag calibrations and evaluations.}
     \label{fig:oob}
 \end{figure}
 
@@ -500,19 +499,12 @@ Tables \ref{tab:rsq} and \ref{tab:rmse} provide an overview of model performance
 \end{figure*}
 
 
-\begin{figure}[!ht]
-    \includegraphics[width=\textwidth]{fig/modobs_spatial_annual.pdf}
-    \caption{Correlation of modelled and observed annual GPP in simulations FULL (a), NULL (b) and FULL\textunderscore EVI (c). The red line and text are based on means across years by site and represents spatial (across-site) variations. Black lines and text are based on annual values, one line for each site. Lines represent linear regressions. $R^2$ and RMSE statistics for annual values (black text) are based on pooled data from all sites. For a perfect fit between modelled and observed annual GPP values, all black lines (representing the linear regression model of annual values for a single site) would lie on the 1:1 line and have a slope of 1. Slopes that deviate substantially from 1, or even are negative, for some sites shows poor model performance in capturing inter-annual variability.}
-    \label{fig:modobs_spatialannual}
-\end{figure}
-
-
 \subsubsection{Seasonal variations}
 \label{sec:results_seasonal}
 
 Seasonal variations are generally reliably simulated (\rsq : 0.69-0.73 for P-model setups, and \rsq : 0.71 for the NULL model, Fig. \ref{fig:season}). Also the NULL model captures most of the seasonal variability, especially in climate zones Dfb and Dfc, and Cfb and Cfa. This indicates that seasonal GPP variations are largely driven by seasonal changes in insolation (PPFD) and vegetation greenness (fAPAR). Accounting for temperature effects on the quantum yield efficiency reduces the overestimation of GPP in spring, except in the case of climate zone Dfb. Observed GPP increases are lagged compared to vegetation greenness, with a delay of up to 2 months at some sites. This lag is clearly visible at almost all sites in Dfb. The early season high bias is largely absent for sites in climate zone Cfb, where observed GPP starts increasing early and the simulations match the observations except at sites CZ-wet, DE-Hai, and FR-Fon, where the simulated start of season is simulated too early.
 
-GPP is overestimated during the dry season in climate zones with a marked dry season (Aw, BSk, Csa, and Csb) in model setups that do not account for soil moisture stress (ORG, BRC, NULL). The NULL model has the largest bias. High VPD during dry periods reduces simulated LUE and leads to lower GPP values and a smaller bias in all the P-model setups (ORG, BRC, FULL). The empirical soil moisture stress function applied in setup FULL eliminates the dryness-related bias in zones Aw, Csa, and Csb and substantially reduces this bias for sites in zone BSk. Observations suggest that GPP declines to values around zero during dry periods at sites in zone BSk (mostly savannah vegetation and grasslands, see Table \ref{tab:sites}). The remaining bias in the FULL model, which includes the soil moisture stress function, is related to the fact that fAPAR remains relatively high and that the soil moisture stress function does not decline to zero.
+GPP is overestimated during the dry season in climate zones with a marked dry season (Aw, BSk, Csa, and Csb) in model setups that do not account for soil moisture stress (ORG, BRC, NULL). The NULL model has the largest bias. High VPD during dry periods reduces simulated LUE and leads to lower GPP values and a smaller bias in all the P-model setups (ORG, BRC, FULL). The empirical soil moisture stress function applied in setup FULL eliminates the dryness-related bias in zones Aw, Csa, and Csb and substantially reduces this bias for sites in zone BSk. Observations suggest that GPP declines to values around zero during dry periods at sites in zone BSk (mostly savannah vegetation and grasslands, see Table \ref{tab:sites}). The remaining bias in the FULL model, which includes the soil moisture stress function, is related to the fact that prescribed fAPAR remains relatively high and that the soil moisture stress function does not decline to zero.
 
 The ORG and BRC models tend to underestimate peak season GPP more strongly compared to the FULL model. This is a direct consequence of the calibration which balances errors across all data points. Across-site average peak-season maximum GPP is accurately captured by the FULL model in most zones (Fig. \ref{fig:season}), except for an underestimation of GPP in zones Aw, Cfa, and Cfb, and an overestimation in zone Csa. Site-level evaluations suggests no clear relationship between peak-season underestimation and vegetation type in zone Cfb. The overestimation of peak-season GPP in zone Csa is caused by a high bias at sites with evergreen broadleaved vegetation (FR-Pue, IT-Cp2, IT-Cpz); sites with other vegetation types show no consistent peak season bias. 
 
@@ -527,22 +519,19 @@ The ORG and BRC models tend to underestimate peak season GPP more strongly compa
 
 \subsubsection{Spatial and annual variations}
 
-The \rsq\ for simulated GPP, aggregated to annual totals, ranges from 0.60 (ORG) to 0.69 (FULL). The NULL model achieves an \rsq\ of 0.58. Most of the explanatory power of the different models for predicting annual total GPP stems from their power in predicting between-site (``spatial'') variations (Fig. \ref{fig:modobs_spatialannual}). The \rsq\ for spatial variations ranges from 0.63 (ORG) to 0.69 (FULL), and 0.65 for the NULL model. In contrast, inter-annual  variations at a site are poorly simulated (\rsq : 0.05-0.09 for P-model setups, and 0.03 for the NULL model). Inter-annual variations are generally much smaller than between site (spatial) variations or seasonal variations. Thus, capturing them is challenging. Inter-annual GPP variations are generally better simulated at sites where the variability is high and in particular at dry sites.
+The \rsq\ for simulated GPP, aggregated to annual totals, ranges from 0.60 (ORG) to 0.69 (FULL). The NULL model achieves an \rsq\ of 0.58. Most of the explanatory power of the different models for predicting annual total GPP stems from their power in predicting between-site (``spatial'') variations (Fig. \ref{fig:modobs_spatialannual}). The \rsq\ for spatial variations ranges from 0.63 (ORG) to 0.69 (FULL), and 0.65 for the NULL model. In contrast, inter-annual  variations at a site are poorly simulated (\rsq : 0.05-0.09 for P-model setups, and 0.03 for the NULL model). Inter-annual variations are generally much smaller than between-site (spatial) variations or seasonal variations. Thus, capturing them is challenging. Inter-annual GPP variations are generally better simulated at sites where the variability is high and in particular at dry sites.
 
+\begin{figure}[!ht]
+    \includegraphics[width=\textwidth]{fig/modobs_spatial_annual.pdf}
+    \caption{Correlation of modelled and observed annual GPP in simulations FULL (a), NULL (b) and FULL\textunderscore EVI (c). The red line and text are based on means across years by site and represents spatial (across-site) variations. Black lines and text are based on annual values, one line for each site. Lines represent linear regressions. $R^2$ and RMSE statistics for annual values (black text) are based on pooled data from all sites. For a perfect fit between modelled and observed annual GPP values, all black lines (representing the linear regression model of annual values for a single site) would lie on the 1:1 line and have a slope of 1. Slopes that deviate substantially from 1, or even are negative, for some sites shows poor model performance in capturing inter-annual variability.}
+    \label{fig:modobs_spatialannual}
+\end{figure}
 
-\subsection{GPP target data}
-\label{sec:results_gppdata}
-
-The different flux decomposition methods make fundamentally different assumptions regarding the sensitivity of ecosystem respiration to diurnal changes in temperature. This should lead to systematic differences in derived observational GPP values and should affect model-data disagreement.
-
-Model predictions compare better to GPP data based on the flux decomposition method Ty \citep{wang17natpl} than for GPP data based on the DT and NT methods. For GPP  8-day means, the model achieves an \rsq\ of 0.66 when compared to GPP Ty (model setup FULL\textunderscore Ty), as opposed to 0.61 and 0.63 compared to the DT and NT methods, respectively (FULL\textunderscore DT and FULL\textunderscore NTsub, Tab. \ref{tab:rsq}, Fig. \ref{fig:modobs_10d_gppdata}). Spatial and annual correlations are not evaluated for GPP Ty due to missing data. Correlations at the 8-day, seasonal and daily time scales rely on dates for which neither the NT, DT, nor Ty method has missing values and thus contain an equal number of data points. Therefore NT evaluations, repeated here, are not identical to the ones above and are referred to as `NTsub' in Tables \ref{tab:rsq} and \ref{tab:rmse}. 
- 
-We found a systematic low bias of simulated GPP in the peak-season in the climatic zone Cfb (warm temperate, fully humid, warm summer). However, as shown in Fig. \ref{fig:modobs_10d_gppdata}, this bias does not seem to be affected by the choice of GPP evaluation data.
 
 \subsection{Drought response}
 \label{sec:results_droughtresponse}
 
-The P-model setups that do not include the soil moisture stress function (ORG and BRC) systematically overestimate GPP during droughts (Fig. \ref{fig:modobs_droughtresponse}). This bias increases sharply at the onset of drought events and continues to increase throughout the drought period. The bias is strongly reduced by applying the empiricial soil moisture stress function (Eq. \ref{eq:soilmstress}) in the FULL model. A small bias remains also in the FULL model. This stems from overestimated values at a few sites (in particular AU−DaP, US-Cop, US-SRG, US-SRM, US-Var, US-Whs, US-Wkg), mostly grasslands and sites in seasonally dry climate zones (Aw, BSk, and Csa, see Fig. \ref{fig:season}), where flux measurements indicate an almost complete shut-down of photosynthetic activity during the dry season. In contrast, the fAPAR data (MODIS FPAR) suggest values substantially greater than zero at these sites during these periods. This suggests either contributions to PAR absorption by photosynthetically inactive tissue, underestimation of LUE sensitivity to dry soils at these sites, or an overestimation of the rooting zone moisture availability by SPLASH.
+The P-model setups that do not include the soil moisture stress function (ORG and BRC) systematically overestimate GPP during droughts (Fig. \ref{fig:modobs_droughtresponse}). This bias increases sharply at the onset of drought events and continues to increase throughout the drought period. The bias is strongly reduced by applying the empiricial soil moisture stress function (Eq. \ref{eq:soilmstress}) in the FULL model. A small bias remains also in the FULL model. This stems from overestimated values at a few sites (in particular AU-DaP, US-Cop, US-SRG, US-SRM, US-Var, US-Whs, US-Wkg), mostly grasslands and sites in seasonally dry climate zones (Aw, BSk, and Csa, see Fig. \ref{fig:season}), where flux measurements indicate an almost complete shut-down of photosynthetic activity during the dry season. In contrast, the fAPAR data (MODIS FPAR) suggest values substantially greater than zero at these sites during these periods. This suggests either contributions to PAR absorption by photosynthetically inactive tissue, underestimation of LUE sensitivity to dry soils at these sites, or an overestimation of the rooting zone moisture availability by the SPLASH model.
 
 \begin{figure}[t]
 \includegraphics[width=8.3cm]{fig/droughtresponse.pdf}
@@ -554,7 +543,7 @@ The P-model setups that do not include the soil moisture stress function (ORG an
 \subsection{Uncertainty from fAPAR input data}
 \label{sec:results_greenness}
 
-Tests of the sensitivity of model performance to alternative fAPAR forcing datasets show that the difference between splined and linearly-interpolated MODIS FPAR is small. However, model performance is generally better using MODIS FPAR compared to simulations using MODIS EVI. Spatial variations in particular, are better captured using MODIS FPAR (Fig. \ref{fig:modobs_spatialannual}, \rsq : 0.69 for setup FULL) compared to MODIS EVI (\rsq : 0.58). However, the \rsq\ of inter-annual variations is 0.15 for MODIS EVI and 0.09 for MODIS FPAR. In terms of biases in climate zones, the overestimation of GPP during the dry period in zone BSk is larger when using MODIS EVI than when using MODIS FPAR (Fig. \ref{fig:season_greenness}, right). The positive spring bias in simulated GPP in zone Dfb is present irrespective of the source of the fAPAR forcing (Fig. \ref{fig:season_greenness}, left), as is the peak-season bias of GPP in zones BSk, Cfb, and Csb (not shown). Differences between the EVI and FPAR-forced simulations depend on vegetation type. The EVI-forced simulation tends to be low biased in evergreen needle-leaved vegetation, and has generally lower values in all evergreen vegetation types compared to the FPAR-forced simulation. However, there is no general difference in model bias between simulations made with the two forcings in other vegetation types. 
+Tests of the sensitivity of model performance to alternative fAPAR forcing datasets show that the difference between splined and linearly-interpolated MODIS FPAR is small, with slightly better performance using splined fAPAR data. Model performance is generally better using MODIS FPAR compared to simulations using MODIS EVI. Spatial variations in particular, are better captured using MODIS FPAR (Fig. \ref{fig:modobs_spatialannual}, \rsq : 0.69 for setup FULL) compared to MODIS EVI (\rsq : 0.58). However, the \rsq\ of inter-annual variations is 0.15 for MODIS EVI and 0.09 for MODIS FPAR. In terms of biases in climate zones, the overestimation of GPP during the dry period in zone BSk is larger when using MODIS EVI than when using MODIS FPAR (Fig. \ref{fig:season_greenness}, right). The positive spring bias in simulated GPP in zone Dfb is present irrespective of the source of the fAPAR forcing (Fig. \ref{fig:season_greenness}, left), as is the peak-season bias of GPP in zones BSk, Cfb, and Csb (not shown). Differences between the EVI and FPAR-forced simulations depend on vegetation type. The EVI-forced simulation tends to be low biased in evergreen needle-leaved vegetation, and has generally lower values in all evergreen vegetation types compared to the FPAR-forced simulation. However, there is no general difference in model bias between simulations made with the two forcings in other vegetation types. 
 
  \begin{figure}[t]
 \includegraphics[width=8.3cm]{fig/meandoy_byzone_greenness.pdf}
@@ -563,10 +552,15 @@ Tests of the sensitivity of model performance to alternative fAPAR forcing datas
 \end{figure}
 
 
-\subsection{Uncertainty from GPP target data}
+\subsection{GPP target data}
 \label{sec:results_gppdata}
 
-Model predictions compare better to GPP data based on the Ty than either the DT or NT methods. For GPP,  8-day means, the model achieves an \rsq\ of 0.69 when compared to GPP Ty (model setup FULL\textunderscore Ty), compared to 0.65 and 0.67 for the DT and NT methods, respectively (FULL\textunderscore DT and FULL\textunderscore NTsub, Tab. \ref{tab:rsq}, Fig. \ref{fig:modobs_10d_gppdata}). Variations in daily GPP anomalies are much better captured in evaluations with Ty (\rsq : 0.49) than DT or NT (\rsq : 0.30). Spatial and annual correlations were not evaluated for Ty because of missing data. The systematic low bias of simulated peak-season GPP in climatic zone Cfb is not affected by the choice of GPP evaluation data (Fig. \ref{fig:modobs_10d_gppdata}). The systematic differences in the level of model-data agreement depending on the target GPP dataset (Fig. \ref{fig:modobs_10d_gppdata}) reflect the fact that these datasets are derived using decomposition methods with different sensitivity to diurnal changes in temperature.
+The different flux decomposition methods make fundamentally different assumptions regarding the sensitivity of ecosystem respiration to diurnal changes in temperature. This should lead to systematic differences in derived observational GPP values and should affect model-data disagreement.
+
+Model predictions compare better to GPP data based on the flux decomposition method Ty \citep{wang17natpl} than for GPP data based on the DT and NT methods. For GPP  8-day means, the model achieves an \rsq\ of 0.68 when compared to GPP Ty (model setup FULL\textunderscore Ty), as opposed to 0.64 and 0.66 compared to the DT and NT methods, respectively (FULL\textunderscore DT and FULL\textunderscore NTsub, Tab. \ref{tab:rsq}, Fig. \ref{fig:modobs_10d_gppdata}). Spatial and annual correlations are not evaluated for GPP Ty due to missing data. Evaluations presented here rely on dates for which neither the NT, DT, nor Ty method has missing values and thus contain an equal number of data points. Metrics from the NT evaluation, repeated here, are not identical to the ones above and are referred to as `NTsub' in Tables \ref{tab:rsq} and \ref{tab:rmse}. 
+ 
+We found a systematic low bias of simulated GPP in the peak-season in the climatic zone Cfb (warm temperate, fully humid, warm summer). However, as shown in Fig. \ref{fig:modobs_10d_gppdata}, this bias does not seem to be affected by the choice of GPP evaluation data.
+
 
  \begin{figure*}[t]
 \includegraphics[width=12cm]{fig/meandoy_modobs_gpp_data.pdf}
@@ -577,13 +571,20 @@ Model predictions compare better to GPP data based on the Ty than either the DT 
 
 \subsection{LUE}
 \label{sec:results_lue}
-The FULL version of the P-model captures 32\% of the variability in mean annual LUE across all sites and across the full range of observed mean annual LUE values and vegetation types (Fig. \ref{fig:lue}). 47 \% of the observed LUE variation within vegetation types is captured by the model through the relationships with climate, without the need to specify parameters for specific vegetation types. 
+The FULL version of the P-model captures 32\% of the variability in mean annual LUE across all sites and across the full range of observed mean annual LUE values and vegetation types (Fig. \ref{fig:lue}). 48\% of the observed LUE variation within vegetation types is captured by the model through the relationships with climate, without the need to specify parameters for specific vegetation types. 
 
-30\% of the variability in monthly mean LUE is captured by the model, with data from all sites and years pooled (Fig. \ref{fig:lue}). The model overestimates monthly LUE values and underestimates LUE at the lowest and highest end of the LUE range respectively. The low-end overestimation is reflected by the overestimation of GPP in the spring at winter-cold sites (Sect. \ref{sec:results_seasonal}) and during soil moisture droughts (Sect. \ref{sec:results_droughtresponse}). The underestimation of high monthly values is not clearly linked to any particular vegetation type.
+31\% of the variability in monthly mean LUE is captured by the model, with data from all sites and years pooled (Fig. \ref{fig:lue}). The model overestimates monthly LUE values and underestimates LUE at the lowest and highest end of the LUE range respectively. The low-end overestimation is reflected by the overestimation of GPP in the spring at winter-cold sites (Sect. \ref{sec:results_seasonal}) and during soil moisture droughts (Sect. \ref{sec:results_droughtresponse}). The underestimation of high monthly values is not clearly linked to any particular vegetation type.
+
+ \begin{figure*}[t]
+\includegraphics[width=12cm]{fig/modobs_lue_FULL.pdf}
+    \caption{Modelled (simulations FULL) versus observed LUE. (a) Mean monthly LUE with data pooled from all sites and available years. (b) Mean annual LUE by site (small dots and color) and vegetation type (large dots and color). ee metrics are given at the top with numbers in brackets referring to the regression of data aggregated by vegetation types and non-bracketed numbers for data aggregated by sites. Dotted lines represent the 1:1 relationship, red lines represent the fitted linear regression to all data in (a) and to mean annual LUE by site in (b). The grey band in (b) represents the 95 \% confidence interval of the linear regression. Vegetation types are: closed shrubland (CSH); deciduous broadleaf forest (DBF); evergreen broadleaf forest (EBF); evergreen needleleaf forest (ENF); grassland (GRA); mixed deciduous and evergreen needleleaf forest (MF); open shrubland (OSH); savanna ecosystem (SAV); woody savanna (WSA). }
+    \label{fig:lue}
+\end{figure*}
+
 
 \subsection{Global GPP}
 
-Simulated global total GPP is 105 GtC yr$^{-1}$ when using MODIS FPAR and 121 GtC yr$^{-1}$ when using fAPAR3g forcing data (mean over years 2001-2011, setup FULL). The spatial pattern of simulated GPP differs substantially between simulations forced by MODIS FPAR and fAPAR3g (Fig. \ref{fig:gpp_global}). This is most evident in their latitudinal distribution (Fig. \ref{fig:gpp_by_lat}). The global spatial pattern of fAPAR3g-based GPP simulated by the P-model generally matches the global distribution of the mean across other remote sensing-based GPP models and lies within the range of their estimates for the latitudinal distribution. The MODIS FPAR-forced P-model simulation suggests lower values in the tropics that differ from the fAPAR3g-based estimates by a factor of $\sim$2 around the equator. The moderate tropical GPP of the MODIS FPAR-based P-model simulation agrees well with the latitudinal distribution of sun-induced fluorescence (SiF) from GOME-2A and GOME-2B.
+Simulated global total GPP is 106 GtC yr$^{-1}$ when using MODIS FPAR and 122 GtC yr$^{-1}$ when using fAPAR3g forcing data (mean over years 2001-2011, setup FULL). The spatial pattern of simulated GPP differs substantially between simulations forced by MODIS FPAR and fAPAR3g (Fig. \ref{fig:gpp_global}). This is most evident in their latitudinal distribution (Fig. \ref{fig:gpp_by_lat}). The global spatial pattern of fAPAR3g-based GPP simulated by the P-model generally matches the global distribution of the mean across other remote sensing-based GPP models and lies within the range of their estimates for the latitudinal distribution. The MODIS FPAR-forced P-model simulation suggests lower values in the tropics that differ from the fAPAR3g-based estimates by a factor of $\sim$2 around the equator. The moderate tropical GPP of the MODIS FPAR-based P-model simulation agrees well with the latitudinal distribution of sun-induced fluorescence (SiF) from GOME-2A and GOME-2B.
 
  \begin{figure}[!ht]
 \includegraphics[width=\textwidth]{fig/maps_comparison.pdf}
@@ -599,11 +600,6 @@ Simulated global total GPP is 105 GtC yr$^{-1}$ when using MODIS FPAR and 121 Gt
 \end{figure*}
 
 
- \begin{figure*}[t]
-\includegraphics[width=12cm]{fig/modobs_lue_FULL.pdf}
-    \caption{Modelled (simulations FULL) versus observed LUE. (a) Mean monthly LUE with data pooled from all sites and available years. (b) Mean annual LUE by site (small dots and color) and vegetation type (large dots and color). ee metrics are given at the top with numbers in brackets referring to the regression of data aggregated by vegetation types and non-bracketed numbers for data aggregated by sites. Dotted lines represent the 1:1 relationship, red lines represent the fitted linear regression to all data in (a) and to mean annual LUE by site in (b). The grey band in (b) represents the 95 \% confidence interval of the linear regression. Vegetation types are: closed shrubland (CSH); deciduous broadleaf forest (DBF); evergreen broadleaf forest (EBF); evergreen needleleaf forest (ENF); grassland (GRA); mixed deciduous and evergreen needleleaf forest (MF); open shrubland (OSH); savanna ecosystem (SAV); woody savanna (WSA). }
-    \label{fig:lue}
-\end{figure*}
 
 
 % \subsubsection{VPD}
@@ -652,20 +648,19 @@ Simulated global total GPP is 105 GtC yr$^{-1}$ when using MODIS FPAR and 121 Gt
 \section{Discussion}
 \label{sec:discussion}
 
-The performance of the P-model can be compared to results obtained from other remote-sensing driven GPP models (RS-models). In its FULL setup, the P-model achieves an \rsq\ of 0.73 and a RMSE of 2.00 g C m$^{-2}$ d$^{-1}$, in simulating 8-day mean GPP and evaluated against GPP data (NT method) from 129 sites. This can be compared to predictions from the VPM model (\rsq : 0.74, RMSE: 2.08 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \citet{Zhang2017-yr}), or BESS (\rsq : 0.67, RMSE: 2.58 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \citet{jiang16rse}). The performance of the P-model in simulating \textit{annual} GPP across all 131 sites (\rsq : 0.69) can be compared to results from MODIS GPP (MOD17A2, \rsq = 0.73, 12 sites, \citet{heinsch06}, and for the updated version MOD17A2H: \rsq = 0.62, 18 sites, \citet{wang17rs}), or BEPS (\rsq : 0.81, RMSE: 347 g C m$^{-2}$ d$^{-1}$, 124 sites \citep{he18grl}). Unfortunately, we cannot present a direct comparison between these models, based on data from identical dates and sites. A targeted model intercomparison may address this. While seasonal and spatial variations in GPP are reliably simulated by the P-model, the model's performance in simulating interannual GPP variations is weaker. Similar results regarding relatively poor model performance in explaining interannual variations have been found from previous studies in both empirical \citep{richardson07gcb, urbanski07jgr} and process model-based \citep{keenan12gcb, biederman16gcb} analyses. This is likely due to lagged effects of climate anomalies expressed through biotic responses \citep{richardson07gcb, keenan12gcb}.
+The performance of the P-model can be compared to results obtained from other remote-sensing driven GPP models (RS-models). In its FULL setup, the P-model achieves an \rsq\ of 0.75 and a RMSE of 1.96 g C m$^{-2}$ d$^{-1}$, in simulating 8-day mean GPP and evaluated against GPP data (NT method) from 126 sites. This can be compared to predictions from the VPM model (\rsq : 0.74, RMSE: 2.08 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \citet{Zhang2017-yr}), or BESS (\rsq : 0.67, RMSE: 2.58 g C m$^{-2}$ d$^{-1}$, 113 sites, 8-daily, \citet{jiang16rse}). The performance of the P-model in simulating \textit{annual} GPP across all 126 sites (\rsq : 0.69) can be compared to results from MODIS GPP (MOD17A2, \rsq = 0.73, 12 sites, \citet{heinsch06}, and for the updated version MOD17A2H: \rsq = 0.62, 18 sites, \citet{wang17rs}), or BEPS (\rsq : 0.81, RMSE: 347 g C m$^{-2}$ d$^{-1}$, 124 sites \citep{he18grl}). Unfortunately, we cannot present a direct comparison between these models based on data from identical dates and sites. A targeted model intercomparison may address this. While seasonal and spatial variations in GPP are reliably simulated by the P-model, the model's performance in simulating interannual GPP variations is weaker. Similar results regarding relatively poor model performance in explaining interannual variations have been found from previous studies in both empirical \citep{richardson07gcb, urbanski07jgr} and process model-based \citep{keenan12gcb, biederman16gcb} analyses. This is likely due to lagged effects of climate anomalies expressed through biotic responses \citep{richardson07gcb, keenan12gcb}.
 
-The P-model-based estimates of global GPP (105 GtC yr$^{-1}$ when using MODIS FPAR and 121 GtC yr$^{-1}$ when using fAPAR3g forcing data, mean over 2000-2011, FULL setup) are within the range of other estimates of global GPP (also means over 2000-2011): 133 GtC yr$^{-1}$ for MTE \citep{jung11jgr}, 130 GtC yr$^{-1}$ for FLUXCOM \citep{tramontana16bg}, 113 GtC yr$^{-1}$ for MODIS-55 GPP and 105 GtC yr$^{-1}$ for MODIS-6 GPP \citep{running04, zhao05}, 133 GtC yr$^{-1}$ for BESS \citep{jiang16rse, ryu11gbc}, 121 GtC yr$^{-1}$ for BEPS \citep{he18grl, chen16agrformet}, and 135 GtC yr$^{-1}$ for VPM \citep{zhang17scidat}. The P-model results presented here are based on simulations that embody relatively strong simplifying assumptions. In particular, we assumed all vegetation to follow the C$_3$ photosynthetic pathway and we made no distinction between croplands and other vegetation, although crops are often more productive \citep{guanter14pnas}. Due to the short period for which forcing data and outputs from comparable models are available, we did not analyse temporal trends in global GPP here. Analyses that are not shown here suggest the introduction of the \jmax\ limitation (not included, e.g., in \citet{keenan17natcomm}) to substantially increase the sensitivity of GPP to \coo\ but we have not further evaluated respective model behaviour against other observations, e.g., \coo\ manipulation experiments. This will have to be addressed before this P-model version (including the \jmax limitation) can reliably be used for the simulation of \coo -related trends. \citet{stocker19natgeo} found that soil moisture effects did not significantly affect global GPP trend over the past decades.
+The P-model-based estimates of global GPP (106 GtC yr$^{-1}$ when using MODIS FPAR and 122 GtC yr$^{-1}$ when using fAPAR3g forcing data, mean over 2001-2011, FULL setup) are within the range of other estimates of global GPP (also means over 2001-2011): 133 GtC yr$^{-1}$ for MTE \citep{jung11jgr}, 130 GtC yr$^{-1}$ for FLUXCOM \citep{tramontana16bg}, 112 GtC yr$^{-1}$ for MODIS-55 GPP and 105 GtC yr$^{-1}$ for MODIS-6 GPP \citep{running04, zhao05}, 133 GtC yr$^{-1}$ for BESS \citep{jiang16rse, ryu11gbc}, 121 GtC yr$^{-1}$ for BEPS \citep{he18grl, chen16agrformet}, and 135 GtC yr$^{-1}$ for VPM \citep{zhang17scidat}. The P-model results presented here are based on simulations that embody relatively strong simplifying assumptions. In particular, we assumed all vegetation to follow the C$_3$ photosynthetic pathway and we made no distinction between croplands and other vegetation, although crops are often more productive \citep{guanter14pnas}. Due to the short period for which forcing data and outputs from comparable models are available, we did not analyse temporal trends in global GPP here. Analyses not shown here indicate that the introduction of the \jmax\ cost factor (not included, e.g., in \citet{keenan17natcomm}) increases the sensitivity of modelled GPP to \coo . Further evaluation of model behaviour against data from \coo\ manipulation experiments will be necessary before applying the model to simulate \coo -related trends.
 
-The large spread of tropical GPP estimates is striking. The highest estimate among the other GPP models we used for evaluation here - coming from BESS - is more than 50\% higher than MODIS GPP from Collection 6. The fAPAR3g-based P-model tropical GPP estimate falls within the range of other GPP models, while the MODIS FPAR-based estimate is lower than all other models. However, the latter's comparably low tropical GPP agrees well with the latitudinal distribution of SiF. However, large changes in leaf area index across latitudes, combined with a dependency of the SiF signal on vegetation structure \citep{zeng19rse} may undermine the validity of SiF as a benchmark for GPP models. A lack of evaluation data from eddy-covariance measurements in dense tropical forests precludes us from drawing conclusions on the accurateness of these diverging tropical GPP estimates. 
+The large spread of tropical GPP estimates is striking. The highest estimate among the other GPP models we used for evaluation here -- coming from BESS -- is more than 50\% higher than MODIS GPP from Collection 6. The fAPAR3g-based P-model tropical GPP estimate falls within the range of other GPP models, while the MODIS FPAR-based estimate is lower than all other models. However, the latter's comparably low tropical GPP agrees well with the latitudinal distribution of SiF (Fig. \ref{fig:gpp_by_lat}). However, large changes in leaf area index across latitudes, combined with a dependency of the SiF signal on vegetation structure \citep{zeng19rse} may undermine the validity of SiF as a benchmark for the latitudinal GPP distribution. A lack of evaluation data from eddy-covariance measurements in dense tropical forests precludes us from drawing conclusions on the accurateness of these diverging tropical GPP estimates. 
 
-With a particular focus on soil moisture effects, \citet{stocker19natgeo} presented global GPP based on the P-model, corresponding to a setup with the soil moisture stress function but without the temperature-dependence of the quantum yield efficiency. They also used a different parametrisation with $\varphi_0 = 0.0579$, $a_\theta = 0.107$, and $b_\theta = 0.478$ for their intermediate model version. Their estimate for global GPP is around 130 PgC yr$^{-1}$ for recent years, having increased from less than 120 PgC yr$^{-1}$ in the early 1980s. This is within the range of other models. In contrast to MODIS GPP, the P-model shows a clear increasing trend in these simulations.
+With a particular focus on soil moisture effects, \citet{stocker19natgeo} presented global GPP based on the P-model, corresponding to a setup with the soil moisture stress function but without the temperature-dependence of the quantum yield efficiency. They also used a different parametrisation with $\varphi_0 = 0.0579$, $a_\theta = 0.107$, and $b_\theta = 0.478$ for their intermediate model version. Their estimate for global GPP was around 130 PgC yr$^{-1}$ for recent years.
 
-
-The coefficients of determination (\rsq ) of simulated versus observed values are lower for LUE (0.37 for the spatial correlation in the FULL setup, Fig. \ref{fig:lue}b) than for GPP (0.70 for the spatial correlation in the FULL setup). This is because GPP variations are strongly driven by variations in absorbed light (PPFD$\cdot$fAPAR), which are observed and used for modelling. In contrast, variations in LUE cannot be observed directly. Using remotely-sensed information for estimating LUE variations, e.g., based on sun-induced fluorescence \citep{frankenberg18, li18gcb, ryu19rse} or alternative reflectance indices \citep{gamon92, gamon16pnas, Badgley2017-tw}, is an active field of research and the separation of remotely sensed signals into contributions by LUE and absorbed light remains challenging \citep{porcarcastell14, ryu19rse}. Other remote sensing-based GPP models rely on vegetation type-specific model parameters for LUE \citep{Zhang2017-yr, running04, jiang16rse}. The P-model in its FULL setup explains 53\% of the variations in LUE across sites aggregated to vegetation types without relying on vegetation or biome-type specific parametrisations. In its ORG setup, it explains 21\% of the variations (not shown), and 51\% of the variations when excluding sites classified as `open shrublands', which tend have a substantially lower LUE than simulated by the P-model (not shown). In spite of this substantial portion of explained variability, the NULL model with its temporally constant and spatially uniform LUE achieves higher \rsq\ values for GPP than the ORG P-model setup at the spatial, annual, and seasonal scales (Tab. \ref{tab:rsq}). This indicates that the spatial and temporal variations in absorbed light are the main drivers of GPP in LUE-type models and underlines the importance of evaluation against a NULL model benchmark. Taken together, these findings demonstrate that the P-model offers a simple but powerful method for simulating terrestrial GPP using readily available input datasets and a very small number of free (calibratable) parameters. Here, three parameters are calibrated (for the FULL setup). Other model parameters are derived from independent field and laboratory measurements.
+The coefficients of determination (\rsq ) of simulated versus observed values are lower for LUE (0.32 for the spatial correlation in the FULL setup, Fig. \ref{fig:lue}b) than for GPP (0.69 for the spatial correlation in the FULL setup). This is because GPP variations are strongly driven by variations in absorbed light (PPFD$\cdot$fAPAR), which are observed and used for modelling. In contrast, variations in LUE cannot be observed directly. Using remotely-sensed information for estimating LUE variations, e.g., based on sun-induced fluorescence \citep{frankenberg18, li18gcb, ryu19rse} or alternative reflectance indices \citep{gamon92, gamon16pnas, Badgley2017-tw}, is an active field of research and the separation of remotely sensed signals into contributions by LUE and absorbed light remains challenging \citep{porcarcastell14, ryu19rse}. Other remote sensing-based GPP models rely on vegetation type-specific model parameters for LUE \citep{Zhang2017-yr, running04, jiang16rse}. The P-model in its FULL setup explains 48\% of the variations in LUE across sites aggregated to vegetation types without relying on vegetation or biome-type specific parametrisations. In its ORG setup, it explains 12\% of the variations (not shown), and 51\% of the variations when excluding sites classified as `open shrublands', which tend have a substantially lower LUE than simulated by the P-model (not shown). In spite of this substantial portion of explained variability, the NULL model with its temporally constant and spatially uniform LUE achieves higher \rsq\ values for GPP than the ORG P-model setup at the spatial, annual, and seasonal scales (Tab. \ref{tab:rsq}). This indicates that the spatial and temporal variations in absorbed light are the main drivers of GPP in LUE-type models and underlines the importance of evaluation against a NULL model benchmark. Taken together, these findings demonstrate that the P-model offers a simple but powerful method for simulating terrestrial GPP using readily available input datasets and a very small number of free (calibratable) parameters. Here, three parameters are calibrated (for the FULL setup). Other model parameters are derived from independent field and laboratory measurements.
 
 % It appears surprising, however, that the NULL model achieves only a slightly lower \rsq\ (0.64, spatial) compared to the FULL model (0.70, spatial), while using a constant and uniform LUE across all sites and time. 
 
-Accounting for the temperature-dependence of the quantum yield efficiency ($\varphi_0$) clearly improves model predictions. The parameter $\varphi_0$ is commonly treated as a constant in global vegetation models \citep{rogers17}. Our results indicate potential for improving DVM photosynthesis routines by accounting for the temperature-dependence of $\varphi_0$. 
+Accounting for the temperature-dependence of the quantum yield efficiency ($\varphi_0$) clearly improves model predictions. The parameter $\varphi_0$ is commonly treated as a constant in global vegetation models \citep{rogers17}. Our results indicate potential for improving such models' photosynthesis routines by accounting for the temperature-dependence of $\varphi_0$. 
 
 $\varphi_0$ appears as a linear scalar in the LUE model. However, the magnitude of this scalar is uncertain and depends on whether incomplete light absorption by the leaf is included in the definition of $\varphi_0$ or in fAPAR data. We have used MODIS FPAR and MODIS EVI data to define fAPAR in different model setups.  While the two are well correlated, their absolute values differ. Hence, we have calibrated an \textit{apparent} quantum yield efficiency ($\widehat{\varphi_0}$) to GPP data separately for different fAPAR datasets, thereby implicitly distinguishing what components of light absorption factors are contained in the fAPAR data. The leaf absorbtance $a_L$, which is typically taken to be around 0.8 in global vegetation models \citep{rogers17} is similar to the ratio of fitted $\widehat{\varphi_0}$ values for simulation FULL and FULL\textunderscore EVI, here calculated as 0.67 (Tab. \ref{tab:setups}).
 
@@ -679,7 +674,7 @@ There is a positive bias in simulated GPP during the dry season at a number of s
 
 The current implementation of the P-model involves some simplifications in terms of climate drivers by using average daily meteorological conditions, measured above the canopy, as input. Optimality in balancing carbon and water costs for average daily conditions is not necessarily equivalent to optimality in balancing integrated water and carbon costs over the diurnal cycle. Large variations in ambient conditions over a diurnal cycle, combined with a non-linear dependence of costs on these conditions suggest that the approach of taking average daily conditions may be an over-simplification. Nevertheless, prior evaluations have shown robust and accurate predictions of optimal $\chi$ across a range conditions \citep{wang17natpl}. Using above-canopy VPD values instead of VPD at the leaf surface for scaling water losses implicitly assumes a perfectly coupled atmospheric boundary layer. Using above-canopy air temperature instead of leaf temperatures introduces a bias when the two become decoupled \citep{michaletz15tee}. The impact of these simplifications may be minor but should be evaluated. %Furthermore, the light use efficiency model, using prescribed fAPAR, implies that no distinction is made between light absorptance by the canopy of diffuse and direct radiation. 
 
-A further simplification is that investment in electron transport capacity (expressed by \jmax ) and investments in the carboxylation capacity (expressed by \vcmax ) are coordinated so that for conditions with which the model is forced (here, monthly means of daily averages), photosynthesis operates at the co-limitation point of the light- and Rubisco-limited assimilation rates and an effective linear relationship between absorbed light and mean assimilation emerges. This assumption follows from the \textit{coordination hypothesis} \citep{chen93, haxeltine96}, which itself can be understood as an optimality principle \citep{haxeltine96}, and is well supported by observations \citep{maire12po}. However, this coordination is contingent on the time scale at which photosynthetic acclimation occurs, which is not known precisely  \citep{smithdukes13gcb, way14}. By simulating $\chi$ usingh monthly mean meteorological variables, we assume a monthly time scale of acclimation. This is probably a conservative estimate \citep{smithdukes17, veres84}. Considering the concave relationship of assimilation rates and absorbed light that follows from the FvCB model for a given \jmax , linearly scaling a given monthly LUE term with daily varying absorbed light levels should lead to an overestimation of assimilation rates at high light levels. This overestimation should disappear as the time scale over which light levels are averaged is increased. However, our results do not confirm these expectations. The fact that the model did not exhibit a systematic error in simulating GPP variations when applied at the daily time scale suggests that the day-to-day variability in light levels is relatively small compared to the within-day variability.
+A further simplification is that investment in electron transport capacity (expressed by \jmax ) and investments in the carboxylation capacity (expressed by \vcmax ) are coordinated so that for conditions with which the model is forced (here, monthly means of daily averages), photosynthesis operates at the co-limitation point of the light- and Rubisco-limited assimilation rates and an effective linear relationship between absorbed light and mean assimilation emerges. This assumption follows from the \textit{coordination hypothesis} \citep{chen93, haxeltine96}, which itself can be understood as an optimality principle \citep{haxeltine96}, and is well supported by observations \citep{maire12po}. However, this coordination is contingent on the time scale at which photosynthetic acclimation occurs, which is not known precisely  \citep{smithdukes13gcb, way14}. By simulating $\chi$ usingh monthly mean meteorological variables, we assume a monthly time scale of acclimation. This is probably a conservative estimate \citep{smithdukes17, veres84}. Considering the concave relationship of assimilation rates and absorbed light that follows from the FvCB model for a given \jmax , linearly scaling a given monthly LUE term with daily varying absorbed light levels should lead to an overestimation of assimilation rates at high light levels. This overestimation should disappear as the time scale over which light levels are averaged is increased. However, our results do not confirm these expectations (Fig. \ref{fig:modobs_anomalies}). The fact that the model did not exhibit a systematic error in simulating GPP variations when applied at the daily time scale is probably due to the fact that day-to-day variability in light levels is relatively small compared to the within-day variability and the non-linearity between $A$ and daily varying light levels does not play an important role.
 
 \begin{figure}[t]
 \includegraphics[width=8.3cm]{fig/hist_anomalies.pdf}
@@ -691,8 +686,9 @@ A further simplification is that investment in electron transport capacity (expr
 \conclusions
 The P-model provides a simple, parameter-sparse but powerful method to predict photosynthetic capacity and light use efficiency across a wide range of climatic conditions and vegetation types. It provides a basis for a terrestrial light use efficiency model driven by remotely sensed vegetation greenness. Using optimality principles for the formulation of the P-model reduces its dependence on uncertain or vegetation type-specific parameters and enables robust predictions of GPP and its variations through the seasons, between years, and across space. Further work is required to develop a distinct treatment of C$_4$ vegetation for global applications and additional evaluations are needed to examine the P-model's sensitivity to increasing \coo . We have shown that accounting for the effects of low soil moisture and the reduction in the quantum yield efficiency under low temperatures improves model performance. There is potential to include below-ground water limitation effects in the mechanistic optimality framework of the P-model. 
 
-\codedataavailability{The P-model is implemented as an R package (\textit{rpmodel}) and available through \url{https://stineb.github.io/rpmodel/}. The R package will be made available through CRAN. Code for all evaluations presented here is available through \url{https://github.com/stineb/eval_pmodel}. Model outputs are available on \textit{Zenodo} \url{http://doi.org/10.5281/zenodo.3247930}.}
+\codedataavailability{The P-model is implemented as an R package (\textit{rpmodel}) and available through CRAN and Zenodo \citep{rpmodel_zenodo}. A documentation is on \url{https://stineb.github.io/rpmodel/}. Code for all evaluations presented here is available through \url{https://github.com/stineb/eval_pmodel}. The current \textit{rpmodel} code version, producing outputs consistent with results shown here, is v1.0.3. Model outputs are available on \textit{Zenodo} \citep{eval_pmodel_data}.}
 
+\clearpage
 
 \appendix
 \section{Site information}
@@ -1109,37 +1105,33 @@ The \textit{rpmodel} R package provides an implementation of the P-model as desc
   \tophline
   Site & Lon. & Lat. & Period & Veg. & Clim. & N & Calib. & Reference \\ 
   \middlehline
-  AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 446 &  & \citet{AR-SLu} \\ 
-  AR-Vir & -56.19 & -28.24 & 2009-2012 & ENF & Csb & 749 & Y & \citet{AR-Vir} \\ 
-  AT-Neu & 11.32 & 47.12 & 2002-2012 & GRA & Dfc & 3243 &  & \citet{AT-Neu} \\ 
+  AR-SLu & -66.46 & -33.46 & 2009-2011 & MF & Bwk & 448 &  & \citet{AR-SLu} \\ 
+  AR-Vir & -56.19 & -28.24 & 2009-2012 & ENF & Csb & 747 & Y & \citet{AR-Vir} \\ 
+  AT-Neu & 11.32 & 47.12 & 2002-2012 & GRA & Dfc & 3709 &  & \citet{AT-Neu} \\ 
   AU-Ade & 131.12 & -13.08 & 2007-2009 & WSA & Aw & 532 & Y & \citet{AU-Ade} \\ 
-  AU-ASM & 133.25 & -22.28 & 2010-2013 & ENF & BSh & 1045 & Y & \citet{AU-ASM} \\ 
-  AU-Cpr & 140.59 & -34.00 & 2010-2014 & SAV & BSk & 1370 &  & \citet{AU-Cpr} \\ 
+  AU-ASM & 133.25 & -22.28 & 2010-2013 & ENF & BSh & 953 & Y & \citet{AU-ASM} \\ 
+  AU-Cpr & 140.59 & -34.00 & 2010-2014 & SAV & BSk & 1412 &  & \citet{AU-Cpr} \\ 
   AU-Cum & 150.72 & -33.61 & 2012-2014 & EBF & Cfa & 744 &  & \citet{AU-XXX} \\ 
-  AU-DaP & 131.32 & -14.06 & 2007-2013 & GRA & Aw & 1402 & Y & \citet{AU-DaP} \\ 
-  AU-DaS & 131.39 & -14.16 & 2008-2014 & SAV & Aw & 2265 & Y & \citet{AU-DaS} \\ 
-  AU-Dry & 132.37 & -15.26 & 2008-2014 & SAV & Aw & 1598 & Y & \citet{AU-Dry} \\ 
-  AU-Emr & 148.47 & -23.86 & 2011-2013 & GRA & Bwk & 755 &  & \citet{AU-Emr} \\ 
-  AU-Fog & 131.31 & -12.55 & 2006-2008 & WET & Aw & 878 & Y & \citet{AU-Fog} \\ 
+  AU-DaP & 131.32 & -14.06 & 2007-2013 & GRA & Aw & 1820 & Y & \citet{AU-DaP} \\ 
+  AU-DaS & 131.39 & -14.16 & 2008-2014 & SAV & Aw & 2230 & Y & \citet{AU-DaS} \\ 
+  AU-Dry & 132.37 & -15.26 & 2008-2014 & SAV & Aw & 1600 & Y & \citet{AU-Dry} \\ 
+  AU-Emr & 148.47 & -23.86 & 2011-2013 & GRA & Bwk & 812 &  & \citet{AU-Emr} \\ 
   AU-Gin & 115.71 & -31.38 & 2011-2014 & WSA & Csa & 942 & Y & \citet{AU-XXX} \\ 
-  AU-GWW & 120.65 & -30.19 & 2013-2014 & SAV & Bwk & 663 &  & \citet{AU-GWW} \\ 
+  AU-GWW & 120.65 & -30.19 & 2013-2014 & SAV & Bwk & 664 &  & \citet{AU-GWW} \\ 
   AU-Lox & 140.66 & -34.47 & 2008-2009 & DBF & Bsh & 273 &  & \citet{AU-Lox} \\ 
-  AU-RDF & 132.48 & -14.56 & 2011-2013 & WSA & Bwh & 431 &  & \citet{AU-RDF} \\ 
+  AU-RDF & 132.48 & -14.56 & 2011-2013 & WSA & Bwh & 571 &  & \citet{AU-RDF} \\ 
   AU-Rig & 145.58 & -36.65 & 2011-2014 & GRA & Cfb & 1130 &  & \citet{AU-XXX} \\ 
   AU-Rob & 145.63 & -17.12 & 2014-2014 & EBF & Csb & 337 &  & \citet{AU-XXX} \\ 
-  AU-Stp & 133.35 & -17.15 & 2008-2014 & GRA & BSh & 1318 & Y & \citet{AU-Stp} \\ 
-  AU-TTE & 133.64 & -22.29 & 2012-2013 & OSH & BWh &  94 &  & \citet{AU-TTE} \\ 
-  AU-Tum & 148.15 & -35.66 & 2001-2014 & EBF & Cfb & 4335 &  & \citet{AU-Tum} \\ 
-  AU-Wac & 145.19 & -37.43 & 2005-2008 & EBF & Cfb & 979 &  & \citet{AU-Wac} \\ 
-  AU-Whr & 145.03 & -36.67 & 2011-2014 & EBF & Cfb & 1065 & Y & \citet{AU-Whr} \\ 
-  AU-Wom & 144.09 & -37.42 & 2010-2012 & EBF & Cfb & 934 & Y & \citet{AU-Wom} \\ 
-  AU-Ync & 146.29 & -34.99 & 2012-2014 & GRA & BSk & 392 &  & \citet{AU-Ync} \\ 
-  BE-Bra & 4.52 & 51.31 & 1996-2014 & MF & Cfb & 4208 & Y & \citet{BE-Bra} \\ 
-  BE-Vie & 6.00 & 50.31 & 1996-2014 & MF & Cfb & 4733 & Y & \citet{BE-Vie} \\ 
-  BR-Sa3 & -54.97 & -3.02 & 2000-2004 & EBF & Am & 1206 &  & \citet{BR-Sa3} \\ 
-  CA-Man & -98.48 & 55.88 & 1994-2008 & ENF & Dfc & 1411 &  & \citet{CA-Man} \\ 
-  CA-NS1 & -98.48 & 55.88 & 2001-2005 & ENF & Dfc & 771 &  & \citet{CA-NS} \\ 
-  CA-NS2 & -98.52 & 55.91 & 2001-2005 & ENF & Dfc & 873 &  & \citet{CA-NS} \\ 
+  AU-Stp & 133.35 & -17.15 & 2008-2014 & GRA & BSh & 1951 & Y & \citet{AU-Stp} \\ 
+  AU-TTE & 133.64 & -22.29 & 2012-2013 & OSH & BWh & 475 &  & \citet{AU-TTE} \\ 
+  AU-Tum & 148.15 & -35.66 & 2001-2014 & EBF & Cfb & 4346 &  & \citet{AU-Tum} \\ 
+  AU-Wac & 145.19 & -37.43 & 2005-2008 & EBF & Cfb & 976 &  & \citet{AU-Wac} \\ 
+  AU-Whr & 145.03 & -36.67 & 2011-2014 & EBF & Cfb & 1064 & Y & \citet{AU-Whr} \\ 
+  AU-Wom & 144.09 & -37.42 & 2010-2012 & EBF & Cfb & 935 & Y & \citet{AU-Wom} \\ 
+  AU-Ync & 146.29 & -34.99 & 2012-2014 & GRA & BSk & 475 &  & \citet{AU-Ync} \\ 
+  BE-Vie &   6.00 & 50.31 & 1996-2014 & MF & Cfb & 4910 & Y & \citet{BE-Vie} \\ 
+  BR-Sa3 & -54.97 & -3.02 & 2000-2004 & EBF & Am & 1192 &  & \citet{BR-Sa3} \\ 
+  CA-Man & -98.48 & 55.88 & 1994-2008 & ENF & Dfc & 1910 &  & \citet{CA-Man} \\ 
     \bottomhline
 \end{tabular}
 \label{tab:sites}
@@ -1152,37 +1144,38 @@ The \textit{rpmodel} R package provides an implementation of the P-model as desc
   \tophline
   Site & Lon. & Lat. & Period & Veg. & Clim. & N & Calib. & Reference \\ 
   \middlehline  
-  CA-NS3 & -98.38 & 55.91 & 2001-2005 & ENF & Dfc & 1069 &  & \citet{CA-NS} \\ 
-  CA-NS4 & -98.38 & 55.91 & 2002-2005 & ENF & Dfc & 610 &  & \citet{CA-NS} \\ 
-  CA-NS5 & -98.48 & 55.86 & 2001-2005 & ENF & Dfc & 912 &  & \citet{CA-NS} \\ 
-  CA-NS6 & -98.96 & 55.92 & 2001-2005 & OSH & Dfc & 913 &  & \citet{CA-NS} \\ 
-  CA-NS7 & -99.95 & 56.64 & 2002-2005 & OSH & Dfc & 709 &  & \citet{CA-NS} \\ 
-  CA-Qfo & -74.34 & 49.69 & 2003-2010 & ENF & Dfc & 1812 &  & \citet{CA-Qfo} \\ 
-  CA-SF1 & -105.82 & 54.48 & 2003-2006 & ENF & Dfc & 525 &  & \citet{CA-SF} \\ 
-  CA-SF2 & -105.88 & 54.25 & 2001-2005 & ENF & Dfc & 675 &  & \citet{CA-SF} \\ 
-  CA-SF3 & -106.01 & 54.09 & 2001-2006 & OSH & Dfc & 651 &  & \citet{CA-SF} \\ 
-  CH-Cha & 8.41 & 47.21 & 2005-2014 & GRA & Cfb & 2885 &  & \citet{CH-Cha} \\ 
-  CH-Dav & 9.86 & 46.82 & 1997-2014 & ENF & ET & 4444 &  & \citet{CH-Dav} \\ 
-  CH-Fru & 8.54 & 47.12 & 2005-2014 & GRA & Cfb & 2566 & Y & \citet{CH-Fru} \\ 
-  CH-Lae & 8.37 & 47.48 & 2004-2014 & MF & Cfb & 3204 & Y & \citet{CH-Lae} \\ 
-  CH-Oe1 & 7.73 & 47.29 & 2002-2008 & GRA & Cfb & 2104 & Y & \citet{CH-Oe1} \\ 
-  CN-Cha & 128.10 & 42.40 & 2003-2005 & MF & Dwb & 982 &  & \citet{CN-Cha} \\ 
-  CN-Cng & 123.51 & 44.59 & 2007-2010 & GRA & Bsh & 1113 & Y & \citet{CN-Cng} \\ 
-  CN-Dan & 91.07 & 30.50 & 2004-2005 & GRA & ET & 647 &  & \citet{CN-Dan} \\ 
-  CN-Din & 112.54 & 23.17 & 2003-2005 & EBF & Cfa & 917 &  & \citet{CN-Din} \\ 
-  CN-Du2 & 116.28 & 42.05 & 2006-2008 & GRA & Dwb & 616 &  & \citet{CN-Du2} \\ 
-  CN-Ha2 & 101.33 & 37.61 & 2003-2005 & WET & ET & 1030 &  & \citet{CN-Ha2} \\ 
-  CN-HaM & 101.18 & 37.37 & 2002-2004 & GRA &  & 688 &  & \citet{CN-HaM} \\ 
-  CN-Qia & 115.06 & 26.74 & 2003-2005 & ENF & Cfa & 992 & Y & \citet{CN-Qia} \\ 
-  CN-Sw2 & 111.90 & 41.79 & 2010-2012 & GRA & Bsh & 237 &  & \citet{CN-Sw2} \\ 
-  CZ-BK1 & 18.54 & 49.50 & 2004-2008 & ENF & Dfb & 1100 &  & \citet{CZ-BK1} \\ 
-  CZ-BK2 & 18.54 & 49.49 & 2004-2006 & GRA & Dfb & 161 &  & \citet{CZ-BK2} \\ 
-  CZ-wet & 14.77 & 49.02 & 2006-2014 & WET & Cfb & 2605 & Y & \citet{CZ-wet} \\ 
-  DE-Gri & 13.51 & 50.95 & 2004-2014 & GRA & Cfb & 3387 & Y & \citet{DE-Gri} \\ 
-  DE-Hai & 10.45 & 51.08 & 2000-2012 & DBF & Cfb & 3435 & Y & \citet{DE-Hai} \\ 
-  DE-Lkb & 13.30 & 49.10 & 2009-2013 & ENF & Cfb & 1001 &  & \citet{DE-Lkb} \\ 
-  DE-Obe & 13.72 & 50.78 & 2008-2014 & ENF & Cfb & 2043 & Y & \citet{DE-Obe} \\ 
-  DE-RuR & 6.30 & 50.62 & 2011-2014 & GRA & Cfb & 1195 & Y & \citet{DE-RuR} \\ 
+  CA-NS1 & -98.48 & 55.88 & 2001-2005 & ENF & Dfc & 1067 &  & NA \\ 
+  CA-NS2 & -98.52 & 55.91 & 2001-2005 & ENF & Dfc & 1123 &  & NA \\ 
+  CA-NS3 & -98.38 & 55.91 & 2001-2005 & ENF & Dfc & 1395 &  & NA \\ 
+  CA-NS4 & -98.38 & 55.91 & 2002-2005 & ENF & Dfc & 756 &  & NA \\ 
+  CA-NS5 & -98.48 & 55.86 & 2001-2005 & ENF & Dfc & 1245 &  & NA \\ 
+  CA-NS6 & -98.96 & 55.92 & 2001-2005 & OSH & Dfc & 1190 &  & NA \\ 
+  CA-NS7 & -99.95 & 56.64 & 2002-2005 & OSH & Dfc & 929 &  & NA \\ 
+  CA-Qfo & -74.34 & 49.69 & 2003-2010 & ENF & Dfc & 2416 &  & \citet{CA-Qfo} \\ 
+  CA-SF1 & -105.82 & 54.48 & 2003-2006 & ENF & Dfc & 526 &  & NA \\ 
+  CA-SF2 & -105.88 & 54.25 & 2001-2005 & ENF & Dfc & 676 &  & NA \\ 
+  CA-SF3 & -106.01 & 54.09 & 2001-2006 & OSH & Dfc & 660 &  & NA \\ 
+  CH-Cha & 8.41 & 47.21 & 2005-2014 & GRA & Cfb & 2944 &  & \citet{CH-Cha} \\ 
+  CH-Dav & 9.86 & 46.82 & 1997-2014 & ENF & ET & 4973 &  & \citet{CH-Dav} \\ 
+  CH-Fru & 8.54 & 47.12 & 2005-2014 & GRA & Cfb & 2861 & Y & \citet{CH-Fru} \\ 
+  CH-Lae & 8.37 & 47.48 & 2004-2014 & MF & Cfb & 3551 & Y & \citet{CH-Lae} \\ 
+  CH-Oe1 & 7.73 & 47.29 & 2002-2008 & GRA & Cfb & 2184 & Y & \citet{CH-Oe1} \\ 
+  CN-Cha & 128.10 & 42.40 & 2003-2005 & MF & Dwb & 1019 &  & \citet{CN-Cha} \\ 
+  CN-Cng & 123.51 & 44.59 & 2007-2010 & GRA & Bsh & 1071 & Y & NA \\ 
+  CN-Dan & 91.07 & 30.50 & 2004-2005 & GRA & ET & 680 &  & \citet{CN-Dan} \\ 
+  CN-Din & 112.54 & 23.17 & 2003-2005 & EBF & Cfa & 921 &  & \citet{CN-Din} \\ 
+  CN-Du2 & 116.28 & 42.05 & 2006-2008 & GRA & Dwb & 595 &  & \citet{CN-Du2} \\ 
+  CN-HaM & 101.18 & 37.37 & 2002-2004 & GRA &  & 949 &  & \citet{CN-HaM} \\ 
+  CN-Qia & 115.06 & 26.74 & 2003-2005 & ENF & Cfa & 995 & Y & \citet{CN-Qia} \\ 
+  CN-Sw2 & 111.90 & 41.79 & 2010-2012 & GRA & Bsh & 382 &  & \citet{CN-Sw2} \\ 
+  CZ-BK1 & 18.54 & 49.50 & 2004-2008 & ENF & Dfb & 1185 &  & \citet{CZ-BK1} \\ 
+  CZ-BK2 & 18.54 & 49.49 & 2004-2006 & GRA & Dfb & 163 &  & NA  \\ 
+  DE-Gri & 13.51 & 50.95 & 2004-2014 & GRA & Cfb & 3642 & Y & \citet{DE-Gri} \\ 
+  DE-Hai & 10.45 & 51.08 & 2000-2012 & DBF & Cfb & 4247 & Y & \citet{DE-Hai} \\ 
+  DE-Lkb & 13.30 & 49.10 & 2009-2013 & ENF & Cfb & 1214 &  & \citet{DE-Lkb} \\ 
+  DE-Obe & 13.72 & 50.78 & 2008-2014 & ENF & Cfb & 2260 & Y & NA \\ 
+  DE-RuR & 6.30 & 50.62 & 2011-2014 & GRA & Cfb & 1227 & Y & \citet{DE-RuR} \\ 
+
     \bottomhline
 \end{tabular}
 \label{tab:sites1}
@@ -1195,37 +1188,30 @@ The \textit{rpmodel} R package provides an implementation of the P-model as desc
   \tophline
   Site & Lon. & Lat. & Period & Veg. & Clim. & N & Calib. & Reference \\ 
   \middlehline  
-  DE-SfN & 11.33 & 47.81 & 2012-2014 & WET & Cfb & 750 &  & \citet{DE-SfN} \\ 
-  DE-Spw & 14.03 & 51.89 & 2010-2014 & WET & Cfb & 1339 & Y & \citet{DE-Spw} \\ 
-  DE-Tha & 13.57 & 50.96 & 1996-2014 & ENF & Cfb & 4887 & Y & \citet{DE-Tha} \\ 
-  DK-NuF & -51.39 & 64.13 & 2008-2014 & WET & ET & 882 & Y & \citet{DK-NuF} \\ 
-  DK-Sor & 11.64 & 55.49 & 1996-2014 & DBF & Cfb & 4483 & Y & \citet{DK-Sor} \\ 
-  DK-ZaF & -20.55 & 74.48 & 2008-2011 & WET & ET & 381 &  & \citet{DK-ZaF} \\ 
-  DK-ZaH & -20.55 & 74.47 & 2000-2014 & GRA & ET & 1696 &  & \citet{DK-ZaH} \\ 
-  ES-LgS & -2.97 & 37.10 & 2007-2009 & OSH & Csa & 794 &  & \citet{ES-LgS} \\ 
-  ES-Ln2 & -3.48 & 36.97 & 2009-2009 & OSH & Csa &  69 &  & \citet{ES-Ln2} \\ 
-  FI-Hyy & 24.30 & 61.85 & 1996-2014 & ENF & Dfc & 4222 & Y & \citet{FI-Hyy} \\ 
-  FI-Lom & 24.21 & 68.00 & 2007-2009 & WET & Dfc & 575 &  & \citet{FI-Lom} \\ 
-  FI-Sod & 26.64 & 67.36 & 2001-2014 & ENF & Dfc & 2816 & Y & \citet{FI-Sod} \\ 
-  FR-Fon & 2.78 & 48.48 & 2005-2014 & DBF & Cfb & 2827 & Y & \citet{FR-Fon} \\ 
-  FR-LBr & -0.77 & 44.72 & 1996-2008 & ENF & Cfb & 2800 & Y & \citet{FR-LBr} \\ 
-  FR-Pue & 3.60 & 43.74 & 2000-2014 & EBF & Csa & 4723 & Y & \citet{FR-Pue} \\ 
-  GF-Guy & -52.92 & 5.28 & 2004-2014 & EBF & Af & 3719 &  & \citet{GF-Guy} \\ 
+  DE-Tha & 13.57 & 50.96 & 1996-2014 & ENF & Cfb & 5141 & Y & \citet{DE-Tha} \\ 
+  DK-Sor & 11.64 & 55.49 & 1996-2014 & DBF & Cfb & 4936 & Y & \citet{DK-Sor} \\ 
+  ES-LgS & -2.97 & 37.10 & 2007-2009 & OSH & Csa & 833 &  & \citet{ES-LgS} \\ 
+  ES-Ln2 & -3.48 & 36.97 & 2009-2009 & OSH & Csa & 182 &  & \citet{ES-Ln2} \\ 
+  FI-Hyy & 24.30 & 61.85 & 1996-2014 & ENF & Dfc & 4857 & Y & \citet{FI-Hyy} \\ 
+  FR-Fon & 2.78 & 48.48 & 2005-2014 & DBF & Cfb & 3262 & Y & \citet{FR-Fon} \\ 
+  FR-LBr & -0.77 & 44.72 & 1996-2008 & ENF & Cfb & 2814 & Y & \citet{FR-LBr} \\ 
+  FR-Pue & 3.60 & 43.74 & 2000-2014 & EBF & Csa & 4722 & Y & \citet{FR-Pue} \\ 
+  GF-Guy & -52.92 & 5.28 & 2004-2014 & EBF & Af & 3609 &  & \citet{GF-Guy} \\ 
   IT-CA1 & 12.03 & 42.38 & 2011-2014 & DBF & Csa & 1036 &  & \citet{IT-CA} \\ 
   IT-CA3 & 12.02 & 42.38 & 2011-2014 & DBF & Csa & 913 &  & \citet{IT-CA} \\ 
-  IT-Col & 13.59 & 41.85 & 1996-2014 & DBF & Cfa & 2822 & Y & \citet{IT-Col} \\ 
+  IT-Col & 13.59 & 41.85 & 1996-2014 & DBF & Cfa & 3350 & Y & \citet{IT-Col} \\ 
   IT-Cp2 & 12.36 & 41.70 & 2012-2014 & EBF & Csa & 764 & Y & \citet{IT-Cp2} \\ 
-  IT-Cpz & 12.38 & 41.71 & 1997-2009 & EBF & Csa & 2601 & Y & \citet{IT-Cpz} \\ 
-  IT-Isp & 8.63 & 45.81 & 2013-2014 & DBF & Cfb & 588 & Y & \citet{IT-Isp} \\ 
-  IT-Lav & 11.28 & 45.96 & 2003-2014 & ENF & Cfb & 3919 & Y & \citet{IT-Lav} \\ 
-  IT-MBo & 11.05 & 46.01 & 2003-2013 & GRA & Dfb & 3236 & Y & \citet{IT-MBo} \\ 
-  IT-Noe & 8.15 & 40.61 & 2004-2014 & CSH & Cwb & 3083 & Y & \citet{IT-Noe} \\ 
-  IT-PT1 & 9.06 & 45.20 & 2002-2004 & DBF & Cfa & 828 & Y & \citet{IT-PT1} \\ 
-  IT-Ren & 11.43 & 46.59 & 1998-2013 & ENF & Dfc & 3043 & Y & \citet{IT-Ren} \\ 
-  IT-Ro2 & 11.92 & 42.39 & 2002-2012 & DBF & Csa & 2671 &  & \citet{IT-Ro2} \\ 
-  IT-SR2 & 10.29 & 43.73 & 2013-2014 & ENF & Csa & 668 & Y & \citet{IT-SR2} \\ 
-  IT-SRo & 10.28 & 43.73 & 1999-2012 & ENF & Csa & 3791 & Y & \citet{IT-SRo} \\ 
-  IT-Tor & 7.58 & 45.84 & 2008-2014 & GRA & Dfc & 1487 & Y & \citet{IT-Tor} \\ 
+  IT-Isp & 8.63 & 45.81 & 2013-2014 & DBF & Cfb & 641 & Y & \citet{IT-Isp} \\ 
+  IT-La2 & 11.29 & 45.95 & 2000-2002 & ENF & Cfb & 513 &  & \citet{IT-La2} \\ 
+  IT-Lav & 11.28 & 45.96 & 2003-2014 & ENF & Cfb & 3947 & Y & \citet{IT-Lav} \\ 
+  IT-MBo & 11.05 & 46.01 & 2003-2013 & GRA & Dfb & 3682 & Y & \citet{IT-MBo} \\ 
+  IT-Noe & 8.15 & 40.61 & 2004-2014 & CSH & Cwb & 3070 & Y & \citet{IT-Noe} \\ 
+  IT-PT1 & 9.06 & 45.20 & 2002-2004 & DBF & Cfa & 891 & Y & \citet{IT-PT1} \\ 
+  IT-Ren & 11.43 & 46.59 & 1998-2013 & ENF & Dfc & 3405 & Y & \citet{IT-Ren} \\ 
+  IT-Ro2 & 11.92 & 42.39 & 2002-2012 & DBF & Csa & 3113 &  & \citet{IT-Ro2} \\ 
+  IT-SR2 & 10.29 & 43.73 & 2013-2014 & ENF & Csa & 675 & Y & \citet{IT-SR2} \\ 
+  IT-SRo & 10.28 & 43.73 & 1999-2012 & ENF & Csa & 3797 & Y & \citet{IT-SRo} \\ 
+  IT-Tor & 7.58 & 45.84 & 2008-2014 & GRA & Dfc & 2172 & Y & \citet{IT-Tor} \\ 
     \bottomhline
 \end{tabular}
 \label{tab:sites2}
@@ -1240,35 +1226,29 @@ The \textit{rpmodel} R package provides an implementation of the P-model as desc
   \middlehline  
   JP-MBF & 142.32 & 44.39 & 2003-2005 & DBF & Dfb & 471 &  & \citet{JP-XXX} \\ 
   JP-SMF & 137.08 & 35.26 & 2002-2006 & MF & Cfa & 1288 & Y & \citet{JP-XXX} \\ 
-  NL-Hor & 5.07 & 52.24 & 2004-2011 & GRA & Cfb & 2131 & Y & \citet{NL-Hor} \\ 
-  NL-Loo & 5.74 & 52.17 & 1996-2013 & ENF & Cfb & 4507 & Y & \citet{NL-Loo} \\ 
-  NO-Adv & 15.92 & 78.19 & 2011-2014 & WET & ET & 151 &  & \citet{NO-Adv} \\ 
-  NO-Blv & 11.83 & 78.92 & 2008-2009 & SNO & ET & 112 &  & \citet{NO-Blv} \\ 
-  RU-Che & 161.34 & 68.61 & 2002-2005 & WET & Dfc & 313 &  & \citet{RU-Che} \\ 
-  RU-Cok & 147.49 & 70.83 & 2003-2014 & OSH & Dfc & 985 &  & \citet{RU-Cok} \\ 
-  RU-Fyo & 32.92 & 56.46 & 1998-2014 & ENF & Dfb & 4042 & Y & \citet{RU-Fyo} \\ 
-  RU-Ha1 & 90.00 & 54.73 & 2002-2004 & GRA & Dfc & 519 &  & \citet{RU-Ha1} \\ 
-  SD-Dem & 30.48 & 13.28 & 2005-2009 & SAV & BWh & 762 & Y & \citet{SD-Dem} \\ 
-  SN-Dhr & -15.43 & 15.40 & 2010-2013 & SAV & BWh & 686 & Y & \citet{SN-Dhr} \\ 
-  US-AR1 & -99.42 & 36.43 & 2009-2012 & GRA & Cfa & 1011 &  & \citet{US-AR} \\ 
-  US-AR2 & -99.60 & 36.64 & 2009-2012 & GRA & Cfa & 882 &  & \citet{US-AR} \\ 
-  US-ARb & -98.04 & 35.55 & 2005-2006 & GRA & Cfa & 414 &  & \citet{US-AR} \\ 
-  US-ARc & -98.04 & 35.55 & 2005-2006 & GRA & Cfa & 488 &  & \citet{US-AR} \\ 
-  US-Blo & -120.63 & 38.90 & 1997-2007 & ENF & Csb & 1827 &  & \citet{US-Blo} \\ 
-  US-Cop & -109.39 & 38.09 & 2001-2007 & GRA & BSk & 1067 &  & \citet{US-Cop} \\ 
-  US-GBT & -106.24 & 41.37 & 1999-2006 & ENF & Dfc & 541 &  & \citet{US-GBT} \\ 
-  US-GLE & -106.24 & 41.37 & 2004-2014 & ENF & Dfb & 2254 & Y & \citet{US-GLE} \\ 
-  US-Ha1 & -72.17 & 42.54 & 1991-2012 & DBF & Dfb & 3259 & Y & \citet{US-Ha1} \\ 
-  US-KS2 & -80.67 & 28.61 & 2003-2006 & CSH & Cfa & 1263 &  & \citet{US-KS2} \\ 
-  US-Los & -89.98 & 46.08 & 2000-2014 & WET & Dfb & 2071 & Y & \citet{US-Los} \\ 
-  US-Me1 & -121.50 & 44.58 & 2004-2005 & ENF & Csb & 287 &  & \citet{US-Me1} \\ 
-  US-Me2 & -121.56 & 44.45 & 2002-2014 & ENF & Csb & 3525 & Y & \citet{US-Me2} \\ 
-  US-Me6 & -121.61 & 44.32 & 2010-2014 & ENF & Csb & 1283 &  & \citet{US-Me6} \\ 
-  US-MMS & -86.41 & 39.32 & 1999-2014 & DBF & Cfa & 3524 & Y & \citet{US-MMS} \\ 
-  US-Myb & -121.77 & 38.05 & 2010-2014 & WET & Csb & 1153 &  & \citet{US-Myb} \\ 
-  US-NR1 & -105.55 & 40.03 & 1998-2014 & ENF & Dfc & 4084 &  & \citet{US-NR1} \\ 
-  US-PFa & -90.27 & 45.95 & 1995-2014 & MF & Dfb & 3679 &  & \citet{US-PFa} \\ 
-  US-Prr & -147.49 & 65.12 & 2010-2013 & ENF & Dfc & 546 &  & \citet{US-Prr} \\ 
+  NL-Hor & 5.07 & 52.24 & 2004-2011 & GRA & Cfb & 2188 & Y & \citet{NL-Hor} \\ 
+  NL-Loo & 5.74 & 52.17 & 1996-2013 & ENF & Cfb & 4671 & Y & \citet{NL-Loo} \\ 
+  RU-Fyo & 32.92 & 56.46 & 1998-2014 & ENF & Dfb & 4635 & Y & \citet{RU-Fyo} \\ 
+  RU-Ha1 & 90.00 & 54.73 & 2002-2004 & GRA & Dfc & 567 &  & \citet{RU-Ha1} \\ 
+  SD-Dem & 30.48 & 13.28 & 2005-2009 & SAV & BWh & 770 & Y & \citet{SD-Dem} \\ 
+  SN-Dhr & -15.43 & 15.40 & 2010-2013 & SAV & BWh & 688 & Y & \citet{SN-Dhr} \\ 
+  US-AR1 & -99.42 & 36.43 & 2009-2012 & GRA & Cfa & 1060 &  & NA \\ 
+  US-AR2 & -99.60 & 36.64 & 2009-2012 & GRA & Cfa & 981 &  & NA \\ 
+  US-ARb & -98.04 & 35.55 & 2005-2006 & GRA & Cfa & 542 &  & NA \\ 
+  US-ARc & -98.04 & 35.55 & 2005-2006 & GRA & Cfa & 582 &  & NA \\ 
+  US-Blo & -120.63 & 38.90 & 1997-2007 & ENF & Csb & 1859 &  & \citet{US-Blo} \\ 
+  US-Cop & -109.39 & 38.09 & 2001-2007 & GRA & BSk & 1186 &  & \citet{US-Cop} \\ 
+  US-GBT & -106.24 & 41.37 & 1999-2006 & ENF & Dfc & 615 &  & \citet{US-GBT} \\ 
+  US-GLE & -106.24 & 41.37 & 2004-2014 & ENF & Dfb & 3134 & Y & \citet{US-GLE} \\ 
+  US-Ha1 & -72.17 & 42.54 & 1991-2012 & DBF & Dfb & 3932 & Y & \citet{US-Ha1} \\ 
+  US-KS2 & -80.67 & 28.61 & 2003-2006 & CSH & Cfa & 1254 &  & \citet{US-KS2} \\ 
+  US-Me1 & -121.50 & 44.58 & 2004-2005 & ENF & Csb & 284 &  & \citet{US-Me1} \\ 
+  US-Me2 & -121.56 & 44.45 & 2002-2014 & ENF & Csb & 3581 & Y & \citet{US-Me2} \\ 
+  US-Me6 & -121.61 & 44.32 & 2010-2014 & ENF & Csb & 1298 &  & \citet{US-Me6} \\ 
+  US-MMS & -86.41 & 39.32 & 1999-2014 & DBF & Cfa & 4865 & Y & \citet{US-MMS} \\ 
+  US-NR1 & -105.55 & 40.03 & 1998-2014 & ENF & Dfc & 5115 &  & \citet{US-NR1} \\ 
+  US-PFa & -90.27 & 45.95 & 1995-2014 & MF & Dfb & 4749 &  & \citet{US-PFa} \\ 
+  US-Prr & -147.49 & 65.12 & 2010-2013 & ENF & Dfc & 811 &  & \citet{US-Prr} \\ 
     \bottomhline
 \end{tabular}
 \label{tab:sites3}
@@ -1281,25 +1261,23 @@ The \textit{rpmodel} R package provides an implementation of the P-model as desc
   \tophline
   Site & Lon. & Lat. & Period & Veg. & Clim. & N & Calib. & Reference \\ 
   \middlehline  
-  US-SRG & -110.83 & 31.79 & 2008-2014 & GRA & BSk & 2146 & Y & \citet{US-SRG} \\ 
-  US-SRM & -110.87 & 31.82 & 2004-2014 & WSA & BSk & 3093 & Y & \citet{US-SRM} \\ 
-  US-Syv & -89.35 & 46.24 & 2001-2014 & MF & Dfb & 2045 & Y & \citet{US-Syv} \\ 
-  US-Ton & -120.97 & 38.43 & 2001-2014 & WSA & Csa & 4321 & Y & \citet{US-Ton} \\ 
-  US-Tw1 & -121.65 & 38.11 & 2012-2014 & WET & Csa & 688 &  & \citet{US-Tw1} \\ 
-  US-Tw4 & -121.64 & 38.10 & 2013-2014 & WET & Csa & 325 &  & \citet{US-Tw4} \\ 
+  US-SRG & -110.83 & 31.79 & 2008-2014 & GRA & BSk & 2117 & Y & \citet{US-SRG} \\ 
+  US-SRM & -110.87 & 31.82 & 2004-2014 & WSA & BSk & 3354 & Y & \citet{US-SRM} \\ 
+  US-Syv & -89.35 & 46.24 & 2001-2014 & MF & Dfb & 2365 & Y & \citet{US-Syv} \\ 
+  US-Ton & -120.97 & 38.43 & 2001-2014 & WSA & Csa & 4336 & Y & \citet{US-Ton} \\ 
   US-UMB & -84.71 & 45.56 & 2000-2014 & DBF & Dfb & 4015 & Y & \citet{US-UM} \\ 
   US-UMd & -84.70 & 45.56 & 2007-2014 & DBF & Dfb & 2050 & Y & \citet{US-UM} \\ 
-  US-Var & -120.95 & 38.41 & 2000-2014 & GRA & Csa & 2981 & Y & \citet{US-Var} \\ 
-  US-WCr & -90.08 & 45.81 & 1999-2014 & DBF & Dfb & 2333 & Y & \citet{US-WCr} \\ 
-  US-Whs & -110.05 & 31.74 & 2007-2014 & OSH & BSk & 1561 &  & \citet{US-Whs} \\ 
+  US-Var & -120.95 & 38.41 & 2000-2014 & GRA & Csa & 4356 & Y & \citet{US-Var} \\ 
+  US-WCr & -90.08 & 45.81 & 1999-2014 & DBF & Dfb & 3425 & Y & \citet{US-WCr} \\ 
+  US-Whs & -110.05 & 31.74 & 2007-2014 & OSH & BSk & 2233 &  & \citet{US-Whs} \\ 
   US-Wi0 & -91.08 & 46.62 & 2002-2002 & ENF & Dfb & 228 &  & \citet{US-Wi} \\ 
   US-Wi3 & -91.10 & 46.63 & 2002-2004 & DBF & Dfb & 415 &  & \citet{US-Wi} \\ 
   US-Wi4 & -91.17 & 46.74 & 2002-2005 & ENF & Dfb & 712 & Y & \citet{US-Wi} \\ 
   US-Wi6 & -91.30 & 46.62 & 2002-2003 & OSH & Dfb & 351 &  & \citet{US-Wi} \\ 
   US-Wi9 & -91.08 & 46.62 & 2004-2005 & ENF & Dfb & 302 &  & \citet{US-Wi} \\ 
-  US-Wkg & -109.94 & 31.74 & 2004-2014 & GRA & BSk & 2676 &  & \citet{US-Wkg} \\ 
-  ZA-Kru & 31.50 & -25.02 & 2000-2010 & SAV & BSh & 2124 &  & \citet{ZA-Kru} \\ 
-  ZM-Mon & 23.25 & -15.44 & 2000-2009 & DBF & Aw & 641 & Y & \citet{ZM-Mon} \\ 
+  US-Wkg & -109.94 & 31.74 & 2004-2014 & GRA & BSk & 3198 &  & \citet{US-Wkg} \\ 
+  ZA-Kru & 31.50 & -25.02 & 2000-2010 & SAV & BSh & 2439 &  & \citet{ZA-Kru} \\ 
+  ZM-Mon & 23.25 & -15.44 & 2000-2009 & DBF & Aw & 645 & Y & \citet{ZM-Mon} \\ 
   \bottomhline
 \end{tabular}
 \label{tab:sites4}
@@ -1372,7 +1350,7 @@ The \textit{rpmodel} R package provides an implementation of the P-model as desc
 %\disclaimer{TEXT} %% optional section
 
 \begin{acknowledgements}
-B.D.S. was funded by ERC H2020-MSCA-IF-2015, grant number 701329. N.G.S. acknowledges support from Texas Tech University. T.F.K. acknowledges support from the Laboratory Directed Research and Development (LDRD) fund under the auspices of DOE, BER Office of Science at Lawrence Berkeley National Laboratory, and the NASA Terrestrial Ecology Program IDS Award NNH17AE86I. S.P.H. acknowledges support from the ERC-funded project GC 2.0 (Global Change 2.0: Unlocking the past for a clearer future, grant number 694481). I.C.P. acknowledges support from the ERC under the European Union’s Horizon 2020 research and innovation programme (grant agreement no: 787203 REALM). 
+B.D.S. was funded by ERC H2020-MSCA-IF-2015, grant number 701329 and the Swiss National Science Foundation grant no. PCEFP2\textunderscore 181115. N.G.S. acknowledges support from Texas Tech University. T.F.K. acknowledges support from the Laboratory Directed Research and Development (LDRD) fund under the auspices of DOE, BER Office of Science at Lawrence Berkeley National Laboratory, and the NASA Terrestrial Ecology Program IDS Award NNH17AE86I. S.P.H. acknowledges support from the ERC-funded project GC 2.0 (Global Change 2.0: Unlocking the past for a clearer future, grant number 694481). I.C.P. acknowledges support from the ERC under the European Union’s Horizon 2020 research and innovation programme (grant agreement no: 787203 REALM). 
 \end{acknowledgements}
 
 
