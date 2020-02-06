@@ -343,7 +343,7 @@ We used data from 59 sites for model calibration and 126 sites for evaluation (F
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=12cm]{fig/map_sites.pdf}
+    \includegraphics[width=12cm]{fig/f01.pdf}
     \caption{Overview of sites selected for model calibration (green dots) and evaluation (black dots). All sites and additional information are listed in Tab. \ref{tab:sites}. The color key of the map represents aridity, quantified as the ratio of precipitation over potential evapotranspiration from \citet{greve14}.}
     \label{fig:map_sites}
 \end{figure*}
@@ -432,7 +432,7 @@ The bias in GPP (modelled minus observed) was calculated for 20 days before and 
 The calibration of model parameters, done with data from all calibration sites simultaneously, yielded values that closely matched the means across parameter values derived from the out-of-sample calibrations (Fig. \ref{fig:oob}). This confirms the robustness of the calibration and that the model is not overfitted. Similarly for the evaluation metrics, the \rsq\ and RMSE values reported from evaluations against data from all evaluation sites pooled yielded values that closely match the means across the out-of-sample evaluations (each calculated with data from the single left-out site). This analysis also shows that the distribution of the evaluation metrics is skewed, with evaluations against a few sites indicating relatively poor performance (\rsq\ below 0.5 for ZM-Mon, AR-Vir, and FR-Pue), while the most frequent values indicate very good model performance (evaluations at 21 sites giving \rsq\ values of above 0.8). Because the out-of-sample calibrations are computationally very expensive, we performed this analysis only for one setup (FULL) and report evaluation metrics done with pooled data from all evaluation sites for the remainder of the analysis. 
 
 \begin{figure}[!ht]
-    \includegraphics[width=\textwidth]{fig/oob_grid.pdf}
+    \includegraphics[width=\textwidth]{fig/f02.pdf}
     \caption{Out-of-sample calibration and evaluation results. (a-c) Distribution of parameter values (setup FULL) from calibrations where data from one site was left out for each individual calibration. Parameters $\widehat{a_\theta}$ and $\widehat{b_\theta}$ are unitless. (d, e) Distribution of evaluation metrics calculated on data from the left-out site based on simulations with model parameters calibrated on all other sites' data. Solid red vertical lines represent the parameter values calibrated with data from all sites pooled. These are the values reported in Tabs. \ref{tab:rsq} and \ref{tab:rmse} for setup FULL. Dashed red lines represent the mean across values from out-of-bag calibrations and evaluations.}
     \label{fig:oob}
 \end{figure}
@@ -493,7 +493,7 @@ Tables \ref{tab:rsq} and \ref{tab:rmse} provide an overview of model performance
 \end{table*}
 
 \begin{figure*}[t]
-    \includegraphics[width=12cm]{fig/modobs_xdaily.pdf}
+    \includegraphics[width=12cm]{fig/f03.pdf}
     \caption{Correlation of observed and modelled GPP values of all sites pooled, mean over 8-day periods, for the model setup FULL (a) and NULL (b).}
     \label{fig:modobs_xdaily}
 \end{figure*}
@@ -509,7 +509,7 @@ GPP is overestimated during the dry season in climate zones with a marked dry se
 The ORG and BRC models tend to underestimate peak season GPP more strongly compared to the FULL model. This is a direct consequence of the calibration which balances errors across all data points. Across-site average peak-season maximum GPP is accurately captured by the FULL model in most zones (Fig. \ref{fig:season}), except for an underestimation of GPP in zones Aw, Cfa, and Cfb, and an overestimation in zone Csa. Site-level evaluations suggests no clear relationship between peak-season underestimation and vegetation type in zone Cfb. The overestimation of peak-season GPP in zone Csa is caused by a high bias at sites with evergreen broadleaved vegetation (FR-Pue, IT-Cp2, IT-Cpz); sites with other vegetation types show no consistent peak season bias. 
 
  \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{fig/meandoy_byzone.pdf}
+\includegraphics[width=\textwidth]{fig/f04.pdf}
 \caption{Mean seasonal cycle. Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles of all data (multiple sites and years) pooled by climate zone. Coloured lines represent different model setups. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}). Only climate zones are shown here for which data from at least five sites was available.}
     \label{fig:season}
 \end{figure}
@@ -522,7 +522,7 @@ The ORG and BRC models tend to underestimate peak season GPP more strongly compa
 The \rsq\ for simulated GPP, aggregated to annual totals, ranges from 0.60 (ORG) to 0.69 (FULL). The NULL model achieves an \rsq\ of 0.58. Most of the explanatory power of the different models for predicting annual total GPP stems from their power in predicting between-site (``spatial'') variations (Fig. \ref{fig:modobs_spatialannual}). The \rsq\ for spatial variations ranges from 0.63 (ORG) to 0.69 (FULL), and 0.65 for the NULL model. In contrast, inter-annual  variations at a site are poorly simulated (\rsq : 0.05-0.09 for P-model setups, and 0.03 for the NULL model). Inter-annual variations are generally much smaller than between-site (spatial) variations or seasonal variations. Thus, capturing them is challenging. Inter-annual GPP variations are generally better simulated at sites where the variability is high and in particular at dry sites.
 
 \begin{figure}[!ht]
-    \includegraphics[width=\textwidth]{fig/modobs_spatial_annual.pdf}
+    \includegraphics[width=\textwidth]{fig/f05.pdf}
     \caption{Correlation of modelled and observed annual GPP in simulations FULL (a), NULL (b) and FULL\textunderscore EVI (c). The red line and text are based on means across years by site and represents spatial (across-site) variations. Black lines and text are based on annual values, one line for each site. Lines represent linear regressions. $R^2$ and RMSE statistics for annual values (black text) are based on pooled data from all sites. For a perfect fit between modelled and observed annual GPP values, all black lines (representing the linear regression model of annual values for a single site) would lie on the 1:1 line and have a slope of 1. Slopes that deviate substantially from 1, or even are negative, for some sites shows poor model performance in capturing inter-annual variability.}
     \label{fig:modobs_spatialannual}
 \end{figure}
@@ -534,7 +534,7 @@ The \rsq\ for simulated GPP, aggregated to annual totals, ranges from 0.60 (ORG)
 The P-model setups that do not include the soil moisture stress function (ORG and BRC) systematically overestimate GPP during droughts (Fig. \ref{fig:modobs_droughtresponse}). This bias increases sharply at the onset of drought events and continues to increase throughout the drought period. The bias is strongly reduced by applying the empiricial soil moisture stress function (Eq. \ref{eq:soilmstress}) in the FULL model. A small bias remains also in the FULL model. This stems from overestimated values at a few sites (in particular AU-DaP, US-Cop, US-SRG, US-SRM, US-Var, US-Whs, US-Wkg), mostly grasslands and sites in seasonally dry climate zones (Aw, BSk, and Csa, see Fig. \ref{fig:season}), where flux measurements indicate an almost complete shut-down of photosynthetic activity during the dry season. In contrast, the fAPAR data (MODIS FPAR) suggest values substantially greater than zero at these sites during these periods. This suggests either contributions to PAR absorption by photosynthetically inactive tissue, underestimation of LUE sensitivity to dry soils at these sites, or an overestimation of the rooting zone moisture availability by the SPLASH model.
 
 \begin{figure}[t]
-\includegraphics[width=8.3cm]{fig/droughtresponse.pdf}
+\includegraphics[width=8.3cm]{fig/f06.pdf}
     \caption{Bias in simulated GPP during the course of drought events. Simulated GPP is from a simulation with (FULL) and without (BRC) accounting for soil moisture stress. The timing of drought events is taken from \citet{stocker18newphyt} and is identified by an apparent soil moisture-related reduction of observed light use efficiency at 36 FLUXNET sites. The bias is calculated as simulated minus observed GPP. Data from multiple drought events and sites are aligned by the date of drought onset and aggregated across all sites and events (lines for medians, shaded ranges from the 33\% and 66\% quantiles).}
     \label{fig:modobs_droughtresponse}
 \end{figure}
@@ -546,7 +546,7 @@ The P-model setups that do not include the soil moisture stress function (ORG an
 Tests of the sensitivity of model performance to alternative fAPAR forcing datasets show that the difference between splined and linearly-interpolated MODIS FPAR is small, with slightly better performance using splined fAPAR data. Model performance is generally better using MODIS FPAR compared to simulations using MODIS EVI. Spatial variations in particular, are better captured using MODIS FPAR (Fig. \ref{fig:modobs_spatialannual}, \rsq : 0.69 for setup FULL) compared to MODIS EVI (\rsq : 0.58). However, the \rsq\ of inter-annual variations is 0.15 for MODIS EVI and 0.09 for MODIS FPAR. In terms of biases in climate zones, the overestimation of GPP during the dry period in zone BSk is larger when using MODIS EVI than when using MODIS FPAR (Fig. \ref{fig:season_greenness}, right). The positive spring bias in simulated GPP in zone Dfb is present irrespective of the source of the fAPAR forcing (Fig. \ref{fig:season_greenness}, left), as is the peak-season bias of GPP in zones BSk, Cfb, and Csb (not shown). Differences between the EVI and FPAR-forced simulations depend on vegetation type. The EVI-forced simulation tends to be low biased in evergreen needle-leaved vegetation, and has generally lower values in all evergreen vegetation types compared to the FPAR-forced simulation. However, there is no general difference in model bias between simulations made with the two forcings in other vegetation types. 
 
  \begin{figure}[t]
-\includegraphics[width=8.3cm]{fig/meandoy_byzone_greenness.pdf}
+\includegraphics[width=8.3cm]{fig/f07.pdf}
     \caption{Mean seasonal cycle for model setups with different greenness forcing data for two climate zones (BSk and Dfb, both northern hemisphere). Observations are given by the black line and grey band, representing the median and 33/66 \% quantiles by day-of-year (DOY) of all data (multiple sites and years) pooled by climate zone. Coloured lines represent model setups, forced with different greenness data. The annotation above each plot specifies the climate zone (see Tab. \ref{tab:kgclimate}). Climate zones shown here are illustrative examples.}
     \label{fig:season_greenness}
 \end{figure}
@@ -563,7 +563,7 @@ We found a systematic low bias of simulated GPP in the peak-season in the climat
 
 
  \begin{figure*}[t]
-\includegraphics[width=12cm]{fig/meandoy_modobs_gpp_data.pdf}
+\includegraphics[width=12cm]{fig/f08.pdf}
     \caption{Model performance subject to comparison with different flux decomposition methods for GPP. (a-c): Mean seasonal cycle of simulated (red) and observed GPP (black) based on different flux decomposition methods for sites in climate zone Cfb north. The grey band represents the 33/66 \% quantiles of observed GPP by day-of-year (DOY). (d-f): Correlation of observed and simulated GPP values of all sites pooled, mean over 8-day periods, all sites pooled. `Observed GPP' refers to the different flux decomposition methods: DT for the daytime method (setup FULL\textunderscore DT), NT for the nighttime method (setup FULL\textunderscore NTsub) and Ty (setup FULL\textunderscore Ty) for the method applied for data used in \citet{wang17rs}. Dotted lines in (d-f) represent the 1:1 relationship, red lines represent the fitted linear regressions.}
     \label{fig:modobs_10d_gppdata}
 \end{figure*}
@@ -576,7 +576,7 @@ The FULL version of the P-model captures 32\% of the variability in mean annual 
 31\% of the variability in monthly mean LUE is captured by the model, with data from all sites and years pooled (Fig. \ref{fig:lue}). The model overestimates monthly LUE values and underestimates LUE at the lowest and highest end of the LUE range respectively. The low-end overestimation is reflected by the overestimation of GPP in the spring at winter-cold sites (Sect. \ref{sec:results_seasonal}) and during soil moisture droughts (Sect. \ref{sec:results_droughtresponse}). The underestimation of high monthly values is not clearly linked to any particular vegetation type.
 
  \begin{figure*}[t]
-\includegraphics[width=12cm]{fig/modobs_lue_FULL.pdf}
+\includegraphics[width=12cm]{fig/f09.pdf}
     \caption{Modelled (simulations FULL) versus observed LUE. (a) Mean monthly LUE with data pooled from all sites and available years. (b) Mean annual LUE by site (small dots and color) and vegetation type (large dots and color). ee metrics are given at the top with numbers in brackets referring to the regression of data aggregated by vegetation types and non-bracketed numbers for data aggregated by sites. Dotted lines represent the 1:1 relationship, red lines represent the fitted linear regression to all data in (a) and to mean annual LUE by site in (b). The grey band in (b) represents the 95 \% confidence interval of the linear regression. Vegetation types are: closed shrubland (CSH); deciduous broadleaf forest (DBF); evergreen broadleaf forest (EBF); evergreen needleleaf forest (ENF); grassland (GRA); mixed deciduous and evergreen needleleaf forest (MF); open shrubland (OSH); savanna ecosystem (SAV); woody savanna (WSA). }
     \label{fig:lue}
 \end{figure*}
@@ -587,14 +587,14 @@ The FULL version of the P-model captures 32\% of the variability in mean annual 
 Simulated global total GPP is 106 GtC yr$^{-1}$ when using MODIS FPAR and 122 GtC yr$^{-1}$ when using fAPAR3g forcing data (mean over years 2001-2011, setup FULL). The spatial pattern of simulated GPP differs substantially between simulations forced by MODIS FPAR and fAPAR3g (Fig. \ref{fig:gpp_global}). This is most evident in their latitudinal distribution (Fig. \ref{fig:gpp_by_lat}). The global spatial pattern of fAPAR3g-based GPP simulated by the P-model generally matches the global distribution of the mean across other remote sensing-based GPP models and lies within the range of their estimates for the latitudinal distribution. The MODIS FPAR-forced P-model simulation suggests lower values in the tropics that differ from the fAPAR3g-based estimates by a factor of $\sim$2 around the equator. The moderate tropical GPP of the MODIS FPAR-based P-model simulation agrees well with the latitudinal distribution of sun-induced fluorescence (SiF) from GOME-2A and GOME-2B.
 
  \begin{figure}[!ht]
-\includegraphics[width=\textwidth]{fig/maps_comparison.pdf}
+\includegraphics[width=\textwidth]{fig/f10.pdf}
 \caption{Global distribution of GPP. Shown are the mean annual values, averaged over years 2000 to 2016. The GPP shown as ``mean of other models'' is the average of MTE \citep{jung11jgr}, FLUXCOM (`RS+METEO' setup) \citep{tramontana16bg}, MODIS GPP (collection 55 and 6) \citep{running04, zhao05}, BESS \citep{jiang16rse}, BEPS \citep{he18grl, chen16agrformet}, and VPM \citep{zhang17scidat}. P-model results are from simulations with the FULL setup and calibrated parameters as given in Table \ref{tab:setups}.}
     \label{fig:gpp_global}
 \end{figure}
 
 
  \begin{figure*}[t]
-\includegraphics[width=12cm]{fig/gpp_by_latitude.pdf}
+\includegraphics[width=12cm]{fig/f11.pdf}
     \caption{Latitudinal distribution of GPP and SiF. Values shown (GPP on the left y-axis, SiF on the right y-axis) are gridcell area-weighted sums along 0.5$^{\circ}$ latitudinal bands.}
     \label{fig:gpp_by_lat}  
 \end{figure*}
@@ -677,7 +677,7 @@ The current implementation of the P-model involves some simplifications in terms
 A further simplification is that investment in electron transport capacity (expressed by \jmax ) and investments in the carboxylation capacity (expressed by \vcmax ) are coordinated so that for conditions with which the model is forced (here, monthly means of daily averages), photosynthesis operates at the co-limitation point of the light- and Rubisco-limited assimilation rates and an effective linear relationship between absorbed light and mean assimilation emerges. This assumption follows from the \textit{coordination hypothesis} \citep{chen93, haxeltine96}, which itself can be understood as an optimality principle \citep{haxeltine96}, and is well supported by observations \citep{maire12po}. However, this coordination is contingent on the time scale at which photosynthetic acclimation occurs, which is not known precisely  \citep{smithdukes13gcb, way14}. By simulating $\chi$ usingh monthly mean meteorological variables, we assume a monthly time scale of acclimation. This is probably a conservative estimate \citep{smithdukes17, veres84}. Considering the concave relationship of assimilation rates and absorbed light that follows from the FvCB model for a given \jmax , linearly scaling a given monthly LUE term with daily varying absorbed light levels should lead to an overestimation of assimilation rates at high light levels. This overestimation should disappear as the time scale over which light levels are averaged is increased. However, our results do not confirm these expectations (Fig. \ref{fig:modobs_anomalies}). The fact that the model did not exhibit a systematic error in simulating GPP variations when applied at the daily time scale is probably due to the fact that day-to-day variability in light levels is relatively small compared to the within-day variability and the non-linearity between $A$ and daily varying light levels does not play an important role.
 
 \begin{figure}[t]
-\includegraphics[width=8.3cm]{fig/hist_anomalies.pdf}
+\includegraphics[width=8.3cm]{fig/f12.pdf}
     \caption{Distribution of anomalies from the mean seasonal cycle, evaluated for daily values (a) and 8-day means (b).} 
     \label{fig:modobs_anomalies}
 \end{figure}
